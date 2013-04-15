@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -87,6 +87,13 @@ class FmRxControls
    private static final int V4L2_CID_PRIVATE_SPUR_FREQ                     = V4L2_CID_PRIVATE_BASE + 0x31;
    private static final int V4L2_CID_PRIVATE_SPUR_FREQ_RMSSI               = V4L2_CID_PRIVATE_BASE + 0x32;
    private static final int V4L2_CID_PRIVATE_SPUR_SELECTION                = V4L2_CID_PRIVATE_BASE + 0x33;
+   private static final int V4L2_CID_PRIVATE_AF_RMSSI_TH                   = V4L2_CID_PRIVATE_BASE + 0x36;
+   private static final int V4L2_CID_PRIVATE_AF_RMSSI_SAMPLES              = V4L2_CID_PRIVATE_BASE + 0x37;
+   private static final int V4L2_CID_PRIVATE_GOOD_CH_RMSSI_TH              = V4L2_CID_PRIVATE_BASE + 0x38;
+   private static final int V4L2_CID_PRIVATE_SRCHALGOTYPE                  = V4L2_CID_PRIVATE_BASE + 0x39;
+   private static final int V4L2_CID_PRIVATE_CF0TH12                       = V4L2_CID_PRIVATE_BASE + 0x3A;
+   private static final int V4L2_CID_PRIVATE_SINRFIRSTSTAGE                = V4L2_CID_PRIVATE_BASE + 0x3B;
+   private static final int V4L2_CID_PRIVATE_RMSSIFIRSTSTAGE               = V4L2_CID_PRIVATE_BASE + 0x3C;
 
    private static final int V4L2_CTRL_CLASS_USER = 0x980000;
    private static final int V4L2_CID_BASE        = V4L2_CTRL_CLASS_USER | 0x900;
@@ -547,4 +554,110 @@ class FmRxControls
    public int configureSpurTable(int fd) {
       return FmReceiverJNI.configureSpurTable(fd);
    }
+
+   public int getAFJumpRmssiTh(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_AF_RMSSI_TH);
+   }
+
+   public boolean setAFJumpRmssiTh(int fd, int th) {
+      int re;
+      re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_AF_RMSSI_TH, th);
+      if (re < 0) {
+           Log.e(TAG, "Error in setting AF jmp Rmssi Threshold");
+           return false;
+      } else {
+           return true;
+      }
+   }
+
+   public int getAFJumpRmssiSamples(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_AF_RMSSI_SAMPLES);
+   }
+
+   public boolean setAFJumpRmssiSamples(int fd, int samples) {
+      int re;
+      re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_AF_RMSSI_SAMPLES, samples);
+      if (re < 0) {
+           Log.e(TAG, "Error in setting AF jmp Rmssi Samples");
+           return false;
+      } else {
+           return true;
+      }
+   }
+
+   public int getGdChRmssiTh(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_GOOD_CH_RMSSI_TH);
+   }
+
+   public boolean setGdChRmssiTh(int fd, int th) {
+      int re;
+      re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_GOOD_CH_RMSSI_TH, th);
+      if (re < 0) {
+           Log.e(TAG, "Error in setting Good channel Rmssi Threshold");
+           return false;
+      } else {
+           return true;
+      }
+   }
+
+   public int getSearchAlgoType(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_SRCHALGOTYPE);
+   }
+
+   public boolean setSearchAlgoType(int fd, int saerchType) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_SRCHALGOTYPE, saerchType);
+      if(ret < 0) {
+         Log.e(TAG, "Error in setting Search Algo type");
+         return false;
+      }else {
+         return true;
+      }
+   }
+
+   public int getSinrFirstStage(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_SINRFIRSTSTAGE);
+   }
+
+   public boolean setSinrFirstStage(int fd, int sinr) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_SINRFIRSTSTAGE, sinr);
+      if(ret < 0) {
+         Log.e(TAG, "Error in setting Sinr First Stage Threshold");
+         return false;
+      }else {
+         return true;
+      }
+   }
+
+   public int getRmssiFirstStage(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_RMSSIFIRSTSTAGE);
+   }
+
+   public boolean setRmssiFirstStage(int fd, int rmssi) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_RMSSIFIRSTSTAGE, rmssi);
+      if(ret < 0) {
+         Log.e(TAG, "Error in setting Rmssi First stage Threshold");
+         return false;
+      }else {
+         return true;
+      }
+   }
+
+   public int getCFOMeanTh(int fd) {
+      return FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_CF0TH12);
+   }
+
+   public boolean setCFOMeanTh(int fd, int th) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_CF0TH12, th);
+      if(ret < 0) {
+         Log.e(TAG, "Error in setting Mean CFO Threshold");
+         return false;
+      }else {
+         return true;
+      }
+   }
+
 }
