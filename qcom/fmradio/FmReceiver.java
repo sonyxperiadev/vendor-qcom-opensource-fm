@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009,2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009,2012-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -290,6 +290,13 @@ public class FmReceiver extends FmTransceiver
    private static final int RT_OR_ERT_IND = 1;
    private static final int ENCODE_TYPE_IND = 1;
    private static final int ERT_DIR_IND = 2;
+
+  /**
+    * Search Algo type
+    */
+   private static final int SEARCH_MPXDCC = 0;
+   private static final int SEARCH_SINR_INT = 1;
+
    /**
     * Constructor for the receiver Object
     */
@@ -1744,6 +1751,142 @@ public class FmReceiver extends FmTransceiver
      return threshold;
    }
 
+   public int getAFJumpRmssiTh() {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getAFJumpThreshold: Device currently busy in executing another command.");
+          return ERROR;
+      }
+      return mControl.getAFJumpRmssiTh(sFd);
+   }
+
+   public boolean setAFJumpRmssiTh(int th) {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setAFJumpThreshold: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setAFJumpRmssiTh(sFd, th);
+   }
+
+   public int getAFJumpRmssiSamples() {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getAFJumpRmssiSamples: Device currently busy in executing another command.");
+          return ERROR;
+      }
+      return mControl.getAFJumpRmssiSamples(sFd);
+   }
+
+   public boolean setAFJumpRmssiSamples(int samples) {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setAFJumpRmssiSamples: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setAFJumpRmssiSamples(sFd, samples);
+   }
+
+   public int getGdChRmssiTh() {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getGdChRmssiTh: Device currently busy in executing another command.");
+          return ERROR;
+      }
+      return mControl.getGdChRmssiTh(sFd);
+   }
+
+   public boolean setGdChRmssiTh(int th) {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setGdChRmssiTh: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setGdChRmssiTh(sFd, th);
+   }
+
+   public int getSearchAlgoType() {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getSearchAlgoType: Device currently busy in executing another command.");
+          return Integer.MAX_VALUE;
+      }
+      return mControl.getSearchAlgoType(sFd);
+   }
+
+   public boolean setSearchAlgoType(int searchType) {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setSearchAlgoType: Device currently busy in executing another command.");
+          return false;
+      }
+      if((searchType != SEARCH_MPXDCC) && (searchType != SEARCH_SINR_INT)) {
+          Log.d(TAG, "Search Algo is invalid");
+          return false;
+      }else {
+          return mControl.setSearchAlgoType(sFd, searchType);
+      }
+   }
+
+   public int getSinrFirstStage() {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getSinrFirstStage: Device currently busy in executing another command.");
+          return Integer.MAX_VALUE;
+      }
+      return mControl.getSinrFirstStage(sFd);
+   }
+
+   public boolean setSinrFirstStage(int sinr) {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setSinrFirstStage: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setSinrFirstStage(sFd, sinr);
+   }
+
+   public int getRmssiFirstStage() {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getRmssiFirstStage: Device currently busy in executing another command.");
+          return Integer.MAX_VALUE;
+      }
+      return mControl.getRmssiFirstStage(sFd);
+   }
+
+   public boolean setRmssiFirstStage(int rmssi) {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setRmssiFirstStage: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setRmssiFirstStage(sFd, rmssi);
+   }
+
+   public int getCFOMeanTh() {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getCF0Th12: Device currently busy in executing another command.");
+          return Integer.MAX_VALUE;
+      }
+      return mControl.getCFOMeanTh(sFd);
+   }
+
+   public boolean setCFOMeanTh(int th) {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setRmssiFirstStage: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setCFOMeanTh(sFd, th);
+   }
 
    /*==============================================================
    FUNCTION:  setRdsGroupOptions
