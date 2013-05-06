@@ -2890,6 +2890,7 @@ private Runnable mSpeakerDisableTask = new Runnable() {
       public void FmRxEvRdsAfInfo()
       {
          Log.d(LOGTAG, "FmRxEvRdsAfInfo");
+         mReceiver.getAFInfo();
       }
       public void FmRxEvRTPlus()
       {

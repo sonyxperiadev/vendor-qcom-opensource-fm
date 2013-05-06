@@ -29,6 +29,7 @@
 package qcom.fmradio;
 
 import android.util.Log;
+import android.os.SystemProperties;
 
 /**
  * This class contains all interfaces and types needed to
@@ -1528,6 +1529,13 @@ public class FmReceiver extends FmTransceiver
       return mRdsData;
    }
 
+   public boolean IsSmdTransportLayer() {
+       String transportLayer = SystemProperties.get("ro.qualcomm.bt.hci_transport");
+       if (transportLayer.equals("smd"))
+           return true;
+       else
+           return false;
+   }
    /*==============================================================
    FUNCTION:  getAFInfo
    ==============================================================*/
@@ -1553,26 +1561,53 @@ public class FmReceiver extends FmTransceiver
    public int[] getAFInfo() {
 
       byte [] buff = new byte[STD_BUF_SIZE];
-      int  [] AfList = new int [40];
-      int lowerBand;
+      int  [] AfList = new int [50];
+      int lowerBand, i;
+      int tunedFreq, PI, size_AFLIST;
 
       FmReceiverJNI.getBufferNative(sFd, buff, TAVARUA_BUF_AF_LIST);
 
-      if ((buff[4] <= 0) || (buff[4] > 25))
-        return null;
+      if (IsSmdTransportLayer()) {
+          Log.d(TAG, "SMD transport layer");
 
-      lowerBand = FmReceiverJNI.getLowerBandNative(sFd);
-      Log.d (TAG, "Low band " + lowerBand);
+          tunedFreq = (buff[0] & 0xFF) |
+                      ((buff[1] & 0xFF) << 8) |
+                      ((buff[2] & 0xFF) << 16) |
+                      ((buff[3] & 0xFF) << 24) ;
+          Log.d(TAG, "tunedFreq = " +tunedFreq);
 
-      Log.d (TAG, "AF_buff 0: " + (buff[0] & 0xff));
-      Log.d (TAG, "AF_buff 1: " + (buff[1] & 0xff));
-      Log.d (TAG, "AF_buff 2: " + (buff[2] & 0xff));
-      Log.d (TAG, "AF_buff 3: " + (buff[3] & 0xff));
-      Log.d (TAG, "AF_buff 4: " + (buff[4] & 0xff));
+          PI = (buff[4] & 0xFF) |
+               ((buff[5] & 0xFF) << 8);
+          Log.d(TAG, "PI: " + PI);
 
-      for (int i=0; i<buff[4]; i++) {
-        AfList[i] = ((buff[i+4] & 0xFF) * 1000) + lowerBand;
-        Log.d (TAG, "AF : " + AfList[i]);
+          size_AFLIST = buff[6] & 0xFF;
+          Log.d(TAG, "size_AFLIST : " +size_AFLIST);
+
+          for (i = 0;i < size_AFLIST;i++) {
+                AfList[i] = (buff[6 + i * 4 + 1] & 0xFF) |
+                           ((buff[6 + i * 4 + 2] & 0xFF) << 8) |
+                           ((buff[6 + i * 4 + 3] & 0xFF) << 16) |
+                           ((buff[6 + i * 4 + 4] & 0xFF) << 24) ;
+                Log.d(TAG, "AF: " + AfList[i]);
+          }
+      } else {
+
+          if ((buff[4] <= 0) || (buff[4] > 25))
+              return null;
+
+          lowerBand = FmReceiverJNI.getLowerBandNative(sFd);
+          Log.d (TAG, "Low band " + lowerBand);
+
+          Log.d (TAG, "AF_buff 0: " + (buff[0] & 0xff));
+          Log.d (TAG, "AF_buff 1: " + (buff[1] & 0xff));
+          Log.d (TAG, "AF_buff 2: " + (buff[2] & 0xff));
+          Log.d (TAG, "AF_buff 3: " + (buff[3] & 0xff));
+          Log.d (TAG, "AF_buff 4: " + (buff[4] & 0xff));
+
+          for (i=0; i<buff[4]; i++) {
+               AfList[i] = ((buff[i+4] & 0xFF) * 1000) + lowerBand;
+               Log.d (TAG, "AF : " + AfList[i]);
+          }
       }
 
       return AfList;
