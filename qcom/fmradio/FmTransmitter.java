@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -298,8 +298,16 @@ public class FmTransmitter extends FmTransceiver
    */
    public boolean reset(){
       boolean status = false;
+      int state = getFMState();
 
+      if(state == FMState_Turned_Off) {
+         Log.d(TAG, "FM already turned Off.");
+         return false;
+      }
+      setFMPowerState(FMState_Turned_Off);
+      Log.v(TAG, "reset: NEW-STATE : FMState_Turned_Off");
       status = unregisterTransmitClient();
+      release("/dev/radio0");
       return status;
    }
 
