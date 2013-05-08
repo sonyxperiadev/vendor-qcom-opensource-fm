@@ -94,6 +94,7 @@ class FmRxControls
    private static final int V4L2_CID_PRIVATE_CF0TH12                       = V4L2_CID_PRIVATE_BASE + 0x3A;
    private static final int V4L2_CID_PRIVATE_SINRFIRSTSTAGE                = V4L2_CID_PRIVATE_BASE + 0x3B;
    private static final int V4L2_CID_PRIVATE_RMSSIFIRSTSTAGE               = V4L2_CID_PRIVATE_BASE + 0x3C;
+   private static final int V4L2_CID_PRIVATE_RXREPEATCOUNT                 = V4L2_CID_PRIVATE_BASE + 0x3D;
 
    private static final int V4L2_CTRL_CLASS_USER = 0x980000;
    private static final int V4L2_CID_BASE        = V4L2_CTRL_CLASS_USER | 0x900;
@@ -657,6 +658,16 @@ class FmRxControls
          return false;
       }else {
          return true;
+      }
+   }
+
+   public boolean setPSRxRepeatCount(int fd, int count) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_RXREPEATCOUNT, count);
+      if (ret < 0) {
+          return false;
+      } else {
+          return true;
       }
    }
 

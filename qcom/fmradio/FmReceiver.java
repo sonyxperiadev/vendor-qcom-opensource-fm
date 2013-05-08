@@ -1888,6 +1888,16 @@ public class FmReceiver extends FmTransceiver
       return mControl.setCFOMeanTh(sFd, th);
    }
 
+   public boolean setPSRxRepeatCount(int count) {
+      int state = getFMState();
+      /* Check current state of FM device */
+      if (state == FMState_Turned_Off){
+          Log.d(TAG, "setRxRepeatcount failed");
+          return false;
+      }
+      return mControl.setPSRxRepeatCount(sFd, count);
+   }
+
    /*==============================================================
    FUNCTION:  setRdsGroupOptions
    ==============================================================*/
