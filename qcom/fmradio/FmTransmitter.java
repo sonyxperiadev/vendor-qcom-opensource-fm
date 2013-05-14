@@ -146,17 +146,22 @@ public class FmTransmitter extends FmTransceiver
     *
     */
    public boolean enable (FmConfig configSettings){
-      boolean status = true;
+      boolean status = false;
 
       int state = getFMState();
       if (state == FMState_Tx_Turned_On) {
           Log.d(TAG, "enable: FM Tx already turned On and running");
           return status;
-      } else if (state == subPwrLevel_FMTurning_Off) {
+      }else if (state == subPwrLevel_FMTurning_Off) {
           Log.v(TAG, "FM is in the process of turning off.Pls wait for sometime.");
           return status;
-      } else if(state == subPwrLevel_FMTx_Starting) {
+      }else if((state == subPwrLevel_FMTx_Starting)
+                ||(state == subPwrLevel_FMRx_Starting)) {
           Log.v(TAG, "FM is in the process of turning On.Pls wait for sometime.");
+          return status;
+      }else if((state == FMState_Srch_InProg)
+                ||(state == FMState_Rx_Turned_On)) {
+          Log.v(TAG, "FM Rx is turned on");
           return status;
       }
       setFMPowerState(subPwrLevel_FMTx_Starting);

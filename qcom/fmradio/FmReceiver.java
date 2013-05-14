@@ -433,13 +433,15 @@ public class FmReceiver extends FmTransceiver
       if (state == FMState_Rx_Turned_On || state == FMState_Srch_InProg) {
          Log.d(TAG, "enable: FM already turned On and running");
          return status;
-      }
-      else if (state == subPwrLevel_FMTurning_Off) {
+      }else if (state == subPwrLevel_FMTurning_Off) {
          Log.v(TAG, "FM is in the process of turning off.Pls wait for sometime.");
          return status;
-      }
-      else if (state == subPwrLevel_FMRx_Starting) {
+      }else if (state == subPwrLevel_FMRx_Starting) {
          Log.v(TAG, "FM is in the process of turning On.Pls wait for sometime.");
+         return status;
+      }else if ((state == FMState_Tx_Turned_On)
+                || (state == subPwrLevel_FMTx_Starting)) {
+         Log.v(TAG, "FM Tx is turned on or in the process of turning on.");
          return status;
       }
 
