@@ -63,6 +63,12 @@ import qcom.fmradio.FmRxRdsData;
 import qcom.fmradio.FmConfig;
 import com.codeaurora.utils.A2dpDeviceStatus;
 
+import android.media.IRemoteControlDisplay;
+import android.os.Bundle;
+import android.os.RemoteException;
+import android.graphics.Bitmap;
+import android.media.IAudioService;
+import android.media.MediaMetadataRetriever;
 /**
  * Provides "background" FM Radio (that uses the hardware) capabilities,
  * allowing the user to switch between activities without stopping playback.
@@ -101,6 +107,10 @@ public class FMTransmitterService extends Service
    private A2dpDeviceStatus mA2dpDeviceState = null;
    // interval after which we stop the service when idle
    private static final int IDLE_DELAY = 60000;
+   private IAudioService mAudioService;
+   private AudioManager mAudioManager;
+   private Metadata mMetadata;
+   RdsDisplay mRds;
 
    private static String RText = " ";
 
@@ -128,7 +138,11 @@ public class FMTransmitterService extends Service
       mA2dpDeviceState = new A2dpDeviceStatus(getApplicationContext());
       Message msg = mDelayedStopHandler.obtainMessage();
       mDelayedStopHandler.sendMessageDelayed(msg, IDLE_DELAY);
+      mAudioManager = new AudioManager(getApplicationContext());
+      mMetadata = new Metadata();
       registerHeadsetListener();
+      mRds = new RdsDisplay();
+      mAudioManager.registerRemoteControlDisplay(mRds);
    }
 
    @Override
@@ -141,12 +155,8 @@ public class FMTransmitterService extends Service
 
       // make sure there aren't any other messages coming
       mDelayedStopHandler.removeCallbacksAndMessages(null);
-/*
-      if (mMetaStatusListener != null) {
-          unregisterReceiver(mMetaStatusListener);
-          mMetaStatusListener = null;
-      } */
 
+      mAudioManager.unregisterRemoteControlDisplay(mRds);
       /* Unregister the headset Broadcase receiver */
       if (mHeadsetReceiver != null) {
           unregisterReceiver(mHeadsetReceiver);
@@ -181,54 +191,6 @@ public class FMTransmitterService extends Service
       Log.d(LOGTAG, "onRebind");
    }
 
-       /*
-         *Listen to Meta data events
-         */
-/*    private BroadcastReceiver mMetaStatusListener = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals("com.android.music.metachanged")) {
-                // redraw the artist/title info and
-                // set new max for progress bar
-                 Log.d(LOGTAG, " MetaData changed\n   ");
-                 Log.d(LOGTAG, "Service:   artist: "+ intent.getStringExtra("artist"));
-                 Log.d(LOGTAG, "    Service:Album: "+ intent.getStringExtra("album"));
-                 Log.d(LOGTAG, "    Service:Track: "+ intent.getStringExtra("track"));
-
-                 //Set if PI and PTY
-                 //as desired
-                 if( mTransmitter != null ){
-                     RText = intent.getStringExtra("album") +":" + intent.getStringExtra("track") +":"
-                     + intent.getStringExtra("artist");
-                     Log.d(LOGTAG,"RT string size is "+RText.length());
-                     mTransmitter.startRTInfo(RText, FM_TX_PROGRAM_TYPE, FM_TX_PROGRAM_ID );
-                 }
-                 try {
-                     if( mCallbacks != null ) {
-                         mCallbacks.onMetaDataChanged(RText);
-                     } else {
-                         Log.d(LOGTAG, "callback is not there");
-                     }
-                 } catch (RemoteException ex){
-                     ex.printStackTrace();
-                 }
-            }
-            else if ( action.equals("com.android.music.playstatechanged")){
-                // current "command" extra string is not supported
-                // but found in open source this info will be filled
-                // for this intent, in that case long pause can be handled
-                // for turning of FM Tx. Yet to be implemented
-                String cmd = intent.getStringExtra("command");
-                Log.d(LOGTAG, "playstatechanged event received");
-            }
-            else if (action.equals("com.android.music.playbackcomplete")){
-                // need to implement timer logic to turn off FM.
-                Log.d(LOGTAG,"playbackcomplete event received");
-            }
-
-        }
-    }; */
    @Override
    public void onStart(Intent intent, int startId) {
       Log.d(LOGTAG, "onStart");
@@ -240,13 +202,6 @@ public class FMTransmitterService extends Service
       mDelayedStopHandler.removeCallbacksAndMessages(null);
       Message msg = mDelayedStopHandler.obtainMessage();
       mDelayedStopHandler.sendMessageDelayed(msg, IDLE_DELAY);
-/*
-      IntentFilter f = new IntentFilter();
-      f.addAction("com.android.music.metachanged");
-      f.addAction("com.android.music.playstatechanged");
-      f.addAction("com.android.music.playbackcomplete");
-      registerReceiver(mMetaStatusListener, f); */
-
    }
 
    @Override
@@ -1175,6 +1130,82 @@ public class FMTransmitterService extends Service
            }
        }
    };
+
+   private class RdsDisplay extends IRemoteControlDisplay.Stub {
+        RdsDisplay() {
+        }
+
+        @Override
+        public void setPlaybackState(int generationId, int state, long stateChangeTimeMs,
+                  long currentPosMs, float speed) {
+        }
+
+        @Override
+        public void setMetadata(int generationId, Bundle metadata) {
+            updateMetadata(metadata);
+        }
+
+        @Override
+        public void setTransportControlInfo(int generationId, int flags, int posCapabilities) {
+        }
+
+        @Override
+        public void setArtwork(int generationId, Bitmap bitmap) {
+        }
+
+        @Override
+        public void setAllMetadata(int generationId, Bundle metadata, Bitmap bitmap) {
+         }
+
+        @Override
+        public void setCurrentClientId(int clientGeneration, PendingIntent clientMediaIntent,
+                boolean clearing) {
+        }
+   }
+
+   class Metadata {
+        private String artist;
+        private String trackTitle;
+        private String albumTitle;
+
+        public Metadata() {
+            artist = null;
+            trackTitle = null;
+            albumTitle = null;
+        }
+
+        public String toString() {
+            return "Metadata[artist=" + artist + " trackTitle=" + trackTitle + " albumTitle=" +
+                   albumTitle + "]";
+        }
+   }
+
+   private String getMdString(Bundle data, int id) {
+        return data.getString(Integer.toString(id));
+   }
+
+   private void updateMetadata(Bundle data) {
+        String oldMetadata = mMetadata.toString();
+        mMetadata.artist = getMdString(data, MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
+        mMetadata.trackTitle = getMdString(data, MediaMetadataRetriever.METADATA_KEY_TITLE);
+        mMetadata.albumTitle = getMdString(data, MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        Log.v(LOGTAG, "mMetadata=" + mMetadata.toString());
+        if (mTransmitter != null ){
+            RText = mMetadata.albumTitle  +":" + mMetadata.trackTitle +":"+ mMetadata.artist;
+            Log.d(LOGTAG,"RT string size is "+RText.length());
+            mTransmitter.startRTInfo(RText, FM_TX_PROGRAM_TYPE, FM_TX_PROGRAM_ID );
+        }
+
+        try {
+             if (mCallbacks != null ) {
+                 mCallbacks.onMetaDataChanged(RText);
+             } else {
+                 Log.d(LOGTAG, "callback is not there");
+             }
+        } catch (RemoteException ex){
+             ex.printStackTrace();
+        }
+   }
    public boolean isHeadsetPlugged() {
        if (mA2dpDeviceState.isDeviceAvailable())
           mHeadsetPlugged = true;
