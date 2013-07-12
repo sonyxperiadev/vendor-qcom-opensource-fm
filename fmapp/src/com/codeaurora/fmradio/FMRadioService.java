@@ -1260,8 +1260,11 @@ private Runnable mSpeakerDisableTask = new Runnable() {
                          mSpeakerDisableHandler.removeCallbacks(mSpeakerDisableTask);
                          mSpeakerDisableHandler.postDelayed(mSpeakerDisableTask, 0);
                       }
-                      if (true == mPlaybackInProgress)
+                      if (true == mPlaybackInProgress) {
+                          if (mMuted)
+                              unMute();
                           stopFM();
+                      }
                       if (mSpeakerPhoneOn) {
                           mSpeakerPhoneOn = false;
                           if (isAnalogModeSupported())
