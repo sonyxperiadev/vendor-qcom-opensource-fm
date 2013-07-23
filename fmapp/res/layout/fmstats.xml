@@ -50,9 +50,18 @@
 
            <Button
                android:id= "@+id/Runbutton"
-               android:text="@string/test_run"
+               android:text="@string/band_sweep_setting"
                android:layout_width="wrap_content"
                android:layout_height="100dp"
+               android:textSize="25dp"
+               android:visibility="gone"/>
+
+           <TextView
+               android:id= "@+id/BandSweepSetting"
+               android:text="@string/band_sweep_setting"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_toRightOf="@id/Runbutton"
                android:textSize="25sp"
                android:visibility="gone"/>
 
