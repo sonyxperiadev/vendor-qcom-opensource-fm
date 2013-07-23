@@ -243,6 +243,7 @@
     <item>Turkey</item>
     <item>United Kingdom </item>
     <item>United States</item>
+    <item>User Defined Band</item>
   </string-array>
 
   <string-array name="regional_band_values">
@@ -282,6 +283,7 @@
     <item>33</item>
     <item>34</item>
     <item>35</item>
+    <item>36</item>
   </string-array>
 
   <string-array name="regional_band_summary">
@@ -321,6 +323,7 @@
     <item>Turkey (87.5MHz To 108.0MHz In 100 Khz Steps)</item>
     <item>United Kingdom (87.5MHz To 108.0MHz In 100 Khz Steps)</item>
     <item>United States (88.1MHz To 107.9MHz In 200 Khz Steps)</item>
+    <item>User Defined Band</item>
   </string-array>
 
   <string-array name="rf_cfg">
@@ -366,6 +369,23 @@
       <item> Select the option</item>
       <item> Configure Performance parameters</item>
       <item> RF Statistics</item>
+  </string-array>
+
+  <string-array name="channel_spacing_val">
+      <item>2</item>
+      <item>1</item>
+      <item>0</item>
+  </string-array>
+
+  <string-array name="channel_spacing_entries">
+      <item>50 Khz</item>
+      <item>100 Khz</item>
+      <item>200 Khz</item>
+  </string-array>
+
+  <string-array name="band_sweep_methods">
+      <item>Manual</item>
+      <item>From File</item>
   </string-array>
 
 </resources>

@@ -78,6 +78,7 @@ public class FmSharedPreferences
    public static final int REGIONAL_BAND_TURKEY          = 33;
    public static final int REGIONAL_BAND_UNITEDKINGDOM   = 34;
    public static final int REGIONAL_BAND_UNITED_STATES   = 35;
+   public static final int REGIONAL_BAND_USER_DEFINED    = 36;
 
    public static final int RECORD_DUR_INDEX_0_VAL        = 5;
    public static final int RECORD_DUR_INDEX_1_VAL       = 15;
@@ -98,9 +99,9 @@ public class FmSharedPreferences
 
    private static final String FMCONFIG_COUNTRY = "fmconfig_country";
    //private static final String FMCONFIG_BAND = "fmconfig_band";
-   //private static final String FMCONFIG_MIN = "fmconfig_min";
-   //private static final String FMCONFIG_MAX = "fmconfig_max";
-   //private static final String FMCONFIG_STEP = "fmconfig_step";
+   private static final String FMCONFIG_MIN = "fmconfig_min";
+   private static final String FMCONFIG_MAX = "fmconfig_max";
+   private static final String FMCONFIG_STEP = "fmconfig_step";
    //private static final String FMCONFIG_EMPH = "fmconfig_emphasis";
    //private static final String FMCONFIG_RDSSTD = "fmconfig_rdsstd";
    /* Storage key String */
@@ -152,9 +153,12 @@ public class FmSharedPreferences
    private static int mListIndex;
    private Context mContext;
    private static int mTunedFrequency = 98100;
+   private static int mBandMinFreq = 76000;
+   private static int mBandMaxFreq = 108000;
+   private static int mChanSpacing = 0;
    private static int mFrequencyBand_Stepsize = 200;
 
-   private static int mCountry=0;
+   private static int mCountry = 0;
    /* true = Stereo and false = "force Mono" even if Station is transmitting a
     * Stereo signal
     */
@@ -444,7 +448,11 @@ public class FmSharedPreferences
       mTunedFrequency = sp.getInt(PREF_LAST_TUNED_FREQUENCY, DEFAULT_NO_FREQUENCY);
       mRecordDuration = sp.getInt(LAST_RECORD_DURATION, RECORD_DUR_INDEX_0_VAL);
       mAFAutoSwitch = sp.getBoolean(LAST_AF_JUMP_VALUE, true);
-
+      if(sp.getInt(FMCONFIG_COUNTRY, 0) == REGIONAL_BAND_USER_DEFINED) {
+         mBandMinFreq = sp.getInt(FMCONFIG_MIN, mBandMinFreq);
+         mBandMaxFreq = sp.getInt(FMCONFIG_MAX, mBandMaxFreq);
+         mChanSpacing = sp.getInt(FMCONFIG_STEP, mChanSpacing);
+      }
       int num_lists = sp.getInt(LIST_NUM, 1);
       if (mListOfPlists.size() == 0) {
 
@@ -544,6 +552,11 @@ public class FmSharedPreferences
 
       /* Save Configuration */
       ed.putInt(FMCONFIG_COUNTRY, mCountry);
+      if(mCountry == REGIONAL_BAND_USER_DEFINED) {
+         ed.putInt(FMCONFIG_MIN, mBandMinFreq);
+         ed.putInt(FMCONFIG_MAX, mBandMaxFreq);
+         ed.putInt(FMCONFIG_STEP, mChanSpacing);
+      }
       ed.putInt(LAST_RECORD_DURATION, mRecordDuration);
       ed.putBoolean(LAST_AF_JUMP_VALUE, mAFAutoSwitch);
       ed.commit();
@@ -686,8 +699,8 @@ public class FmSharedPreferences
 
    public static void setChSpacing(int spacing)
    {
-      if( (spacing>=FmReceiver.FM_CHSPACE_200_KHZ)
-          && (spacing<=FmReceiver.FM_CHSPACE_50_KHZ))
+      if( (spacing >= FmReceiver.FM_CHSPACE_200_KHZ)
+          && (spacing <= FmReceiver.FM_CHSPACE_50_KHZ))
       {
          mFrequencyBand_Stepsize = 200;
          switch (spacing)
@@ -703,6 +716,7 @@ public class FmSharedPreferences
                break;
             }
          }
+         mChanSpacing = spacing;
          mFMConfiguration.setChSpacing(spacing);
       }
    }
@@ -761,12 +775,18 @@ public class FmSharedPreferences
       return mFMConfiguration.getLowerLimit();
    }
 
-   public static void setLowerLimit(int lowLimit){
+   public static void setLowerLimit(int lowLimit) {
       mFMConfiguration.setLowerLimit(lowLimit);
+      if(mCountry == REGIONAL_BAND_USER_DEFINED) {
+         mBandMinFreq = lowLimit;
+      }
    }
 
    public static void setUpperLimit(int upLimit){
       mFMConfiguration.setUpperLimit(upLimit);
+      if(mCountry == REGIONAL_BAND_USER_DEFINED) {
+         mBandMaxFreq = upLimit;
+      }
    }
 
    public static void setCountry(int nCountryCode){
@@ -1050,6 +1070,23 @@ public class FmSharedPreferences
           mFMConfiguration.setLowerLimit(88100);
           mFMConfiguration.setUpperLimit(107900);
           mFrequencyBand_Stepsize = 200;
+          break;
+        }
+        case REGIONAL_BAND_USER_DEFINED:
+        {
+          mFMConfiguration.setRadioBand(FmReceiver.FM_USER_DEFINED_BAND);
+          mFMConfiguration.setChSpacing(mChanSpacing);
+          mFMConfiguration.setEmphasis(FmReceiver.FM_DE_EMP75);
+          mFMConfiguration.setRdsStd(FmReceiver.FM_RDS_STD_RDS);
+          mFMConfiguration.setLowerLimit(mBandMinFreq);
+          mFMConfiguration.setUpperLimit(mBandMaxFreq);
+          if(mChanSpacing == 0) {
+             mFrequencyBand_Stepsize = 200;
+          }else if(mChanSpacing == 1) {
+             mFrequencyBand_Stepsize = 100;
+          }else {
+             mFrequencyBand_Stepsize = 50;
+          }
           break;
         }
         default:
