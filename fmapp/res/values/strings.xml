@@ -261,5 +261,6 @@
     <string name="rt_plus_tags">Tags</string>
     <string name="enter_RxRePeatCount">Enter RxRePeat count</string>
     <string name="set_RxRePeatCount">Config RxRePeat count</string>
+    <string name="save_record_file">FM Recorded file saved to "<xliff:g id="record_file">%1$s</xliff:g>"</string>
 
 </resources>

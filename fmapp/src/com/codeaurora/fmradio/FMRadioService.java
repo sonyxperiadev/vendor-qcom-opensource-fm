@@ -983,6 +983,8 @@ public class FMRadioService extends Service
        if (Environment.MEDIA_MOUNTED.equals(state)) {
           try {
                this.addToMediaDB(mSampleFile);
+               Toast.makeText(this,getString(R.string.save_record_file, mSampleFile.getAbsolutePath()),
+                          Toast.LENGTH_LONG).show();
           }
           catch(Exception e) {
                e.printStackTrace();
