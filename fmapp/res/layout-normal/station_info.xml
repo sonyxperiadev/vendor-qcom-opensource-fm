@@ -44,7 +44,7 @@
           android:src="@drawable/ic_signal_2"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:paddingLeft="5dip"
+          android:paddingLeft="5dp"
           android:layout_alignParentTop="true"
           android:layout_alignParentLeft="true"/>
 
@@ -55,7 +55,7 @@
           android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true"
           android:layout_alignBaseline="@id/signal_level"
-          android:textSize="16dip"
+          android:textSize="16dp"
           android:singleLine="true"
           android:textStyle="bold"
           android:text="@string/prog_service_string" />
@@ -64,11 +64,11 @@
          android:textAppearance="?android:attr/textAppearanceMedium"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:paddingRight="5dip"
+         android:paddingRight="5dp"
          android:layout_alignParentTop="true"
          android:layout_alignParentRight="true"
          android:layout_alignBaseline="@id/signal_level"
-         android:textSize="16dip"
+         android:textSize="16dp"
          android:text="@string/default_audio" />
 
     </RelativeLayout>
@@ -82,7 +82,7 @@
          android:textAppearance="?android:attr/textAppearanceMedium"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:textSize="16dip"
+         android:textSize="16dp"
          android:layout_centerInParent="true"
          android:text="@string/station_id_string" />
 
@@ -98,7 +98,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="50dip"
+        android:textSize="50dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/frequency_string"/>
@@ -107,8 +107,8 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_width="wrap_content"
-        android:layout_height="100dip"
-        android:paddingLeft="2dip"
+        android:layout_height="100dp"
+        android:paddingLeft="2dp"
         android:layout_alignParentLeft="true"
         android:visibility="visible"
         android:layout_alignWithParentIfMissing="true"
@@ -118,8 +118,8 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_width="wrap_content"
-        android:layout_height="100dip"
-        android:paddingRight="2dip"
+        android:layout_height="100dp"
+        android:paddingRight="2dp"
         android:layout_alignParentRight="true"
         android:visibility="visible"
         android:layout_alignWithParentIfMissing="true"
@@ -137,7 +137,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dip"
+        android:textSize="16dp"
         android:layout_centerInParent="true"
         android:text="@string/pty_string" />
     </RelativeLayout>
@@ -154,12 +154,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="16dip"
+        android:textSize="16dp"
         android:singleLine="true"
         android:textStyle="bold"
-        android:paddingLeft="2dip"
-        android:paddingRight="2dip"
-        android:paddingBottom="5dip"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingBottom="5dp"
         android:gravity="center"
         android:text="@string/radio_text_string" />
 
@@ -167,12 +167,12 @@
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
          android:textAppearance="?android:attr/textAppearanceMedium"
-         android:textSize="16dip"
+         android:textSize="16dp"
          android:singleLine="true"
          android:textStyle="bold"
-         android:paddingLeft="2dip"
-         android:paddingRight="2dip"
-         android:paddingBottom="5dip"
+         android:paddingLeft="2dp"
+         android:paddingRight="2dp"
+         android:paddingBottom="5dp"
          android:layout_below="@id/radio_text_tv"
          android:gravity="center_horizontal"
          android:text="@string/eradio_text_string"/>

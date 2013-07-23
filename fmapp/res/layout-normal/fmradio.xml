@@ -30,7 +30,7 @@
     android:id="@+id/fmradio"
     android:background="@drawable/application_border"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="wrap_content">
 
     <!-- This LinearLayout contains Station Information display and the function buttons -->
 
@@ -72,7 +72,7 @@
     <RelativeLayout android:id="@+id/layout_on_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="1dp"
         android:layout_centerInParent="true"
         android:layout_below="@id/on_off_separator_layout">
 

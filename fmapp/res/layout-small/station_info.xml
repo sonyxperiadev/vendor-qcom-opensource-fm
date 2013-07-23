@@ -43,7 +43,7 @@
                 android:src="@drawable/ic_signal_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dip"
+                android:paddingLeft="5dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"/>
 
@@ -54,7 +54,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_alignBaseline="@id/signal_level"
-                android:textSize="20dip"
+                android:textSize="20dp"
                 android:singleLine="true"
                 android:textStyle="bold"
                 android:text="@string/prog_service_string"/>
@@ -63,11 +63,11 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dip"
+                android:paddingRight="5dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignBaseline="@id/signal_level"
-                android:textSize="14dip"
+                android:textSize="14dp"
                 android:text="@string/default_audio"/>
 
         </RelativeLayout>
@@ -76,8 +76,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="5dip"
-            android:paddingBottom="5dip"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_alignWithParentIfMissing="true"
             android:gravity="center">
 
@@ -85,26 +85,26 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dip"
-                android:paddingTop="2dip"
-                android:paddingRight="2dip"
-                android:paddingBottom="2dip"
-                android:paddingLeft="2dip"
+                android:textSize="14dp"
+                android:paddingTop="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="2dp"
                 android:text="@string/station_id_string" />
 
             <RelativeLayout android:id="@+id/second_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dip"
-                android:layout_marginBottom="2dip"
-                android:layout_marginLeft="2dip"
-                android:layout_marginRight="2dip">
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp">
 
                 <TextView android:id="@+id/prog_frequency_tv"
                      android:textAppearance="?android:attr/textAppearanceLarge"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:textSize="64dip"
+                     android:textSize="64dp"
                      android:layout_centerHorizontal="true"
                      android:text="@string/frequency_string"/>
 
@@ -112,8 +112,8 @@
                      android:clickable="true"
                      android:focusable="true"
                      android:layout_width="wrap_content"
-                     android:layout_height="100dip"
-                     android:paddingLeft="2dip"
+                     android:layout_height="100dp"
+                     android:paddingLeft="2dp"
                      android:layout_alignParentLeft="true"
                      android:visibility="visible"
                      android:layout_alignWithParentIfMissing="true"
@@ -123,8 +123,8 @@
                      android:clickable="true"
                      android:focusable="true"
                      android:layout_width="wrap_content"
-                     android:layout_height="100dip"
-                     android:paddingRight="2dip"
+                     android:layout_height="100dp"
+                     android:paddingRight="2dp"
                      android:layout_alignParentRight="true"
                      android:visibility="visible"
                      android:layout_alignWithParentIfMissing="true"
@@ -136,11 +136,11 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dip"
-                android:paddingTop="2dip"
-                android:paddingRight="2dip"
-                android:paddingBottom="2dip"
-                android:paddingLeft="2dip"
+                android:textSize="14dp"
+                android:paddingTop="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="2dp"
                 android:text="@string/pty_string" />
 
         </LinearLayout>
@@ -150,12 +150,12 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20dip"
+            android:textSize="20dp"
             android:singleLine="true"
             android:textStyle="bold"
-            android:paddingLeft="2dip"
-            android:paddingRight="2dip"
-            android:paddingBottom="5dip"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingBottom="5dp"
             android:gravity="center_horizontal"
             android:text="@string/radio_text_string"/>
 
@@ -163,12 +163,12 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="20dip"
+            android:textSize="20dp"
             android:singleLine="true"
             android:textStyle="bold"
-            android:paddingLeft="2dip"
-            android:paddingRight="2dip"
-            android:paddingBottom="5dip"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingBottom="5dp"
             android:gravity="center_horizontal"
             android:text="@string/eradio_text_string"/>
     </LinearLayout>

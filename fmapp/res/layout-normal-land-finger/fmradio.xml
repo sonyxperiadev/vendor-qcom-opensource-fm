@@ -26,28 +26,35 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal"
+    android:layout_height="fill_parent">
 
     <!-- This LinearLayout contains Station Information display and the function buttons -->
-    <RelativeLayout android:id="@+id/station_info_wrapper_layout"
+    <LinearLayout android:id="@+id/station_info_wrapper_layout"
         android:background="@drawable/station_border"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical"
+        android:layout_weight="0.6"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent">
 
         <include layout="@layout/station_info" />
 
-     </RelativeLayout>
+     </LinearLayout>
 
-     <RelativeLayout android:id="@+id/navigate_wrapper_layout"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/station_info_wrapper_layout">
+     <LinearLayout android:id="@+id/navigate_wrapper_layout"
+         android:layout_height="fill_parent"
+         android:layout_weight="0.4"
+         android:layout_width="0dp"
+         android:orientation="vertical"
+         android:layout_alignTop="@id/station_info_wrapper_layout"
+         android:layout_alignBottom="@id/station_info_wrapper_layout"
+         android:layout_toRightOf="@id/station_info_wrapper_layout">
 
          <!-- Layout contains the Next/Previous Presets and Tune buttons and status msg text-->
          <include layout="@layout/navigate"/>
 
-     </RelativeLayout>
+     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

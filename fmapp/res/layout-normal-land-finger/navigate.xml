@@ -37,37 +37,25 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_alignParentLeft="true"
-             android:textSize="16dip"
+             android:textSize="16dp"
              android:textStyle="bold"
              android:text="@string/default_record"/>
 
-         <ImageButton android:id="@+id/btn_silent"
-             android:src="@drawable/ic_silent_mode_off"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_toLeftOf="@id/btn_presets_list"/>
-
          <Button android:id="@+id/btn_presets_list"
              android:text= "@string/default_preset_list_name"
-             android:textSize="24dip"
+             android:textSize="24dp"
              android:singleLine="true"
              android:textStyle="bold"
              android:layout_centerHorizontal="true"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content" />
 
-         <ImageButton android:id="@+id/btn_onoff"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_toRightOf="@id/btn_presets_list"
-             android:src="@drawable/ic_btn_onoff"/>
-
          <TextView android:id="@+id/sleep_msg_tv"
              android:textAppearance="?android:attr/textAppearanceMedium"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_alignParentRight="true"
-             android:textSize="16dip"
+             android:textSize="16dp"
              android:textStyle="bold"
              androidtext="@string/default_sleep"/>
 
@@ -77,76 +65,97 @@
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
          android:layout_below="@id/message_row"
-         android:layout_marginTop="1dip"
-         android:layout_marginBottom="5dip">
+         android:layout_marginTop="1dp"
+         android:layout_marginBottom="5dp">
 
          <RelativeLayout android:id="@+id/presets_upper_layout1"
              android:layout_width="wrap_content"
-             android:layout_centerInParent="true"
              android:layout_height="wrap_content">
 
              <Button android:id="@+id/presets_button_1"
                  android:text="@string/default_station"
-                 android:layout_marginLeft="10dip"
-                 android:layout_marginRight="25dip"
-                 android:textSize="24dip"
+                 android:textSize="24dp"
+                 android:layout_marginRight="10dp"
                  android:singleLine="true"
-                 android:layout_width="wrap_content"
+                 android:layout_width="75dp"
                  android:layout_height="wrap_content" />
 
              <Button android:id="@+id/presets_button_2"
                  android:text="@string/default_station"
-                 android:layout_marginRight="25dip"
-                 android:textSize="24dip"
+                 android:layout_marginRight="10dp"
+                 android:textSize="24dp"
                  android:singleLine="true"
                  android:layout_alignTop="@id/presets_button_1"
                  android:layout_alignBottom="@id/presets_button_1"
                  android:layout_toRightOf="@id/presets_button_1"
-                 android:layout_width="wrap_content"
+                 android:layout_width="75dp"
                  android:layout_height="wrap_content" />
 
              <Button android:id="@+id/presets_button_3"
                  android:text="@string/default_station"
-                 android:layout_marginRight="25dip"
-                 android:textSize="24dip"
+                 android:textSize="24dp"
                  android:singleLine="true"
                  android:layout_alignTop="@id/presets_button_2"
                  android:layout_alignBottom="@id/presets_button_2"
                  android:layout_toRightOf="@id/presets_button_2"
-                 android:layout_width="wrap_content"
+                 android:layout_width="75dp"
                  android:layout_height="wrap_content" />
+
+          </RelativeLayout>
+
+          <RelativeLayout android:id="@+id/presets_upper_layout2"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/presets_upper_layout1"
+            android:layout_height="wrap_content">
 
              <Button android:id="@+id/presets_button_4"
                  android:text="@string/default_blank"
-                 android:layout_marginRight="25dip"
-                 android:textSize="24dip"
+                 android:layout_marginRight="10dp"
+                 android:textSize="24dp"
                  android:singleLine="true"
-                 android:layout_alignTop="@id/presets_button_3"
-                 android:layout_alignBottom="@id/presets_button_3"
-                 android:layout_toRightOf="@id/presets_button_3"
-                 android:layout_width="wrap_content"
+                 android:layout_width="75dp"
                  android:layout_height="wrap_content"/>
 
              <Button android:id="@+id/presets_button_5"
                  android:text="@string/default_blank"
-                 android:layout_marginRight="25dip"
-                 android:textSize="24dip"
+                 android:layout_marginRight="10dp"
+                 android:textSize="24dp"
                  android:singleLine="true"
                  android:layout_alignTop="@id/presets_button_4"
                  android:layout_alignBottom="@id/presets_button_4"
                  android:layout_toRightOf="@id/presets_button_4"
-                 android:layout_width="wrap_content"
+                 android:layout_width="75dp"
                  android:layout_height="wrap_content" />
 
              <ImageButton android:id="@+id/btn_preset_page"
                  android:src="@drawable/ic_btn_forward"
-                 android:layout_marginRight="10dip"
                  android:layout_alignTop="@id/presets_button_5"
                  android:layout_alignBottom="@id/presets_button_5"
                  android:layout_toRightOf="@id/presets_button_5"
-                 android:layout_width="wrap_content"
+                 android:layout_width="75dp"
                  android:layout_height="wrap_content"/>
 
          </RelativeLayout>
+
+         <RelativeLayout android:id="@+id/silent_on_off_layout"
+             android:layout_width="wrap_content"
+             android:layout_centerHorizontal="true"
+             android:layout_below="@id/presets_upper_layout2"
+             android:layout_height="wrap_content">
+
+             <ImageButton android:id="@+id/btn_silent"
+                 android:src="@drawable/ic_silent_mode_off"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"/>
+
+             <ImageButton android:id="@+id/btn_onoff"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_toRightOf="@id/btn_silent"
+                 android:src="@drawable/ic_btn_onoff"/>
+
+         </RelativeLayout>
+
      </RelativeLayout>
+
 </merge>
