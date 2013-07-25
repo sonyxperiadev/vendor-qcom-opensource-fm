@@ -39,7 +39,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dip"
+        android:layout_marginTop="5dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true">
 
@@ -67,8 +67,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginTop="2dip"
-        android:layout_marginBottom="2dip"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_weight="0"
@@ -76,23 +76,23 @@
 
         <ImageButton android:id="@+id/btn_silent"
             android:src="@drawable/ic_silent_mode_off"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:layout_width="100dip"
-            android:layout_height="50dip"/>
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"/>
 
         <ImageButton android:id="@+id/btn_onoff"
             android:src="@drawable/ic_btn_onoff"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:layout_width="100dip"
-            android:layout_height="50dip"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"/>
 
     </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dip"
+        android:layout_height="1dp"
         android:background="#ffffffff"
         android:layout_above="@+id/layout_on_off"/>
 
