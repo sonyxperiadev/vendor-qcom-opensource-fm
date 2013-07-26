@@ -15,4 +15,6 @@ include $(BUILD_JAVA_LIBRARY)
 include $(LOCAL_PATH)/jni/Android.mk
 LOCAL_PATH := $(LOCAL_DIR_PATH)
 include $(LOCAL_PATH)/fmapp/Android.mk
+LOCAL_PATH := $(LOCAL_DIR_PATH)
+include $(LOCAL_PATH)/fmapp2/Android.mk
 endif # is-vendor-board-platform
