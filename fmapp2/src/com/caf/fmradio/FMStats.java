@@ -1290,6 +1290,10 @@ public class FMStats extends Activity  {
           {
              Log.d(LOGTAG, "mServiceCallbacks.onFinishActivity:");
           }
+          public void onRecordingStarted()
+          {
+             Log.d(LOGTAG, "mServiceCallbacks.onRecordingStarted:");
+          }
       };
       /* Radio Vars */
      final Handler mHandler = new Handler();

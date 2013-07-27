@@ -1,5 +1,6 @@
-/*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -24,26 +25,23 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.codeaurora.fmrecording" >
+      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.RECORD_AUDIO" />
+      <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
+      <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
 
-package com.caf.fmradio;
+<application>
 
-interface IFMRadioServiceCallbacks
-{
-  void onEnabled();
-  void onDisabled();
-  void onRadioReset();
-  void onTuneStatusChanged();
-  void onProgramServiceChanged();
-  void onRadioTextChanged();
-  void onAlternateFrequencyChanged();
-  void onSignalStrengthChanged();
-  void onSearchComplete();
-  void onSearchListComplete();
-  void onMute(boolean bMuted);
-  void onAudioUpdate(boolean bStereo);
-  void onStationRDSSupported(boolean bRDSSupported);
-  void onRecordingStopped();
-  void onExtenRadioTextChanged();
-  void onRecordingStarted();
-}
+<receiver android:name="FMRecordingReceiver">
+      <intent-filter>
+         <action android:name="codeaurora.intent.action.FM" />
+      </intent-filter>
+</receiver>
+
+<service android:name="com.codeaurora.fmrecording.FMRecordingService"></service>
+</application>
+</manifest>

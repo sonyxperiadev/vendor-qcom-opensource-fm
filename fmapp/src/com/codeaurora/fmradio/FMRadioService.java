@@ -78,6 +78,10 @@ import android.media.AudioManager;
 import android.content.ComponentName;
 import android.os.StatFs;
 import android.os.SystemClock;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.app.IntentService;
+import android.os.UserHandle;
 
 /**
  * Provides "background" FM Radio (that uses the hardware) capabilities,
@@ -160,6 +164,16 @@ public class FMRadioService extends Service
    private static final String SLEEP_EXPIRED_ACTION = "com.codeaurora.fmradio.SLEEP_EXPIRED";
    private static final String RECORD_EXPIRED_ACTION = "com.codeaurora.fmradio.RECORD_TIMEOUT";
    private static final String SERVICE_DELAYED_STOP_ACTION = "com.codeaurora.fmradio.SERVICE_STOP";
+   public static final String ACTION_FM =
+               "codeaurora.intent.action.FM";
+   public static final String ACTION_FM_RECORDING =
+           "codeaurora.intent.action.FM_Recording";
+   public static final String ACTION_FM_RECORDING_STATUS =
+           "codeaurora.intent.action.FM.Recording.Status";
+   private String mFilePath = "";
+   private BroadcastReceiver mFmRecordingStatus  = null;
+   static final int RECORD_START = 1;
+   static final int RECORD_STOP = 0;
 
    public FMRadioService() {
    }
@@ -184,7 +198,7 @@ public class FMRadioService extends Service
       registerSleepExpired();
       registerRecordTimeout();
       registerDelayedServiceStop();
-      registerExternalStorageListener();
+      registerFMRecordingStatus();
       // registering media button receiver seperately as we need to set
       // different priority for receiving media events
       registerFmMediaButtonReceiver();
@@ -233,10 +247,6 @@ public class FMRadioService extends Service
           unregisterReceiver(mHeadsetReceiver);
           mHeadsetReceiver = null;
       }
-      if( mSdcardUnmountReceiver != null ) {
-          unregisterReceiver(mSdcardUnmountReceiver);
-          mSdcardUnmountReceiver = null;
-      }
       if( mMusicCommandListener != null ) {
           unregisterReceiver(mMusicCommandListener);
           mMusicCommandListener = null;
@@ -257,6 +267,10 @@ public class FMRadioService extends Service
           unregisterReceiver(mDelayedServiceStopListener);
           mDelayedServiceStopListener = null;
       }
+      if (mFmRecordingStatus != null ) {
+          unregisterReceiver(mFmRecordingStatus);
+          mFmRecordingStatus = null;
+      }
       /* Since the service is closing, disable the receiver */
       fmOff();
 
@@ -270,38 +284,46 @@ public class FMRadioService extends Service
       super.onDestroy();
    }
 
-/**
-      * Registers an intent to listen for ACTION_MEDIA_UNMOUNTED notifications.
-      * The intent will call closeExternalStorageFiles() if the external media
-      * is going to be ejected, so applications can clean up.
-      */
-     public void registerExternalStorageListener() {
-         if (mSdcardUnmountReceiver == null) {
-             mSdcardUnmountReceiver = new BroadcastReceiver() {
+   public void registerFMRecordingStatus() {
+         if (mFmRecordingStatus == null) {
+             mFmRecordingStatus = new BroadcastReceiver() {
                  @Override
                  public void onReceive(Context context, Intent intent) {
+                     Log.d(LOGTAG, "received intent " +intent);
                      String action = intent.getAction();
-                     if ((action.equals(Intent.ACTION_MEDIA_UNMOUNTED))
-                           || (action.equals(Intent.ACTION_MEDIA_EJECT))) {
-                         Log.d(LOGTAG, "ACTION_MEDIA_UNMOUNTED Intent received");
-                         if (mFmRecordingOn == true) {
+                     if (action.equals(ACTION_FM_RECORDING_STATUS)) {
+                         Log.d(LOGTAG, "ACTION_FM_RECORDING_STATUS Intent received");
+                         int state = intent.getIntExtra("state", 0);
+                         if (state == RECORD_START) {
+                             Log.d(LOGTAG, "FM Recording started");
+                             mFmRecordingOn = true;
                              try {
-                                  stopRecording();
-                             } catch (Exception e) {
+                                  if ((mServiceInUse) && (mCallbacks != null) ) {
+                                      Log.d(LOGTAG, "start recording thread");
+                                      mCallbacks.onRecordingStarted();
+                                  } 
+                             } catch (RemoteException e) {
                                   e.printStackTrace();
                              }
-                         }
+                         } else if (state == RECORD_STOP) {
+                             Log.d(LOGTAG, "FM Recording stopped");
+                             mFmRecordingOn = false;
+                             try {
+                                  if ((mServiceInUse) && (mCallbacks != null) ) {
+                                     mCallbacks.onRecordingStopped();
+                                  }
+                             } catch (RemoteException e) {
+                                  e.printStackTrace();
+                             }
+                        }
                      }
                  }
              };
              IntentFilter iFilter = new IntentFilter();
-             iFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-             iFilter.addAction(Intent.ACTION_MEDIA_EJECT);
-             iFilter.addDataScheme("file");
-             registerReceiver(mSdcardUnmountReceiver, iFilter);
+             iFilter.addAction(ACTION_FM_RECORDING_STATUS);
+             registerReceiver(mFmRecordingStatus , iFilter);
          }
-     }
-
+   }
 
      /**
      * Registers an intent to listen for ACTION_HEADSET_PLUG
@@ -666,6 +688,20 @@ public class FMRadioService extends Service
       return true;
    }
 
+   private void sendRecordIntent(int action) {
+       Intent intent = new Intent(ACTION_FM_RECORDING);
+       intent.putExtra("state", action);
+       Log.d(LOGTAG, "Sending Recording intent for = " +action);
+       getApplicationContext().sendBroadcast(intent);
+   }
+
+   private void sendRecordServiceIntent(int action) {
+       Intent intent = new Intent(ACTION_FM);
+       intent.putExtra("state", action);
+       Log.d(LOGTAG, "Sending Recording intent for = " +action);
+       getApplicationContext().sendBroadcast(intent);
+   }
+
    private void startFM(){
        Log.d(LOGTAG, "In startFM");
        if(true == mAppShutdown) { // not to send intent to AudioManager in Shutdown
@@ -703,6 +739,7 @@ public class FMRadioService extends Service
            }
            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
                                      AudioSystem.DEVICE_STATE_AVAILABLE, "");
+           sendRecordServiceIntent(RECORD_START);
        }
        mPlaybackInProgress = true;
    }
@@ -716,6 +753,7 @@ public class FMRadioService extends Service
            Log.d(LOGTAG, "FMRadio: Requesting to stop FM");
            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
                                     AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
+           sendRecordServiceIntent(RECORD_STOP);
        }
        mPlaybackInProgress = false;
    }
@@ -729,105 +767,23 @@ public class FMRadioService extends Service
           Log.d(LOGTAG, "FMRadio: Requesting to stop FM");
           AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
                                     AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
+          sendRecordServiceIntent(RECORD_STOP);
        }
        mPlaybackInProgress = false;
    }
 
-   public boolean startRecording() {
-        Log.d(LOGTAG, "In startRecording of Recorder");
-    if( (true == mSingleRecordingInstanceSupported) &&
-        (true == mOverA2DP )) {
-                Toast.makeText( this,
-                                "playback on BT in progress,can't record now",
-                                Toast.LENGTH_SHORT).show();
-                return false;
+   public void startRecording() {
+
+       Log.d(LOGTAG, "In startRecording of Recorder");
+       if ((true == mSingleRecordingInstanceSupported) &&
+                               (true == mOverA2DP )) {
+            Toast.makeText( this,
+                      "playback on BT in progress,can't record now",
+                       Toast.LENGTH_SHORT).show();
+            return;
        }
-        stopRecording();
-
-        if (!updateAndShowStorageHint())
-            return false;
-        long maxFileSize = mStorageSpace - LOW_STORAGE_THRESHOLD;
-        mRecorder = new MediaRecorder();
-        try {
-              mRecorder.setMaxFileSize(maxFileSize);
-        } catch (RuntimeException exception) {
-
-        }
-
-        mSampleFile = null;
-        File sampleDir = Environment.getExternalStorageDirectory();
-        if (!sampleDir.canWrite()) // Workaround for broken sdcard support on
-                                    // the device.
-            sampleDir = new File("/sdcard/sdcard");
-        try {
-            mSampleFile = File
-                    .createTempFile("FMRecording", ".3gpp", sampleDir);
-        } catch (IOException e) {
-            Log.e(LOGTAG, "Not able to access SD Card");
-            Toast.makeText(this, "Not able to access SD Card", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (mRecorder == null) {
-           Toast.makeText(this,"MediaRecorder failed to create an instance",
-                            Toast.LENGTH_SHORT).show();
-           return false;
-        }
-
-        try {
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.FM_RX);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        } catch (RuntimeException exception) {
-            mRecorder.reset();
-            mRecorder.release();
-            mRecorder = null;
-            return false;
-        }
-        mRecorder.setOutputFile(mSampleFile.getAbsolutePath());
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-        } catch (IOException e) {
-            mRecorder.reset();
-            mRecorder.release();
-            mRecorder = null;
-            return false;
-        } catch (RuntimeException e) {
-            mRecorder.reset();
-            mRecorder.release();
-            mRecorder = null;
-            return false;
-        }
-        mFmRecordingOn = true;
-        mRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
-             public void onInfo(MediaRecorder mr, int what, int extra) {
-                 if ((what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) ||
-                     (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED)) {
-                     if (mFmRecordingOn) {
-                         Log.d(LOGTAG, "Maximum file size/duration reached, stopping the recording");
-                         stopRecording();
-                     }
-                     // Show the toast.
-                     Toast.makeText(FMRadioService.this, R.string.FMRecording_reach_size_limit,
-                               Toast.LENGTH_LONG).show();
-                 }
-             }
-             // from MediaRecorder.OnErrorListener
-             public void onError(MediaRecorder mr, int what, int extra) {
-                 Log.e(LOGTAG, "MediaRecorder error. what=" + what + ". extra=" + extra);
-                 if (what == MediaRecorder.MEDIA_RECORDER_ERROR_UNKNOWN) {
-                     // We may have run out of space on the sdcard.
-                     if (mFmRecordingOn) {
-                         stopRecording();
-                     }
-                     updateAndShowStorageHint();
-                 }
-             }
-        });
-
-        mSampleStart = System.currentTimeMillis();
-        return true;
-  }
+       sendRecordIntent(RECORD_START);
+   }
 
    public boolean startA2dpPlayback() {
         Log.d(LOGTAG, "In startA2dpPlayback");
@@ -925,197 +881,13 @@ public class FMRadioService extends Service
        return;
    }
 
-   private void resetRecording() {
-
-       Log.v(LOGTAG, "resetRecording()");
-
-       mFmRecordingOn = false;
-       if (mRecorder == null)
-           return;
-
-       // Send Intent for IOBUSY VOTE, because MediaRecorder.stop
-       // gets Activity context which might not be always available
-       // and would thus fail to send the intent.
-       Intent ioBusyUnVoteIntent = new Intent(IOBUSY_UNVOTE);
-       // Remove vote for io_is_busy to be turned off.
-       ioBusyUnVoteIntent.putExtra("com.android.server.CpuGovernorService.voteType", 0);
-       sendBroadcast(ioBusyUnVoteIntent);
-
-       mRecorder.stop();
-
-       mRecorder.reset();
-       mRecorder.release();
-       mRecorder = null;
-       int sampleLength = (int)((System.currentTimeMillis() - mSampleStart)/1000 );
-       if (sampleLength == 0)
-           return;
-       String state = Environment.getExternalStorageState();
-       Log.d(LOGTAG, "storage state is " + state);
-
-       if (Environment.MEDIA_MOUNTED.equals(state)) {
-           this.addToMediaDB(mSampleFile);
-       }
-       else{
-           Log.e(LOGTAG, "SD card must have removed during recording. ");
-           Toast.makeText(this, "Recording aborted", Toast.LENGTH_SHORT).show();
-       }
-       return;
-   }
-
    public void stopRecording() {
-       mFmRecordingOn = false;
-       if (mRecorder == null)
+       if (!mFmRecordingOn)
            return;
-       try {
-             mRecorder.stop();
-             mRecorder.reset();
-             mRecorder.release();
-             mRecorder = null;
-       } catch(Exception e) {
-             e.printStackTrace();
-       }
-       int sampleLength = (int)((System.currentTimeMillis() - mSampleStart)/1000 );
-       if (sampleLength == 0)
-           return;
-       String state = Environment.getExternalStorageState();
-       Log.d(LOGTAG, "storage state is " + state);
-
-       if (Environment.MEDIA_MOUNTED.equals(state)) {
-          try {
-               this.addToMediaDB(mSampleFile);
-               Toast.makeText(this,getString(R.string.save_record_file, mSampleFile.getAbsolutePath()),
-                          Toast.LENGTH_LONG).show();
-          }
-          catch(Exception e) {
-               e.printStackTrace();
-          }
-       }
-       else{
-           Log.e(LOGTAG, "SD card must have removed during recording. ");
-           Toast.makeText(this, "Recording aborted", Toast.LENGTH_SHORT).show();
-       }
-       try
-       {
-           if((mServiceInUse) && (mCallbacks != null) ) {
-               mCallbacks.onRecordingStopped();
-           }
-       } catch (RemoteException e)
-       {
-           e.printStackTrace();
-       }
+       sendRecordIntent(RECORD_STOP);
        return;
    }
 
-   /*
-    * Adds file and returns content uri.
-    */
-   private Uri addToMediaDB(File file) {
-       Log.d(LOGTAG, "In addToMediaDB");
-       Resources res = getResources();
-       ContentValues cv = new ContentValues();
-       long current = System.currentTimeMillis();
-       long modDate = file.lastModified();
-       Date date = new Date(current);
-       SimpleDateFormat formatter = new SimpleDateFormat(
-               res.getString(R.string.audio_db_title_format));
-       String title = formatter.format(date);
-
-       // Lets label the recorded audio file as NON-MUSIC so that the file
-       // won't be displayed automatically, except for in the playlist.
-       cv.put(MediaStore.Audio.Media.IS_MUSIC, "1");
-
-       cv.put(MediaStore.Audio.Media.TITLE, title);
-       cv.put(MediaStore.Audio.Media.DATA, file.getAbsolutePath());
-       cv.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
-       cv.put(MediaStore.Audio.Media.DATE_MODIFIED, (int) (modDate / 1000));
-       cv.put(MediaStore.Audio.Media.MIME_TYPE, "AUDIO_AAC_MP4");
-       cv.put(MediaStore.Audio.Media.ARTIST,
-               res.getString(R.string.audio_db_artist_name));
-       cv.put(MediaStore.Audio.Media.ALBUM,
-               res.getString(R.string.audio_db_album_name));
-       Log.d(LOGTAG, "Inserting audio record: " + cv.toString());
-       ContentResolver resolver = getContentResolver();
-       Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-       Log.d(LOGTAG, "ContentURI: " + base);
-       Uri result = resolver.insert(base, cv);
-       if (result == null) {
-           Toast.makeText(this, "Unable to save recorded audio", Toast.LENGTH_SHORT).show();
-           return null;
-       }
-       if (getPlaylistId(res) == -1) {
-           createPlaylist(res, resolver);
-       }
-       int audioId = Integer.valueOf(result.getLastPathSegment());
-       addToPlaylist(resolver, audioId, getPlaylistId(res));
-
-       // Notify those applications such as Music listening to the
-       // scanner events that a recorded audio file just created.
-       sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, result));
-       return result;
-   }
-
-   private int getPlaylistId(Resources res) {
-       Uri uri = MediaStore.Audio.Playlists.getContentUri("external");
-       final String[] ids = new String[] { MediaStore.Audio.Playlists._ID };
-       final String where = MediaStore.Audio.Playlists.NAME + "=?";
-       final String[] args = new String[] { res.getString(R.string.audio_db_playlist_name) };
-       Cursor cursor = query(uri, ids, where, args, null);
-       if (cursor == null) {
-           Log.v(LOGTAG, "query returns null");
-       }
-       int id = -1;
-       if (cursor != null) {
-           cursor.moveToFirst();
-           if (!cursor.isAfterLast()) {
-               id = cursor.getInt(0);
-           }
-           cursor.close();
-       }
-       return id;
-   }
-
-   private Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-       try {
-           ContentResolver resolver = getContentResolver();
-           if (resolver == null) {
-               return null;
-           }
-           return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
-        } catch (UnsupportedOperationException ex) {
-           return null;
-       }
-   }
-
-   private Uri createPlaylist(Resources res, ContentResolver resolver) {
-       ContentValues cv = new ContentValues();
-       cv.put(MediaStore.Audio.Playlists.NAME, res.getString(R.string.audio_db_playlist_name));
-       Uri uri = resolver.insert(MediaStore.Audio.Playlists.getContentUri("external"), cv);
-       if (uri == null) {
-           Toast.makeText(this, "Unable to save recorded audio", Toast.LENGTH_SHORT).show();
-       }
-       return uri;
-   }
-
-   private void addToPlaylist(ContentResolver resolver, int audioId, long playlistId) {
-       String[] cols = new String[] {
-               "count(*)"
-       };
-       Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId);
-       Cursor cur = resolver.query(uri, cols, null, null, null);
-       final int base;
-       if (cur != null) {
-            cur.moveToFirst();
-            base = cur.getInt(0);
-            cur.close();
-       }
-       else {
-            base = 0;
-       }
-       ContentValues values = new ContentValues();
-       values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Integer.valueOf(base + audioId));
-       values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioId);
-       resolver.insert(uri, values);
-   }
    private void fmActionOnCallState( int state ) {
    //if Call Status is non IDLE we need to Mute FM as well stop recording if
    //any. Similarly once call is ended FM should be unmuted.
@@ -1480,9 +1252,9 @@ private Runnable mSpeakerDisableTask = new Runnable() {
          return(mService.get().isMuted());
       }
 
-      public boolean startRecording()
+      public void startRecording()
       {
-         return(mService.get().startRecording());
+         mService.get().startRecording();
       }
 
       public void stopRecording()
@@ -1870,7 +1642,7 @@ private Runnable mSpeakerDisableTask = new Runnable() {
 
       if (isFmRecordingOn())
       {
-          resetRecording();
+          stopRecording();
       }
 
       AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);

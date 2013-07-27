@@ -1768,19 +1768,18 @@ public class FMRadio extends Activity
    private void startRecording() {
       if(mService != null) {
          try {
-             mRecording = mService.startRecording();
-         }catch (RemoteException e) {
-             e.printStackTrace();
-         }
-         //Initiate record timer thread here
-         if(mRecording == true) {
-             mRecordingMsgTV.setCompoundDrawablesWithIntrinsicBounds
-                                   (R.drawable.recorder_stop, 0, 0, 0);
-             int durationInMins = FmSharedPreferences.getRecordDuration();
-             Log.e(LOGTAG, "Fected duration: " + durationInMins);
-             initiateRecordDurationTimer( durationInMins );
+              mService.startRecording();
+         } catch (RemoteException e) {
+              e.printStackTrace();
          }
       }
+   }
+
+   private void startRecordingTimer() {
+      mRecording = true;
+      int durationInMins = FmSharedPreferences.getRecordDuration();
+      Log.e(LOGTAG, " Fected duration:" + durationInMins );
+      initiateRecordDurationTimer( durationInMins );
    }
 
    private void stopRecording() {
@@ -3032,6 +3031,11 @@ public class FMRadio extends Activity
       public void onRecordingStopped() {
          Log.d(LOGTAG, "mServiceCallbacks.onRecordingStopped:");
          stopRecording();
+      }
+      public void onRecordingStarted()
+      {
+         Log.d(LOGTAG, "mServiceCallbacks.onRecordingStarted:");
+         startRecordingTimer();
       }
    };
 }
