@@ -45,4 +45,5 @@ interface IFMRadioServiceCallbacks
   void onStationRDSSupported(boolean bRDSSupported);
   void onRecordingStopped();
   void onExtenRadioTextChanged();
+  void onRecordingStarted();
 }
