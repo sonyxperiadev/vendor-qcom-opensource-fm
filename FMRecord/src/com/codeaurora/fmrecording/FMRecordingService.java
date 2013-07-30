@@ -75,10 +75,10 @@ public class FMRecordingService extends Service {
 
     private File mSampleFile = null;
     private MediaRecorder mRecorder = null;
-    long mSampleStart = 0;
+    private long mSampleStart = 0;
     static final int START = 1;
     static final int STOP = 0;
-
+    private int mRecordDuration = -1;
     public void onCreate() {
 
         super.onCreate();
@@ -220,6 +220,8 @@ public class FMRecordingService extends Service {
         mRecorder = new MediaRecorder();
         try {
              mRecorder.setMaxFileSize(maxFileSize);
+             if(mRecordDuration >= 0)
+                mRecorder.setMaxDuration(mRecordDuration);
         } catch (RuntimeException exception) {
 
         }
@@ -459,6 +461,7 @@ public class FMRecordingService extends Service {
                          Log.d(TAG, "ACTION_FM_RECORDING Intent received" +state);
                          if (state == START) {
                              Log.d(TAG, "Recording start");
+                             mRecordDuration = intent.getIntExtra("record_duration", mRecordDuration);
                              startRecord();
                          } else if (state == STOP) {
                              Log.d(TAG, "Stop recording");

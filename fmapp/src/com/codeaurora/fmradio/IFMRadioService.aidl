@@ -98,5 +98,6 @@ interface IFMRadioService
     int getGoodChRmssiTh();
     int getAfJmpRmssiSamplesCnt();
     boolean setRxRepeatCount(int count);
+    long getRecordingStartTime();
 }
 
