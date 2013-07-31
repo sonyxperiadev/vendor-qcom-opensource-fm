@@ -980,6 +980,15 @@ public class FMRadioService extends Service
       }
  };
 
+   private Handler mSpeakerDisableHandler = new Handler();
+
+   private Runnable mSpeakerDisableTask = new Runnable() {
+      public void run() {
+         Log.v(LOGTAG, "Disabling Speaker");
+         AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
+      }
+   };
+
    private Handler mDelayedStopHandler = new Handler() {
       @Override
       public void handleMessage(Message msg) {
@@ -1016,19 +1025,21 @@ public class FMRadioService extends Service
                       //intentional fall through.
                   case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                       Log.v(LOGTAG, "AudioFocus: received AUDIOFOCUS_LOSS_TRANSIENT");
+                      if (true == isFmRecordingOn())
+                          stopRecording();
+                      if (mSpeakerPhoneOn) {
+                         mSpeakerDisableHandler.removeCallbacks(mSpeakerDisableTask);
+                         mSpeakerDisableHandler.postDelayed(mSpeakerDisableTask, 0);
+                      }
+                      if (true == mPlaybackInProgress) {
+                          if(mMuted)
+                             unMute();
+                          stopFM();
+                      }
                       if (mSpeakerPhoneOn) {
                           mSpeakerPhoneOn = false;
-                          if (isAnalogModeSupported()) {
+                          if (isAnalogModeSupported())
                               setAudioPath(true);
-                          }
-                          AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
-                      }
-                      if(true == isFmRecordingOn())
-                          stopRecording();
-                      if(true == mPlaybackInProgress) {
-                          if (mMuted)
-                              unMute();
-                          stopFM();
                       }
                       mStoppedOnFocusLoss = true;
                       break;
