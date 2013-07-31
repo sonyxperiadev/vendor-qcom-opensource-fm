@@ -45,6 +45,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -66,6 +67,8 @@ import android.os.SystemProperties;
 public class FMStats extends Activity  {
 
     EditText txtbox1;
+    Button button1;
+    Button button2;
     TextView tv1;
     Button SetButton;
     Button RunButton;
@@ -181,6 +184,25 @@ public class FMStats extends Activity  {
     ArrayAdapter<CharSequence> adaptFmRf;
 
     private static boolean mIsTransportSMD = false;
+
+    private static final int MPX_DCC = 0;
+    private static final int SINR_INTF = 1;
+    private static final int MIN_SINR_FIRST_STAGE = -128;
+    private static final int MAX_SINR_FIRST_STAGE = 127;
+    private static final int MIN_RMSSI_FIRST_STAGE = -128;
+    private static final int MAX_RMSSI_FIRST_STAGE = 127;
+    private static final int MIN_CF0TH12 = -2147483648;
+    private static final int MAX_CF0TH12 = 2147483647;
+    private static final int MIN_SINR_TH = -128;
+    private static final int MAX_SINR_TH = 127;
+    private static final int MIN_SINR_SAMPLES = 0;
+    private static final int MAX_SINR_SAMPLES = 255;
+    private static final int MIN_AF_JMP_RMSSI_TH = 0;
+    private static final int MAX_AF_JMP_RMSSI_TH = 65535;
+    private static final int MIN_GD_CH_RMSSI_TH = -128;
+    private static final int MAX_GD_CH_RMSSI_TH = 127;
+    private static final int MIN_AF_JMP_RMSSI_SAMPLES = 0;
+    private static final int MAX_AF_JMP_RMSSI_SAMPLES = 255;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -507,6 +529,174 @@ public class FMStats extends Activity  {
        }
     };
 
+    private View.OnClickListener mOnSetSinrFirstStageListener = new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a =  txtbox1.getText().toString();
+          try {
+              int sinr = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value entered for SINR FIRST STAGE is : " + sinr);
+              if((sinr < MIN_SINR_FIRST_STAGE) ||
+                     (sinr > MAX_SINR_FIRST_STAGE))
+                  return;
+              if(mService != null) {
+                 try {
+                     mService.setSinrFirstStage(sinr);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          } catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+              txtbox1.setText("");
+          }
+       }
+    };
+    private View.OnClickListener mOnSetRmssiFirstStageListener = new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a =  txtbox1.getText().toString();
+          try {
+              int rmssi = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value entered for RMSSI FIRST STAGE is: " + rmssi);
+              if((rmssi < MIN_RMSSI_FIRST_STAGE) ||
+                     (rmssi > MAX_RMSSI_FIRST_STAGE))
+                  return;
+              if(mService != null) {
+                 try {
+                     mService.setRmssiFirstStage(rmssi);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          } catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+              txtbox1.setText("");
+          }
+       }
+    };
+
+    private View.OnClickListener mOnSetCFOMeanThListener = new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a =  txtbox1.getText().toString();
+          try {
+              int cf0 = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value entered for CF0TH12 is: " + cf0);
+              if((cf0 < MIN_CF0TH12) ||
+                     (cf0 > MAX_CF0TH12))
+                  return;
+              if(mService != null) {
+                 try {
+                     mService.setCFOMeanTh(cf0);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          } catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+              txtbox1.setText("");
+          }
+       }
+    };
+
+    private View.OnClickListener mOnSetSearchMPXDCCListener = new View.OnClickListener() {
+       public void onClick(View v) {
+              Log.d(LOGTAG, "Value entered for search is: MPX DCC");
+              if(mService != null) {
+                 try {
+                     mService.setSearchAlgoType(MPX_DCC);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+       }
+    };
+    private View.OnClickListener mOnSetSearchSinrIntfListener = new View.OnClickListener() {
+       public void onClick(View v) {
+              Log.d(LOGTAG, "Value entered for search is: SINR INTF");
+              if(mService != null) {
+                 try {
+                     mService.setSearchAlgoType(SINR_INTF);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+       }
+    };
+
+    private View.OnClickListener mOnSetAfJmpRmssiThListener = new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a =  txtbox1.getText().toString();
+          try {
+              int th = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value entered for AfJmpRmssiTh is: " + th);
+              if((th < MIN_AF_JMP_RMSSI_TH) ||
+                     (th > MAX_AF_JMP_RMSSI_TH))
+                  return;
+              if(mService != null) {
+                 try {
+                     mService.setAfJmpRmssiTh(th);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          } catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+              txtbox1.setText("");
+          }
+       }
+    };
+
+    private View.OnClickListener mOnSetGdChRmssiThListener = new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a =  txtbox1.getText().toString();
+          try {
+              int th = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value entered for Good channel Rmssi Th is: " + th);
+              if((th < MIN_GD_CH_RMSSI_TH) ||
+                     (th > MAX_GD_CH_RMSSI_TH))
+                  return;
+              if(mService != null) {
+                 try {
+                     mService.setGoodChRmssiTh(th);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          } catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+              txtbox1.setText("");
+          }
+       }
+    };
+
+    private View.OnClickListener mOnSetAfJmpRmssiSmplsCntListener = new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a =  txtbox1.getText().toString();
+          try {
+              int cnt = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value entered for AfJmpRmssiSamples is: " + cnt);
+              if((cnt < MIN_AF_JMP_RMSSI_SAMPLES) ||
+                     (cnt > MAX_AF_JMP_RMSSI_SAMPLES))
+                  return;
+              if(mService != null) {
+                 try {
+                     mService.setAfJmpRmssiSamplesCnt(cnt);
+                 } catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          } catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+              txtbox1.setText("");
+          }
+       }
+    };
+
     public class CfgRfItemSelectedListener1 implements OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             Log.d("Table","onItemSelected is hit with " + pos);
@@ -574,8 +764,11 @@ public class FMStats extends Activity  {
     public class CfgRfItemSelectedListener2 implements OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             Log.d("Table","onItemSelected is hit with " + pos);
+            int ret = Integer.MAX_VALUE;
             txtbox1 = (EditText) findViewById(R.id.txtbox1);
             tv1 = (TextView) findViewById(R.id.label);
+            button1 = (Button)findViewById(R.id.SearchMpxDcc);
+            button2 = (Button)findViewById(R.id.SearchSinrInt);
             Button SetButton = (Button)findViewById(R.id.Setbutton);
             tLayout.setVisibility(View.INVISIBLE);
             switch(pos)
@@ -588,6 +781,12 @@ public class FMStats extends Activity  {
                     if (tv1 != null) {
                        tv1.setText(R.string.enter_SinrSmplsCnt);
                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
                     }
                     if (SetButton != null) {
                        SetButton.setText(R.string.set_SinrSmplsCnt);
@@ -604,6 +803,12 @@ public class FMStats extends Activity  {
                        tv1.setText(R.string.enter_SinrTh);
                        tv1.setVisibility(View.VISIBLE);
                     }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
                     if (SetButton != null) {
                        SetButton.setText(R.string.set_SinrTh);
                        SetButton.setVisibility(View.VISIBLE);
@@ -618,6 +823,12 @@ public class FMStats extends Activity  {
                     if (tv1 != null) {
                        tv1.setText(R.string.enter_IntfLowTh);
                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
                     }
                     if (SetButton != null) {
                        SetButton.setText(R.string.set_IntfLowTh);
@@ -634,6 +845,12 @@ public class FMStats extends Activity  {
                        tv1.setText(R.string.enter_IntfHighTh);
                        tv1.setVisibility(View.VISIBLE);
                     }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
                     if (SetButton != null) {
                        SetButton.setText(R.string.set_IntfHighTh);
                        SetButton.setVisibility(View.VISIBLE);
@@ -641,6 +858,412 @@ public class FMStats extends Activity  {
                     }
                     break;
                 case 4:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_SinrFirstStage);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_SinrFirstStage);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetSinrFirstStageListener);
+                    }
+                    break;
+                case 5:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_RmssiFirstStage);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_RmssiFirstStage);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetRmssiFirstStageListener);
+                    }
+                    break;
+                case 6:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_CF0Th12);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_CF0Th12);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetCFOMeanThListener);
+                    }
+                    break;
+                case 7:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setText(R.string.search_algo_mpx);
+                       button1.setVisibility(View.VISIBLE);
+                       button1.setOnClickListener(mOnSetSearchMPXDCCListener);
+                    }
+                    if(button2 != null) {
+                       button2.setText(R.string.search_algo_sinrint);
+                       button2.setVisibility(View.VISIBLE);
+                       button2.setOnClickListener(mOnSetSearchSinrIntfListener);
+                    }
+                    break;
+                case 8:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null)
+                           ret = mService.getSinrSamplesCnt();
+                           Log.d(LOGTAG, "Get Sinr Samples Count: " + ret);
+                           if((ret >= MIN_SINR_SAMPLES) &&
+                                  (ret <= MAX_SINR_SAMPLES))
+                              tv1.setText(" " + String.valueOf(ret));
+                    }catch (RemoteException e) {
+                    }
+                    break;
+                case 9:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null)
+                           ret = mService.getSinrTh();
+                           Log.d(LOGTAG, "Get Sinr Threshold: " + ret);
+                           if((ret >= MIN_SINR_TH) &&
+                                   (ret <= MAX_SINR_TH))
+                              tv1.setText(" " + String.valueOf(ret));
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 10:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getSinrFirstStage();
+                           Log.d(LOGTAG, "Get Sinr First Stage: " + ret);
+                           if (ret >= MIN_SINR_FIRST_STAGE &&
+                                   ret <= MAX_SINR_FIRST_STAGE)
+                               tv1.setText(" " + String.valueOf(ret));
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 11:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getRmssiFirstStage();
+                           Log.d(LOGTAG, "Get Rmssi First Stage: " + ret);
+                           if (ret >= MIN_RMSSI_FIRST_STAGE &&
+                                   ret <= MAX_RMSSI_FIRST_STAGE)
+                               tv1.setText(" " + String.valueOf(ret));
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 12:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getCFOMeanTh();
+                           Log.d(LOGTAG, "Get CF0 Threshold: " + ret);
+                           if (ret >= MIN_CF0TH12 &&
+                                   ret <= MAX_CF0TH12)
+                               tv1.setText(" " + String.valueOf(ret));
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 13:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getSearchAlgoType();
+                           Log.d(LOGTAG, "Search Type: " + ret);
+                           if (ret == MPX_DCC)
+                               tv1.setText(R.string.search_algo_mpx);
+                           else if(ret == SINR_INTF)
+                               tv1.setText(R.string.search_algo_sinrint);
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 14:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_AfJmpRmssiTh);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_AfJmpRmssiTh);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetAfJmpRmssiThListener);
+                    }
+                    break;
+                case 15:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_GdChRmssiTh);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_GdChRmssiTh);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetGdChRmssiThListener);
+                    }
+                    break;
+                case 16:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_AfJmpRmssiSmplsCnt);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_AfJmpRmssiSmplsCnt);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetAfJmpRmssiSmplsCntListener);
+                    }
+                    break;
+                case 17:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getAfJmpRmssiTh();
+                           Log.d(LOGTAG, "Get Af Jmp Rmssi Th: " + ret);
+                           if ((ret >= MIN_AF_JMP_RMSSI_TH) &&
+                                  (ret <= MAX_AF_JMP_RMSSI_TH))
+                               tv1.setText(" " + String.valueOf(ret));
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 18:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getGoodChRmssiTh();
+                           Log.d(LOGTAG, "Get GoodChRmssi Threshold: " + ret);
+                           if ((ret >= MIN_GD_CH_RMSSI_TH) &&
+                                  (ret <= MAX_GD_CH_RMSSI_TH))
+                               tv1.setText(" " + String.valueOf(ret));
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 19:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    try {
+                        if(mService != null) {
+                           ret = mService.getAfJmpRmssiSamplesCnt();
+                           Log.d(LOGTAG, "Get AfJmpRmssiSamples count: " + ret);
+                           if ((ret >= MIN_AF_JMP_RMSSI_SAMPLES) &&
+                                  (ret <= MAX_AF_JMP_RMSSI_SAMPLES))
+                               tv1.setText(" " + String.valueOf(ret));
+                        }
+                    }catch (RemoteException e) {
+
+                    }
+                    break;
+                case 20:
                     tLayout.removeAllViewsInLayout();
                     mNewRowIds = NEW_ROW_ID;
                     tLayout.setVisibility(View.VISIBLE);
@@ -652,6 +1275,12 @@ public class FMStats extends Activity  {
                     }
                     if (SetButton != null) {
                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
                     }
                     adaptRfCfg.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinOptionFmRf.setAdapter(adaptRfCfg);

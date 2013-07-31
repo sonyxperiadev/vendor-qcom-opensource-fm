@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (c) 2011, 2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -86,6 +86,21 @@
                android:layout_height="100dp"
                android:layout_below="@id/txtbox1"
                android:textSize="15sp"
+               android:visibility="gone"/>
+
+           <Button
+               android:id="@+id/SearchMpxDcc"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/search_algo_mpx"
+               android:visibility="gone"/>
+
+           <Button
+               android:id="@+id/SearchSinrInt"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/search_algo_sinrint"
+               android:layout_below="@id/SearchMpxDcc"
                android:visibility="gone"/>
 
        </RelativeLayout>

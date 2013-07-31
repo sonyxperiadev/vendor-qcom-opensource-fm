@@ -229,7 +229,20 @@
     <string name="station_list_delete_station_prompt">Are you sure to delete <xliff:g id="name">%s</xliff:g> .</string>
     <string name="station_name_empty">Station name is empty, please input again.</string>
     <string name="station_name_exist">There is already a station named \"<xliff:g id="name">%s</xliff:g>\". Please input a different name.</string>
-
+    <string name="enter_SinrFirstStage">Enter Sinr First Stage</string>
+    <string name="set_SinrFirstStage">Config Sinr First Stage</string>
+    <string name="enter_RmssiFirstStage">Enter Rmssi First Stage</string>
+    <string name="set_RmssiFirstStage">Config Rmssi First Stage</string>
+    <string name="enter_CF0Th12">Enter CF0 Threshold</string>
+    <string name="set_CF0Th12">Config CF0 Threshold</string>
+    <string name="search_algo_mpx">MPX_DCC Algo</string>
+    <string name="search_algo_sinrint">SINR_INTF Algo</string>
+    <string name="enter_AfJmpRmssiTh">Enter Af Jump Rmssi Threshold</string>
+    <string name="set_AfJmpRmssiTh">Config Af Jump Rmssi Threshold</string>
+    <string name="enter_GdChRmssiTh">Enter Good Channel Rmssi Threshold</string>
+    <string name="set_GdChRmssiTh">Config Good Channel Rmssi Threshold</string>
+    <string name="enter_AfJmpRmssiSmplsCnt">Enter Af Jump Rmssi Samples count</string>
+    <string name="set_AfJmpRmssiSmplsCnt">Config Af Jump Rmssi Samples count</string>
     <string name="rt_plus_tags">Tags</string>
 
 </resources>

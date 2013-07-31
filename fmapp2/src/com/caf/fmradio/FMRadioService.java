@@ -1389,6 +1389,70 @@ public class FMRadioService extends Service
       {
           return (mService.get().setIntfDetHighTh(intfHighTh));
       }
+      public int getSearchAlgoType()
+      {
+          return (mService.get().getSearchAlgoType());
+      }
+      public boolean setSearchAlgoType(int searchType)
+      {
+          return (mService.get().setSearchAlgoType(searchType));
+      }
+      public int getSinrFirstStage()
+      {
+          return (mService.get().getSinrFirstStage());
+      }
+      public boolean setSinrFirstStage(int sinr)
+      {
+          return (mService.get().setSinrFirstStage(sinr));
+      }
+      public int getRmssiFirstStage()
+      {
+          return (mService.get().getRmssiFirstStage());
+      }
+      public boolean setRmssiFirstStage(int rmssi)
+      {
+          return (mService.get().setRmssiFirstStage(rmssi));
+      }
+      public int getCFOMeanTh()
+      {
+          return (mService.get().getCFOMeanTh());
+      }
+      public boolean setCFOMeanTh(int th)
+      {
+          return (mService.get().setCFOMeanTh(th));
+      }
+      public int getSinrSamplesCnt()
+      {
+          return (mService.get().getSinrSamplesCnt());
+      }
+      public int getSinrTh()
+      {
+          return (mService.get().getSinrTh());
+      }
+      public int getAfJmpRmssiTh()
+      {
+          return (mService.get().getAfJmpRmssiTh());
+      }
+      public boolean setAfJmpRmssiTh(int afJmpRmssiTh)
+      {
+          return (mService.get().setAfJmpRmssiTh(afJmpRmssiTh));
+      }
+      public int getGoodChRmssiTh()
+      {
+          return (mService.get().getGoodChRmssiTh());
+      }
+      public boolean setGoodChRmssiTh(int gdChRmssiTh)
+      {
+          return (mService.get().setGoodChRmssiTh(gdChRmssiTh));
+      }
+      public int getAfJmpRmssiSamplesCnt()
+      {
+          return (mService.get().getAfJmpRmssiSamplesCnt());
+      }
+      public boolean setAfJmpRmssiSamplesCnt(int afJmpRmssiSmplsCnt)
+      {
+          return (mService.get().setAfJmpRmssiSamplesCnt(afJmpRmssiSmplsCnt));
+      }
    }
    private final IBinder mBinder = new ServiceStub(this);
 
@@ -2702,7 +2766,103 @@ public class FMRadioService extends Service
       else
          return false;
    }
+   public int getSearchAlgoType() {
+       if(mReceiver != null)
+          return mReceiver.getSearchAlgoType();
+       else
+          return -1;
+   }
+   public boolean setSearchAlgoType(int searchType) {
+        if(mReceiver != null)
+           return mReceiver.setSearchAlgoType(searchType);
+        else
+           return false;
+   }
+   public int getSinrFirstStage() {
+        if(mReceiver != null)
+           return mReceiver.getSinrFirstStage();
+        else
+           return Integer.MAX_VALUE;
+   }
+   public boolean setSinrFirstStage(int sinr) {
+        if(mReceiver != null)
+           return mReceiver.setSinrFirstStage(sinr);
+        else
+           return false;
+   }
+   public int getRmssiFirstStage() {
+        if(mReceiver != null)
+           return mReceiver.getRmssiFirstStage();
+        else
+           return Integer.MAX_VALUE;
+   }
+   public boolean setRmssiFirstStage(int rmssi) {
+         if(mReceiver != null)
+            return mReceiver.setRmssiFirstStage(rmssi);
+         else
+            return false;
+   }
+   public int getCFOMeanTh() {
+          if(mReceiver != null)
+             return mReceiver.getCFOMeanTh();
+          else
+             return Integer.MAX_VALUE;
+   }
+   public boolean setCFOMeanTh(int th) {
+          if(mReceiver != null)
+             return mReceiver.setCFOMeanTh(th);
+          else
+             return false;
+   }
+   public int getSinrSamplesCnt() {
+          if(mReceiver != null)
+             return mReceiver.getSINRsamples();
+          else
+             return Integer.MAX_VALUE;
+   }
+   public int getSinrTh() {
+          if(mReceiver != null)
+             return mReceiver.getSINRThreshold();
+          else
+             return Integer.MAX_VALUE;
+   }
 
+   boolean setAfJmpRmssiTh(int afJmpRmssiTh) {
+          if(mReceiver != null)
+             return mReceiver.setAFJumpRmssiTh(afJmpRmssiTh);
+          else
+             return false;
+   }
+   boolean setGoodChRmssiTh(int gdChRmssiTh) {
+          if(mReceiver != null)
+             return mReceiver.setGdChRmssiTh(gdChRmssiTh);
+          else
+             return false;
+   }
+   boolean setAfJmpRmssiSamplesCnt(int afJmpRmssiSmplsCnt) {
+          if(mReceiver != null)
+             return mReceiver.setAFJumpRmssiSamples(afJmpRmssiSmplsCnt);
+          else
+             return false;
+   }
+   int getAfJmpRmssiTh() {
+          if(mReceiver != null)
+             return mReceiver.getAFJumpRmssiTh();
+          else
+             return Integer.MIN_VALUE;
+   }
+   int getGoodChRmssiTh() {
+          if(mReceiver != null)
+             return mReceiver.getGdChRmssiTh();
+          else
+             return Integer.MAX_VALUE;
+   }
+   int getAfJmpRmssiSamplesCnt() {
+          if(mReceiver != null)
+             return mReceiver.getAFJumpRmssiSamples();
+          else
+             return Integer.MIN_VALUE;
+   }
    private void setAlarmSleepExpired (long duration) {
        Intent i = new Intent(SLEEP_EXPIRED_ACTION);
        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
