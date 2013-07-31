@@ -1453,6 +1453,10 @@ public class FMRadioService extends Service
       {
           return (mService.get().setAfJmpRmssiSamplesCnt(afJmpRmssiSmplsCnt));
       }
+      public boolean setRxRepeatCount(int count)
+      {
+           return (mService.get().setRxRepeatCount(count));
+      }
    }
    private final IBinder mBinder = new ServiceStub(this);
 
@@ -2906,6 +2910,13 @@ public class FMRadioService extends Service
        cancelAlarmRecordTimeout();
        cancelAlarmDealyedServiceStop();
    }
+   public boolean setRxRepeatCount(int count) {
+      if(mReceiver != null)
+         return mReceiver.setPSRxRepeatCount(count);
+      else
+         return false;
+   }
+
    //handling the sleep and record stop when FM App not in focus
    private void delayedStop(long duration, int nType) {
        int whatId = (nType == STOP_SERVICE) ? STOPSERVICE_ONSLEEP: STOPRECORD_ONTIMEOUT;

@@ -244,5 +244,7 @@
     <string name="enter_AfJmpRmssiSmplsCnt">Enter Af Jump Rmssi Samples count</string>
     <string name="set_AfJmpRmssiSmplsCnt">Config Af Jump Rmssi Samples count</string>
     <string name="rt_plus_tags">Tags</string>
+    <string name="enter_RxRePeatCount">Enter RxRePeat count</string>
+    <string name="set_RxRePeatCount">Config RxRePeat count</string>
 
 </resources>

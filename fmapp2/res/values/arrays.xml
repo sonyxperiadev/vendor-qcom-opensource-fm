@@ -359,6 +359,7 @@
       <item> Get GoodChRmssi Threshold</item>
       <item> Get AfJmpRmssi Samples count</item>
       <item> RF Statistics</item>
+      <item> Set RXREPEAT Count</item>
   </string-array>
 
   <string-array name="stats_options">
