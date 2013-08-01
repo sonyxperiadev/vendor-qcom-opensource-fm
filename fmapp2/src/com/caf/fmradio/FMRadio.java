@@ -460,24 +460,13 @@ public class FMRadio extends Activity
               }
           }
       }
-      if(isRecordTimerActive()) {
+      if(isRecording()) {
           try {
               if (null != mRecordUpdateHandlerThread) {
                   mRecordUpdateHandlerThread.interrupt();
               }
           }catch (NullPointerException e) {
               e.printStackTrace();
-          }
-          long rtimeNow = ((SystemClock.elapsedRealtime()));
-          if (rtimeNow < mRecordDuration) {
-              try {
-                if (null != mService) {
-                    mService.delayedStop((mRecordDuration - rtimeNow),
-                                              FMRadioService.STOP_RECORD);
-                }
-              }catch (Exception e) {
-                e.printStackTrace();
-              }
           }
       }
       super.onStop();
@@ -505,8 +494,8 @@ public class FMRadio extends Activity
           }
           initiateSleepThread();
       }
-      if(isRecordTimerActive()) {
-          Log.d(LOGTAG, "isRecordTimerActive is true");
+      if(isRecording()) {
+          Log.d(LOGTAG,"isRecordTimerActive is true");
           try {
             if (null != mService) {
                 mService.cancelDelayedStop(FMRadioService.STOP_RECORD);
@@ -774,66 +763,35 @@ public class FMRadio extends Activity
    private static final int RECORDTIMER_EXPIRED = 0x1003;
    private static final int RECORDTIMER_UPDATE = 0x1004;
 
-   private boolean hasRecordTimerExpired() {
-      boolean expired = true;
-      /* If record duration is 'until stopped' then return false and exit */
-      if (mRecordUntilStopped)
-          return false;
-      if (isRecordTimerActive()) {
-         long timeNow = ((SystemClock.elapsedRealtime()));
-         //Log.d(LOGTAG, "hasSleepTimerExpired - " + mSleepAtPhoneTime + " now: "+ timeNow);
-         if ((mRecording == false) || (timeNow < mRecordDuration)) {
-             expired = false;
-         }
-      }
-      return expired;
-   }
-
-   private boolean isRecordTimerActive() {
-      boolean active = false;
-      if (mRecordDuration > 0) {
-          active = true;
-      }
-      return active;
-   }
-
    private void updateExpiredRecordTime() {
       int vis = View.VISIBLE;
-      if (mRecordUntilStopped || isRecordTimerActive()) {
+      if(isRecording())
+      {
          long timeNow = ((SystemClock.elapsedRealtime()));
-         if (mRecordUntilStopped || (mRecordDuration >= timeNow)) {
-            long seconds = (timeNow - mRecordStartTime) / 1000;
-            String Msg = makeTimeString(seconds);
-            mRecordingMsgTV.setText(Msg);
-         }else {
-            /* Clean up timer */
-            mRecordDuration = 0;
-         }
+         long seconds = (timeNow - getRecordingStartTime()) / 1000;
+         String Msg = makeTimeString(seconds);
+         mRecordingMsgTV.setText(Msg);
+         mRecordingMsgTV.setVisibility(vis);
       }
-      mRecordingMsgTV.setVisibility(vis);
    }
 
    /* Recorder Thread processing */
    private Runnable doRecordProcessing = new Runnable() {
       public void run() {
-         boolean recordTimerExpired;
-         if (mRecordUntilStopped) {
-             recordTimerExpired = false;
-         }else {
-             recordTimerExpired = hasRecordTimerExpired();
-         }
-         while ((recordTimerExpired == false) &&
-                  (!Thread.currentThread().isInterrupted())) {
-            try {
-                Thread.sleep(500);
-                Message statusUpdate = new Message();
-                statusUpdate.what = RECORDTIMER_UPDATE;
-                mUIUpdateHandlerHandler.sendMessage(statusUpdate);
-                recordTimerExpired = hasRecordTimerExpired();
-            }catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+         while (isRecording() &&
+                 (!Thread.currentThread().isInterrupted()))
+         {
+            try
+            {
+               Thread.sleep(500);
+               Message statusUpdate = new Message();
+               statusUpdate.what = RECORDTIMER_UPDATE;
+               mUIUpdateHandlerHandler.sendMessage(statusUpdate);
+            } catch (InterruptedException e)
+            {
+               Thread.currentThread().interrupt();
             }
-            if(true == recordTimerExpired) {
+            if(!isRecording()) {
                Message finished = new Message();
                finished.what = RECORDTIMER_EXPIRED;
                mUIUpdateHandlerHandler.sendMessage(finished);
@@ -842,24 +800,22 @@ public class FMRadio extends Activity
       }
    };
 
-   private static long mRecordDuration = 0;
-   private static long mRecordStartTime = 0;
-   private static boolean mRecordUntilStopped = false;
    private Thread mRecordUpdateHandlerThread = null;
 
-   private void initiateRecordDurationTimer(long mins) {
+   private long getRecordingStartTime() {
 
-      if(mins == FmSharedPreferences.RECORD_DUR_INDEX_3_VAL) {
-          mRecordUntilStopped = true;
-          mRecordStartTime = SystemClock.elapsedRealtime();
-      }else {
-          mRecordUntilStopped = false;
-          mRecordDuration = (mRecordStartTime = SystemClock.elapsedRealtime())
-                                   +
-                            (mins * 60 * 1000);
+      if(mService == null)
+         return 0;
+
+      try {
+           return mService.getRecordingStartTime();
+      }catch(RemoteException e) {
+           return 0;
       }
+   }
 
-      Log.d(LOGTAG, "Stop Recording in mins: " + mins);
+   private void initiateRecordDurationTimer(long mins ) {
+      Log.d(LOGTAG, "Stop Recording in mins : " + mins);
       initiateRecordThread();
     }
     private void initiateRecordThread() {
@@ -1775,11 +1731,27 @@ public class FMRadio extends Activity
       }
    }
 
+   private void setRecordingStopImage() {
+       if(null != mRecordingMsgTV) {
+          mRecordingMsgTV.setCompoundDrawablesWithIntrinsicBounds
+                           (R.drawable.recorder_stop, 0, 0, 0);
+       }
+   }
+
+   private void setRecordingStartImage() {
+       if(null != mRecordingMsgTV) {
+          mRecordingMsgTV.setCompoundDrawablesWithIntrinsicBounds
+                           (R.drawable.recorder_start, 0, 0, 0);
+       }
+   }
+
    private void startRecordingTimer() {
       mRecording = true;
       int durationInMins = FmSharedPreferences.getRecordDuration();
       Log.e(LOGTAG, " Fected duration:" + durationInMins );
       initiateRecordDurationTimer( durationInMins );
+      setRecordingStopImage();
+      invalidateOptionsMenu();
    }
 
    private void stopRecording() {
@@ -1790,8 +1762,7 @@ public class FMRadio extends Activity
        }
        if(null != mRecordingMsgTV) {
           mRecordingMsgTV.setText("");
-          mRecordingMsgTV.setCompoundDrawablesWithIntrinsicBounds
-                           (R.drawable.recorder_start, 0, 0, 0);
+          setRecordingStartImage();
        }
        if (mService != null) {
            try {
@@ -1800,7 +1771,7 @@ public class FMRadio extends Activity
               e.printStackTrace();
            }
         }
-        mRecordDuration = 0;
+        invalidateOptionsMenu();
    }
 
    private boolean isRecording() {
@@ -1873,6 +1844,11 @@ public class FMRadio extends Activity
          invalidateOptionsMenu();
          if ((mRecordingMsgTV != null) && !isRecording()) {
              mRecordingMsgTV.setText("");
+         }
+         if(isRecording()) {
+            setRecordingStopImage();
+         }else {
+            setRecordingStartImage();
          }
       }else {
          if (mRadioTextScroller != null) {
@@ -2376,13 +2352,11 @@ public class FMRadio extends Activity
             }
          case RECORDTIMER_EXPIRED: {
                Log.d(LOGTAG, "mUIUpdateHandlerHandler - RECORDTIMER_EXPIRED");
-               mRecordDuration = 0;
                //Clear the Recorder text
                mRecordingMsgTV.setText("");
                if (mRecording != false) {
                   DebugToasts("Stop Recording", Toast.LENGTH_SHORT);
                   stopRecording();
-                  invalidateOptionsMenu();
                }
               return;
             }
@@ -2921,16 +2895,7 @@ public class FMRadio extends Activity
                e.printStackTrace();
             }
             if (isRecording()) {
-                mRecordingMsgTV.setCompoundDrawablesWithIntrinsicBounds
-                                  (R.drawable.recorder_stop, 0, 0, 0);
                 initiateRecordThread();
-            }else if((mRecordDuration > 0) &&
-                      (mRecordUpdateHandlerThread != null)) {
-                mRecordUpdateHandlerThread.interrupt();
-                if(mRecordingMsgTV != null) {
-                   mRecordingMsgTV.setText("");
-                }
-                mRecordDuration = 0;
             }
             return;
          }else {
