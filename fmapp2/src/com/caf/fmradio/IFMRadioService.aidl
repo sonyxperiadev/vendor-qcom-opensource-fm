@@ -69,5 +69,6 @@ interface IFMRadioService
     int getAfJmpRmssiTh();
     int getGoodChRmssiTh();
     int getAfJmpRmssiSamplesCnt();
+    boolean setRxRepeatCount(int count);
 }
 

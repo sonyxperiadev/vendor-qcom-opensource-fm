@@ -431,6 +431,30 @@ public class FMStats extends Activity  {
        }
     };
 
+    private View.OnClickListener mOnSetRxRePeatCount = new View.OnClickListener() {
+        public void onClick(View v) {
+            String a;
+            a =  txtbox1.getText().toString();
+            try {
+                 int count = Integer.parseInt(a);
+                 Log.d(LOGTAG, "Value entered for mOnSetRxRePeatCount: " + count);
+                 if((count < 0) ||
+                     (count > 255))
+                     return;
+                 if(mService != null) {
+                    try {
+                         mService.setRxRepeatCount(count);
+                    } catch (RemoteException e) {
+                         e.printStackTrace();
+                    }
+                 }
+            } catch (NumberFormatException e) {
+                 Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+                 txtbox1.setText("");
+            }
+        }
+    };
+
     private View.OnClickListener mOnSetSigThListener = new View.OnClickListener() {
        public void onClick(View v) {
           String a;
@@ -1285,6 +1309,21 @@ public class FMStats extends Activity  {
                     adaptRfCfg.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinOptionFmRf.setAdapter(adaptRfCfg);
                     spinOptionFmRf.setOnItemSelectedListener(mSpinRfCfgListener);
+                    break;
+                case 21:
+                    if (txtbox1 != null) {
+                        txtbox1.setText(R.string.type_rd);
+                        txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText(R.string.enter_RxRePeatCount);
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setText(R.string.set_RxRePeatCount);
+                        SetButton.setVisibility(View.VISIBLE);
+                        SetButton.setOnClickListener(mOnSetRxRePeatCount);
+                    }
                     break;
             }
         }
