@@ -902,7 +902,7 @@ public class FMRadioService extends Service
            boolean bTempSpeaker = mSpeakerPhoneOn; //need to restore SpeakerPhone
            boolean bTempMute = mMuted;// need to restore Mute status
            int bTempCall = mCallStatus;//need to restore call status
-           if (fmOff()) {
+           if (isFmOn() && fmOff()) {
                if((mServiceInUse) && (mCallbacks != null)) {
                    try {
                         mCallbacks.onDisabled();
@@ -1037,9 +1037,8 @@ public class FMRadioService extends Service
                           stopFM();
                       }
                       if (mSpeakerPhoneOn) {
-                          mSpeakerPhoneOn = false;
                           if (isAnalogModeSupported())
-                              setAudioPath(true);
+                              setAudioPath(false);
                       }
                       mStoppedOnFocusLoss = true;
                       break;
