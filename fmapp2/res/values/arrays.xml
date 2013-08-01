@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (c) 2009, 2011, 2012 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009, 2011-2013 The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -328,7 +328,7 @@
       <item> Get Station Parameters Repeat 20 times</item>
       <item> Get Search  station parameters</item>
       <item> Get FM Band sweep parameters</item>
-      <item> Configure FM Search Parameters</item>
+      <item> Configure Performance Parameters</item>
   </string-array>
 
   <string-array name="cfg_rf1">
@@ -342,12 +342,28 @@
       <item> Set SINR Threshold</item>
       <item> Set IntfDetoutLow Threshold</item>
       <item> Set IntfDetoutHigh Threshold</item>
+      <item> Set SinrFirstStage</item>
+      <item> Set RmssiFirstStage</item>
+      <item> Set CF0Th12</item>
+      <item> Set SearchAlgo Type</item>
+      <item> Get SINR Samples Count</item>
+      <item> Get SINR Threshold</item>
+      <item> Get SinrFirstStage</item>
+      <item> Get RmssiFirstStage</item>
+      <item> Get CF0Th12</item>
+      <item> Get Search Algo Type</item>
+      <item> Set AfJmpRmssi Threshold</item>
+      <item> Set GoodChRmssi Threshold</item>
+      <item> Set AfJmpRmssi Samples count</item>
+      <item> Get AfJmpRmssi Threshold</item>
+      <item> Get GoodChRmssi Threshold</item>
+      <item> Get AfJmpRmssi Samples count</item>
       <item> RF Statistics</item>
   </string-array>
 
   <string-array name="stats_options">
       <item> Select the option</item>
-      <item> Configure FM Search parameters</item>
+      <item> Configure Performance parameters</item>
       <item> RF Statistics</item>
   </string-array>
 

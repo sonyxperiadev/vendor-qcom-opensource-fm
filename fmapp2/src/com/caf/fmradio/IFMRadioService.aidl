@@ -53,5 +53,21 @@ interface IFMRadioService
     boolean setIntfDetLowTh(int intfLowTh);
     boolean setIntfDetHighTh(int intfHighTh);
     String getExtenRadioText();
+    int getSinrSamplesCnt();
+    int getSinrTh();
+    int getSearchAlgoType();
+    boolean setSearchAlgoType(int searchType);
+    int getSinrFirstStage();
+    boolean setSinrFirstStage(int sinr);
+    int getRmssiFirstStage();
+    boolean setRmssiFirstStage(int rmssi);
+    int getCFOMeanTh();
+    boolean setCFOMeanTh(int cf0);
+    boolean setAfJmpRmssiTh(int afJmpRmssiTh);
+    boolean setGoodChRmssiTh(int gdChRmssiTh);
+    boolean setAfJmpRmssiSamplesCnt(int afJmpRmssiSmplsCnt);
+    int getAfJmpRmssiTh();
+    int getGoodChRmssiTh();
+    int getAfJmpRmssiSamplesCnt();
 }
 
