@@ -990,11 +990,11 @@ public class FmSharedPreferences
         }
         case REGIONAL_BAND_POLAND:
         {
-          /*POLAND : 87500 TO 108000 IN 50 KHZ STEPS*/
+          /*POLAND : 87500 TO 108000 IN 100 KHZ STEPS*/
           mFMConfiguration.setRadioBand(FmReceiver.FM_EU_BAND);
-          mFMConfiguration.setChSpacing(FmReceiver.FM_CHSPACE_50_KHZ);
+          mFMConfiguration.setChSpacing(FmReceiver.FM_CHSPACE_100_KHZ);
           mFMConfiguration.setLowerLimit(87500);
-          mFrequencyBand_Stepsize = 50;
+          mFrequencyBand_Stepsize = 100;
           break;
         }
         case REGIONAL_BAND_PORTUGAL:
