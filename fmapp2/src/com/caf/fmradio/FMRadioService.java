@@ -731,8 +731,10 @@ public class FMRadioService extends Service
            //ACTION_FM=1 to AudioManager, the previous state of Speaker we set
            //need not be retained by the Audio Manager.
            if (isSpeakerEnabled()) {
-                   mSpeakerPhoneOn = true;
-                   AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_SPEAKER);
+               mSpeakerPhoneOn = true;
+               AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_SPEAKER);
+           } else {
+               AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
            }
            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
                                AudioSystem.DEVICE_STATE_AVAILABLE, "");
