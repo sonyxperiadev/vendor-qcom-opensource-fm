@@ -247,4 +247,17 @@
     <string name="enter_RxRePeatCount">Enter RxRePeat count</string>
     <string name="set_RxRePeatCount">Config RxRePeat count</string>
 
+    <string name="usr_def_band_min">Lower Freq Limit(In Mhz)</string>
+    <string name="usr_def_band_max">Higher Freq Limit(In Mhz)</string>
+    <string name="sel_chanl_spacing">Select Channel Spacing</string>
+    <string name="chanl_spacing">Channel Spacing</string>
+
+    <string name="band_method_prompt">Select Method</string>
+    <string name="enter_start_delay_time">Start Delay Time</string>
+    <string name="enter_dwell_time">Dwell Time</string>
+    <string name="band_sweep_setting">Sweep Setting</string>
+    <string name="band_sweep_setting_set">Set</string>
+    <string name="band_sweep_setting_cancel">Cancel</string>
+    <string name="band_sweep_choose">Choose Band Sweep Method</string>
+
 </resources>
