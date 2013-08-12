@@ -73,7 +73,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="settings_revert_defaults_summary">清除所有設定</string>
     <string name="audio_type_stereo">立體聲</string>
     <string name="audio_type_mono">單聲道</string>
-    <string name="spaceIsLow_content">USB 存儲設備空間不足，請更改錄音時長設置，或刪除某些錄音或者其他檔案。</string>
     <string name="alert_dialog_ok">確定</string>
     <string name="alert_dialog_cancel">取消</string>
     <string name="search_dialog_title">搜索電台</string>
@@ -96,6 +95,4 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="station_name_exist">已存在名為\"<xliff:g id="name">%s</xliff:g>\"的電台，請輸入其他名稱。</string>
     <string name="dialog_presetlist_rename_title">請輸入名字</string>
 
-    <!-- prompt message for stopping record -->
-    <string name="save_record_file">錄音已保存至 "<xliff:g id="record_file">%1$s</xliff:g>"</string>
 </resources>
