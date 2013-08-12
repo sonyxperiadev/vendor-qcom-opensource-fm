@@ -449,7 +449,6 @@ public class FmSharedPreferences
       mTunedFrequency = sp.getInt(PREF_LAST_TUNED_FREQUENCY, DEFAULT_NO_FREQUENCY);
       mRecordDuration = sp.getInt(LAST_RECORD_DURATION, RECORD_DUR_INDEX_0_VAL);
       mAFAutoSwitch = sp.getBoolean(LAST_AF_JUMP_VALUE, true);
-      mAudioOutputMode = sp.getBoolean(AUDIO_OUTPUT_MODE, true);
      /* Reset the Lists before reading the preferences */
       mListOfPlists.clear();
 
