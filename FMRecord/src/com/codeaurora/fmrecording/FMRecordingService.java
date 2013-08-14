@@ -61,7 +61,6 @@ import android.os.StatFs;
 public class FMRecordingService extends Service {
     private static final String TAG     = "FMRecordingService";
     private BroadcastReceiver mFmRecordingReceiver = null;
-    private BroadcastReceiver mSdcardUnmountReceiver = null;
     public static final long UNAVAILABLE = -1L;
     public static final long PREPARING = -2L;
     public static final long UNKNOWN_SIZE = -3L;
@@ -84,7 +83,6 @@ public class FMRecordingService extends Service {
         super.onCreate();
         Log.d(TAG, "FMRecording Service onCreate");
         registerRecordingListner();
-        registerExternalStorageListener();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -100,7 +98,6 @@ public class FMRecordingService extends Service {
             stopRecord();
         }
         unregisterBroadCastReceiver(mFmRecordingReceiver);
-        unregisterBroadCastReceiver(mSdcardUnmountReceiver);
         super.onDestroy();
     }
 
@@ -116,38 +113,6 @@ public class FMRecordingService extends Service {
            myreceiver = null;
        }
    }
-    /**
-      * Registers an intent to listen for ACTION_MEDIA_UNMOUNTED notifications.
-      * The intent will call closeExternalStorageFiles() if the external media
-      * is going to be ejected, so applications can clean up.
-      */
-    private void registerExternalStorageListener() {
-        if (mSdcardUnmountReceiver == null) {
-            mSdcardUnmountReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
-                    if ((action.equals(Intent.ACTION_MEDIA_UNMOUNTED))
-                         || (action.equals(Intent.ACTION_MEDIA_EJECT))) {
-
-                         Log.d(TAG, "ACTION_MEDIA_UNMOUNTED Intent received");
-                         if (mFmRecordingOn == true) {
-                             try {
-                                  stopRecord();
-                             } catch (Exception e) {
-                                  e.printStackTrace();
-                             }
-                         }
-                    }
-                }
-            };
-            IntentFilter iFilter = new IntentFilter();
-            iFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-            iFilter.addAction(Intent.ACTION_MEDIA_EJECT);
-            iFilter.addDataScheme("file");
-            registerReceiver(mSdcardUnmountReceiver, iFilter);
-        }
-    }
 
     private static long getAvailableSpace() {
         String state = Environment.getExternalStorageState();
