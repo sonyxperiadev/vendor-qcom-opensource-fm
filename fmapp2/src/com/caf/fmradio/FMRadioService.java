@@ -294,6 +294,7 @@ public class FMRadioService extends Service
                          if (state == RECORD_START) {
                              Log.d(LOGTAG, "FM Recording started");
                              mFmRecordingOn = true;
+                             mSampleStart = SystemClock.elapsedRealtime();
                              try {
                                   if ((mServiceInUse) && (mCallbacks != null) ) {
                                       Log.d(LOGTAG, "start recording thread");
@@ -312,6 +313,7 @@ public class FMRadioService extends Service
                              } catch (RemoteException e) {
                                   e.printStackTrace();
                              }
+                             mSampleStart = 0;
                         }
                      }
                  }
@@ -688,6 +690,14 @@ public class FMRadioService extends Service
    private void sendRecordIntent(int action) {
        Intent intent = new Intent(ACTION_FM_RECORDING);
        intent.putExtra("state", action);
+       if(action == RECORD_START) {
+          int mRecordDuration = -1;
+          if(FmSharedPreferences.getRecordDuration() !=
+             FmSharedPreferences.RECORD_DUR_INDEX_3_VAL) {
+             mRecordDuration = (FmSharedPreferences.getRecordDuration() * 60 * 1000);
+          }
+          intent.putExtra("record_duration", mRecordDuration);
+        }
        Log.d(LOGTAG, "Sending Recording intent for = " +action);
        getApplicationContext().sendBroadcast(intent);
    }
@@ -1468,6 +1478,10 @@ public class FMRadioService extends Service
       public boolean setRxRepeatCount(int count)
       {
            return (mService.get().setRxRepeatCount(count));
+      }
+      public long getRecordingStartTime()
+      {
+           return (mService.get().getRecordingStartTime());
       }
    }
    private final IBinder mBinder = new ServiceStub(this);
@@ -2929,6 +2943,9 @@ public class FMRadioService extends Service
          return false;
    }
 
+   public long getRecordingStartTime() {
+      return mSampleStart;
+   }
    //handling the sleep and record stop when FM App not in focus
    private void delayedStop(long duration, int nType) {
        int whatId = (nType == STOP_SERVICE) ? STOPSERVICE_ONSLEEP: STOPRECORD_ONTIMEOUT;
