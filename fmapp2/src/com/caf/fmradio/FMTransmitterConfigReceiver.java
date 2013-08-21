@@ -36,6 +36,7 @@ import android.content.ComponentName;
 import android.util.Log;
 import android.os.SystemProperties;
 import java.io.FileReader;
+import java.io.File;
 import java.lang.String;
 
 
@@ -57,7 +58,12 @@ public class FMTransmitterConfigReceiver extends BroadcastReceiver {
             if ("msm7630_surf".equals(SystemProperties.get("ro.board.platform"))) {
                 Log.d(TAG,"this is msm7630_surf");
                 try {
-                    socinfo_fd = new FileReader("/sys/devices/system/soc/soc0/build_id");
+                    File f = new File("/sys/devices/soc0/build_id");
+                    if (f.exists()) {
+                        socinfo_fd = new FileReader("/sys/devices/soc0/build_id");
+                    } else {
+                        socinfo_fd = new FileReader("/sys/devices/system/soc/soc0/build_id");
+                    }
                     socinfo_fd.read(socinfo,0,20);
                     socinfo_fd.close();
                 } catch(Exception e) {
