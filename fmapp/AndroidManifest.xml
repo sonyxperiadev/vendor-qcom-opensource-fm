@@ -54,7 +54,7 @@
                   android:clearTaskOnLaunch="true"
                   android:taskAffinity=""
                   android:launchMode="singleTop"
-                  android:excludeFromRecents="true" >
+                  android:excludeFromRecents="false" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -84,7 +84,7 @@
                   android:label="@string/tx_app_name"
                   android:clearTaskOnLaunch="true"
                   android:taskAffinity=""
-                  android:excludeFromRecents="true">
+                  android:excludeFromRecents="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

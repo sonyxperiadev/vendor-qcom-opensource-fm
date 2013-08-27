@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (c) 2009, 2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009, 2012-2013, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@
             android:clearTaskOnLaunch="true"
             android:taskAffinity=""
             android:launchMode="singleTop"
-            android:excludeFromRecents="true" >
+            android:excludeFromRecents="false" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -89,7 +89,7 @@
             android:label="@string/tx_app_name"
             android:clearTaskOnLaunch="true"
             android:taskAffinity=""
-            android:excludeFromRecents="true">
+            android:excludeFromRecents="false">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
