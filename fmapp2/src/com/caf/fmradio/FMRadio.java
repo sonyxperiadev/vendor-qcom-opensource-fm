@@ -1482,9 +1482,20 @@ public class FMRadio extends Activity
           @Override
           public void onClick(View v) {
              // TODO Auto-generated method stub
-             enableSpeaker();
+             mSpeakerButton.setClickable(false);
+             mSpeakerButton.setOnClickListener(null);
+             mHandler.removeCallbacks(mEnableRadioTask);
+             mHandler.postDelayed(mEnableSpeakerTask, 0);
           }
     };
+
+   private Runnable mEnableSpeakerTask = new Runnable() {
+     public void run() {
+       enableSpeaker();
+       mSpeakerButton.setClickable(true);
+       mSpeakerButton.setOnClickListener(mSpeakerClickListener);
+     }
+   };
 
    private View.OnClickListener mMuteModeClickListener =
       new View.OnClickListener() {
