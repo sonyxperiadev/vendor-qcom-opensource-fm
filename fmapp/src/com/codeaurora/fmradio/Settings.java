@@ -292,7 +292,13 @@ public class Settings extends PreferenceActivity implements
                }
            }else if(key.equals(USER_DEFINED_BAND_MIN_KEY)) {
                String valStr = mUserBandMinPref.getText();
-               double freq = Double.parseDouble(valStr) * 1000;
+               double freq = 0;
+               try {
+                    freq = Double.parseDouble(valStr) * 1000;
+               }catch(NumberFormatException e) {
+                    e.printStackTrace();
+                    return;
+               }
                max_freq = FmSharedPreferences.getUpperLimit();
                min_freq = FmSharedPreferences.getLowerLimit();
                if((freq > 0) && (freq < max_freq) && (freq >= 76000)) {
@@ -305,7 +311,13 @@ public class Settings extends PreferenceActivity implements
                }
            }else if(key.equals(USER_DEFINED_BAND_MAX_KEY)) {
                String valStr = mUserBandMaxPref.getText();
-               double freq = Double.parseDouble(valStr) * 1000;
+               double freq = 0;
+               try {
+                    freq = Double.parseDouble(valStr) * 1000;
+               }catch(NumberFormatException e) {
+                    e.printStackTrace();
+                    return;
+               }
                min_freq = FmSharedPreferences.getLowerLimit();
                max_freq = FmSharedPreferences.getUpperLimit();
                if((freq > 0) && (freq > min_freq) && (freq <= 108000)) {
