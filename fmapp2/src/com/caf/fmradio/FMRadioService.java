@@ -762,7 +762,6 @@ public class FMRadioService extends Service
            Log.d(LOGTAG, "FMRadio: Requesting to stop FM");
            AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
                                      AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
-           sendRecordServiceIntent(RECORD_STOP);
        }
        mPlaybackInProgress = false;
    }
@@ -1637,6 +1636,7 @@ public class FMRadioService extends Service
          Log.d(LOGTAG, "audioManager.setFmRadioOn false done \n" );
       }
 
+      sendRecordServiceIntent(RECORD_STOP);
       if (isAnalogModeEnabled()) {
               SystemProperties.set("hw.fm.isAnalog","false");
               misAnalogPathEnabled = false;
