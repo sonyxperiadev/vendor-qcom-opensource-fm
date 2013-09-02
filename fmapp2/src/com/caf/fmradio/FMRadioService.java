@@ -2500,7 +2500,7 @@ public class FMRadioService extends Service
             }
             /* Update the frequency in the StatusBar's Notification */
             startNotification();
-
+            enableStereo(FmSharedPreferences.getAudioOutputMode());
          }
          catch (RemoteException e)
          {

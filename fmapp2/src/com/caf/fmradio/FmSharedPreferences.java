@@ -137,7 +137,6 @@ public class FmSharedPreferences
    private static final String LAST_RECORD_DURATION = "last_record_duration";
    private static String  LAST_AF_JUMP_VALUE = "last_af_jump_value";
    private static final String AUDIO_OUTPUT_MODE = "audio_output_mode";
-
    private static Map<String, String> mNameMap = new HashMap<String, String>();
    private static List<PresetList> mListOfPlists = new ArrayList<PresetList>();
    public static Set[] tagList = new TreeSet[FmSharedPreferences.MAX_NUM_TAG_TYPES];
@@ -166,6 +165,7 @@ public class FmSharedPreferences
    private static boolean mAudioOutputMode = true;
    private static boolean mAFAutoSwitch = true;
    private static int mRecordDuration = 0;
+   private static int mLastAudioMode = -1;
 
    FmSharedPreferences(Context context){
       mContext = context.getApplicationContext();
@@ -449,6 +449,7 @@ public class FmSharedPreferences
       mTunedFrequency = sp.getInt(PREF_LAST_TUNED_FREQUENCY, DEFAULT_NO_FREQUENCY);
       mRecordDuration = sp.getInt(LAST_RECORD_DURATION, RECORD_DUR_INDEX_0_VAL);
       mAFAutoSwitch = sp.getBoolean(LAST_AF_JUMP_VALUE, true);
+      mAudioOutputMode = sp.getBoolean(AUDIO_OUTPUT_MODE, true);
 
       if(sp.getInt(FMCONFIG_COUNTRY, 0) == REGIONAL_BAND_USER_DEFINED) {
          mBandMinFreq = sp.getInt(FMCONFIG_MIN, mBandMinFreq);
@@ -556,6 +557,7 @@ public class FmSharedPreferences
       }
       ed.putInt(LAST_RECORD_DURATION, mRecordDuration);
       ed.putBoolean(LAST_AF_JUMP_VALUE, mAFAutoSwitch);
+      ed.putBoolean(AUDIO_OUTPUT_MODE, mAudioOutputMode);
       ed.commit();
    }
 
@@ -1119,6 +1121,13 @@ public class FmSharedPreferences
       return mAudioOutputMode;
    }
 
+   public static int getLastAudioMode() {
+       return mLastAudioMode;
+   }
+
+   public static void setLastAudioMode(int audiomode) {
+       mLastAudioMode = audiomode;
+   }
    public static void setRecordDuration(int durationIndex) {
 
       Log.d(LOGTAG, "setRecordDuration "+durationIndex);
