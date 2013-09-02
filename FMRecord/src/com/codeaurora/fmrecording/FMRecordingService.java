@@ -61,6 +61,7 @@ import android.os.StatFs;
 public class FMRecordingService extends Service {
     private static final String TAG     = "FMRecordingService";
     private BroadcastReceiver mFmRecordingReceiver = null;
+    private BroadcastReceiver mFmShutdownReceiver = null;
     public static final long UNAVAILABLE = -1L;
     public static final long PREPARING = -2L;
     public static final long UNKNOWN_SIZE = -3L;
@@ -83,6 +84,7 @@ public class FMRecordingService extends Service {
         super.onCreate();
         Log.d(TAG, "FMRecording Service onCreate");
         registerRecordingListner();
+        registerShutdownListner();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -98,6 +100,7 @@ public class FMRecordingService extends Service {
             stopRecord();
         }
         unregisterBroadCastReceiver(mFmRecordingReceiver);
+        unregisterBroadCastReceiver(mFmShutdownReceiver);
         super.onDestroy();
     }
 
@@ -106,13 +109,33 @@ public class FMRecordingService extends Service {
         return null;
     }
 
-   private void unregisterBroadCastReceiver(BroadcastReceiver myreceiver) {
+    private void unregisterBroadCastReceiver(BroadcastReceiver myreceiver) {
 
        if (myreceiver != null) {
            unregisterReceiver(myreceiver);
            myreceiver = null;
        }
-   }
+    }
+
+    private void registerShutdownListner() {
+        if (mFmShutdownReceiver == null) {
+            mFmShutdownReceiver = new BroadcastReceiver() {
+                 @Override
+                 public void onReceive(Context context, Intent intent) {
+                     Log.d(TAG, "Received intent " +intent);
+                     String action = intent.getAction();
+                     Log.d(TAG, " action = " +action);
+                     if (action.equals("android.intent.action.ACTION_SHUTDOWN")) {
+                         Log.d(TAG, "android.intent.action.ACTION_SHUTDOWN Intent received");
+                         stopRecord();
+                     }
+                 }
+            };
+            IntentFilter iFilter = new IntentFilter();
+            iFilter.addAction("android.intent.action.ACTION_SHUTDOWN");
+            registerReceiver(mFmShutdownReceiver, iFilter);
+        }
+    }
 
     private static long getAvailableSpace() {
         String state = Environment.getExternalStorageState();
