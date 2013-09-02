@@ -386,6 +386,7 @@ public class Settings extends PreferenceActivity implements
                          // Mono
                          FmSharedPreferences.setAudioOutputMode(false);
                      }
+                     mPrefs.Save();
                      FMRadio.fmAudioOutputMode();
                  }
               }

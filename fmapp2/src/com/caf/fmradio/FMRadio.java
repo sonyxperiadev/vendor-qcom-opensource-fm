@@ -532,6 +532,7 @@ public class FMRadio extends Activity
       if (station != null) {
           mTunedStation.Copy(station);
       }
+      mStereo = FmSharedPreferences.getLastAudioMode();
       mHandler.post(mUpdateProgramService);
       mHandler.post(mUpdateRadioText);
       mHandler.post(mOnStereo);
@@ -2593,6 +2594,7 @@ public class FMRadio extends Activity
          }else {
              mStereoTV.setText("");
          }
+         FmSharedPreferences.setLastAudioMode(mStereo);
       }
    };
 
@@ -2954,6 +2956,7 @@ public class FMRadio extends Activity
          }
          cleanupTimeoutHandler();
          mHandler.post(mUpdateStationInfo);
+         mHandler.post(mOnStereo);
       }
 
       public void onProgramServiceChanged() {
