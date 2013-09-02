@@ -160,6 +160,7 @@
     <item>土耳其</item>
     <item>英国</item>
     <item>美国</item>
+    <item>用户定义的乐队</item>
   </string-array>
 
   <string-array name="regional_band_summary">
@@ -199,5 +200,6 @@
     <item>土耳其 (87.5MHz - 108.0MHz ，步长 100 Khz)</item>
     <item>英国 (87.5MHz - 108.0MHz ，步长 100 Khz)</item>
     <item>美国 (88.1MHz - 107.9MHz ，步长 200 Khz)</item>
+    <item>用户定义的乐队</item>
   </string-array>
 </resources>
