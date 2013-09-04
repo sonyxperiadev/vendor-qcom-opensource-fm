@@ -46,4 +46,5 @@
     <!-- all recordings will show up in the media database in a playlist with this name -->
     <string name="audio_db_playlist_name">FM recordings</string>
     <string name="save_record_file">FM Recorded file saved to "<xliff:g id="record_file">%1$s</xliff:g>"</string>
+    <string name="fm_record_progress">FM Recording in progress</string>
 </resources>
