@@ -82,6 +82,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.app.IntentService;
 import android.os.UserHandle;
+import android.os.Process;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 
 /**
  * Provides "background" FM Radio (that uses the hardware) capabilities,
@@ -688,6 +691,24 @@ public class FMRadioService extends Service
       return true;
    }
 
+   private String getProcessName() {
+      int id = Process.myPid();
+      String myProcessName = this.getPackageName();
+
+      ActivityManager actvityManager =
+             (ActivityManager)this.getSystemService(this.ACTIVITY_SERVICE);
+      List<RunningAppProcessInfo> procInfos =
+             actvityManager.getRunningAppProcesses();
+
+      for(RunningAppProcessInfo procInfo : procInfos) {
+         if (id == procInfo.pid) {
+              myProcessName = procInfo.processName;
+         }
+      }
+      procInfos.clear();
+      return myProcessName;
+   }
+
    private void sendRecordIntent(int action) {
        Intent intent = new Intent(ACTION_FM_RECORDING);
        intent.putExtra("state", action);
@@ -698,6 +719,8 @@ public class FMRadioService extends Service
              mRecordDuration = (FmSharedPreferences.getRecordDuration() * 60 * 1000);
           }
           intent.putExtra("record_duration", mRecordDuration);
+          intent.putExtra("process_name", getProcessName());
+          intent.putExtra("process_id", Process.myPid());
         }
        Log.d(LOGTAG, "Sending Recording intent for = " +action);
        getApplicationContext().sendBroadcast(intent);
