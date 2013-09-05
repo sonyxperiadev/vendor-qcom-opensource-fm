@@ -470,7 +470,7 @@ public class FMRadioService extends Service
                                  }
                                  break;
                              case KeyEvent.KEYCODE_MEDIA_PLAY:
-                                 if (mServiceInUse ) {
+                                 if (isAntennaAvailable() && mServiceInUse) {
                                      fmOn();
                                      if (isOrderedBroadcast()) {
                                          abortBroadcast();
