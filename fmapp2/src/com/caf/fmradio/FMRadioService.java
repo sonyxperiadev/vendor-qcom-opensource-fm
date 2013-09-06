@@ -653,8 +653,6 @@ public class FMRadioService extends Service
       mServiceInUse = true;
       /* Application/UI is attached, so get out of lower power mode */
       setLowPowerMode(false);
-      if((mPlaybackInProgress == false) && isWiredHeadsetAvailable())
-         startFM();
       Log.d(LOGTAG, "onRebind");
    }
 
