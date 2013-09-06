@@ -178,7 +178,7 @@ public class FMStats extends Activity  {
     int  mTestSelected = 0;
     boolean mIsSearching = false;
     private static String LOGTAG = "FMStats";
-    private static IFMRadioService mService = null;
+    private IFMRadioService mService = null;
     private Thread mMultiUpdateThread = null;
     private static final int STATUS_UPDATE = 1;
     private static final int STATUS_DONE = 2;
@@ -355,6 +355,7 @@ public class FMStats extends Activity  {
 
     @Override
     public void onStop() {
+       Log.d(LOGTAG, "onStop");
        super.onStop();
        if(isRecording()) {
           try {
@@ -369,12 +370,16 @@ public class FMStats extends Activity  {
 
     @Override
     public void onDestroy() {
-
+        Log.d(LOGTAG, "onDestroy");
         stopCurTest();
-
+        if(mUIUpdateHandlerHandler != null) {
+           mUIUpdateHandlerHandler.removeCallbacksAndMessages(null);
+        }
+        if(mHandler != null) {
+           mHandler.removeCallbacksAndMessages(null);
+        }
         unRegisterBroadcastReceiver(mBandSweepDelayExprdListener);
         unRegisterBroadcastReceiver(mBandSweepDwellExprdListener);
-
         if(null != mFileCursor ) {
             try {
                 mFileCursor.close();
@@ -1707,7 +1712,7 @@ public class FMStats extends Activity  {
            20 times*/
           int freq = FmSharedPreferences.getTunedFrequency();
 
-          for(int i = 0; i < 20; i++) {
+          for(int i = 0; i < 20 && !Thread.currentThread().isInterrupted(); i++) {
               try {
                    Thread.sleep(500);
                    Message updateUI = new Message();
@@ -1749,19 +1754,27 @@ public class FMStats extends Activity  {
     /* Thread processing */
     private Runnable getManualSweepResults = new Runnable() {
        public void run() {
-           mWakeLock.acquire(10 * 1000);
-           if(mBand.cur_freq <= mBand.hFreq) {
-              if(!tuneAndUpdateSweepResult(mBand.cur_freq)) {
-                 sendStatusDoneMsg();
-              }
-              mBand.cur_freq += mBand.Spacing;
-              if(mBand.cur_freq > mBand.hFreq) {
-                 sendStatusDoneMsg();
-              }else {
-                 setAlarm(prevDwellTime * 1000, BAND_SWEEP_DWELL_DELAY_TIMEOUT);
-              }
-           }else {
-              sendStatusDoneMsg();
+           try {
+               if(mBand == null) {
+                  return;
+               }
+               mWakeLock.acquire(10 * 1000);
+               if(mBand.cur_freq <= mBand.hFreq) {
+                  if(!tuneAndUpdateSweepResult(mBand.cur_freq)) {
+                     sendStatusDoneMsg();
+                     return;
+                  }
+                  mBand.cur_freq += mBand.Spacing;
+                  if(mBand.cur_freq > mBand.hFreq) {
+                     sendStatusDoneMsg();
+                  }else {
+                     setAlarm(prevDwellTime * 1000, BAND_SWEEP_DWELL_DELAY_TIMEOUT);
+                  }
+               }else {
+                  sendStatusDoneMsg();
+               }
+           }catch(Exception e) {
+               e.printStackTrace();
            }
        }
     };
@@ -1787,31 +1800,37 @@ public class FMStats extends Activity  {
          boolean status = true;
          int freq;
 
-         mWakeLock.acquire(10 * 1000);
-         freq = mNextFreqInterface.getNextFreq();
-
-         for(; (status = (!mNextFreqInterface.errorOccured()) & (!Thread.currentThread().isInterrupted()));
-                  freq = mNextFreqInterface.getNextFreq()) {
-            if(validFreq(freq)) {
-               if(!tuneAndUpdateSweepResult(freq)) {
-                  status = false;
-                  break;
-               }else {
-                  setAlarm(prevDwellTime * 1000, BAND_SWEEP_DWELL_DELAY_TIMEOUT);
-                  break;
-               }
-            }
-         }
-         if(!status) {
-            sendStatusDoneMsg();
-            mNextFreqInterface.Stop();
-            mNextFreqInterface = null;
+         try {
+              mWakeLock.acquire(10 * 1000);
+              freq = mNextFreqInterface.getNextFreq();
+              for(; (status = (!mNextFreqInterface.errorOccured()) &
+                     (!Thread.currentThread().isInterrupted()));
+                          freq = mNextFreqInterface.getNextFreq()) {
+                  if(validFreq(freq)) {
+                     if(!tuneAndUpdateSweepResult(freq)) {
+                        status = false;
+                        break;
+                     }else {
+                        setAlarm(prevDwellTime * 1000,
+                                  BAND_SWEEP_DWELL_DELAY_TIMEOUT);
+                        break;
+                     }
+                  }
+              }
+              if(!status) {
+                 sendStatusDoneMsg();
+                 mNextFreqInterface.Stop();
+                 mNextFreqInterface = null;
+              }
+         }catch (Exception e) {
+              e.printStackTrace();
          }
        }
     };
 
     private boolean validFreq(int freq) {
-       if((freq >= mBand.lFreq) &&
+       if((freq >= mBand.lFreq) && (freq <= mBand.hFreq)
+           &&
           (((freq - mBand.lFreq) / mBand.Spacing) >= 0)) {
            return true;
        }else {
@@ -1870,6 +1889,8 @@ public class FMStats extends Activity  {
                }
            } catch (RemoteException e) {
                e.printStackTrace();
+           } catch(Exception e) {
+               e.printStackTrace();
            }
 
            try {
@@ -1879,6 +1900,8 @@ public class FMStats extends Activity  {
                else
                    return null;
            } catch (RemoteException e) {
+               e.printStackTrace();
+           } catch(Exception e) {
                e.printStackTrace();
            }
 
@@ -1893,6 +1916,8 @@ public class FMStats extends Activity  {
                   }
               } catch (RemoteException e) {
                   e.printStackTrace();
+              } catch(Exception e) {
+                  e.printStackTrace();
               }
            } else {
               try {
@@ -1902,6 +1927,8 @@ public class FMStats extends Activity  {
                   else
                       return null;
               } catch (RemoteException e) {
+                  e.printStackTrace();
+              }catch(Exception e) {
                   e.printStackTrace();
               }
            }
@@ -1913,6 +1940,8 @@ public class FMStats extends Activity  {
                else
                    return null;
            } catch (RemoteException e) {
+               e.printStackTrace();
+           }catch (Exception e) {
                e.printStackTrace();
            }
         } else {
@@ -1949,15 +1978,15 @@ public class FMStats extends Activity  {
             }
     };
 
-    public static IFMRadioService sService = null;
-    private static HashMap<Context, ServiceBinder> sConnectionMap = new HashMap<Context, ServiceBinder>();
+    public IFMRadioService sService = null;
+    private HashMap<Context, ServiceBinder> sConnectionMap = new HashMap<Context, ServiceBinder>();
 
-    public static boolean bindToService(Context context) {
+    public boolean bindToService(Context context) {
        Log.e(LOGTAG, "bindToService: Context");
        return bindToService(context, null);
     }
 
-    public static boolean bindToService(Context context, ServiceConnection callback) {
+    public boolean bindToService(Context context, ServiceConnection callback) {
        Log.e(LOGTAG, "bindToService: Context with serviceconnection callback");
        context.startService(new Intent(context, FMRadioService.class));
        ServiceBinder sb = new ServiceBinder(callback);
@@ -1966,7 +1995,7 @@ public class FMStats extends Activity  {
                                                           FMRadioService.class), sb, 0);
     }
 
-    public static void unbindFromService(Context context) {
+    public void unbindFromService(Context context) {
        ServiceBinder sb = (ServiceBinder) sConnectionMap.remove(context);
        Log.e(LOGTAG, "unbindFromService: Context");
        if (sb == null)
@@ -1983,7 +2012,7 @@ public class FMStats extends Activity  {
        }
     }
 
-    private static class ServiceBinder implements ServiceConnection
+    private class ServiceBinder implements ServiceConnection
     {
        ServiceConnection mCallback;
        ServiceBinder(ServiceConnection callback) {
@@ -2136,9 +2165,9 @@ public class FMStats extends Activity  {
           }
       };
       /* Radio Vars */
-     final Handler mHandler = new Handler();
+     private Handler mHandler = new Handler();
 
-     final Runnable mTuneComplete = new Runnable(){
+     private Runnable mTuneComplete = new Runnable(){
          public void run(){
              if((null != mMultiUpdateThread) &&(null != mSync))
              {
@@ -2297,8 +2326,10 @@ public class FMStats extends Activity  {
               @Override
                public void onReceive(Context context, Intent intent) {
                    Log.d(LOGTAG, "received Band sweep Dwell expired");
-                   mWakeLock.acquire(5 * 1000);
-                   ResumeBandSweep();
+                   if(mTestRunning) {
+                      mWakeLock.acquire(5 * 1000);
+                      ResumeBandSweep();
+                   }
                }
            };
            IntentFilter intentFilter = new IntentFilter(BAND_SWEEP_DWELL_DELAY_TIMEOUT);
