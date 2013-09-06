@@ -1041,13 +1041,7 @@ public class FMRadioService extends Service
                          mSpeakerDisableHandler.postDelayed(mSpeakerDisableTask, 0);
                       }
                       if (true == mPlaybackInProgress) {
-                          if(mMuted)
-                             unMute();
-                          stopFM();
-                      }
-                      if (mSpeakerPhoneOn) {
-                          if (isAnalogModeSupported())
-                              setAudioPath(false);
+                          fmOff();
                       }
                       mStoppedOnFocusLoss = true;
                       break;
