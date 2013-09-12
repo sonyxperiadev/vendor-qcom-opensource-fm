@@ -57,6 +57,13 @@ import android.os.UserHandle;
 import android.net.Uri;
 import android.content.res.Resources;
 import android.os.StatFs;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.widget.RemoteViews;
+import android.R.layout;
+import android.R.drawable;
+import android.content.ComponentName;
+import android.content.res.Resources;
 
 public class FMRecordingService extends Service {
     private static final String TAG     = "FMRecordingService";
@@ -282,7 +289,17 @@ public class FMRecordingService extends Service {
         });
         mSampleStart = System.currentTimeMillis();
         sendRecordingStatusIntent(START);
+        startNotification();
         return true;
+    }
+
+    private void startNotification() {
+        RemoteViews views = new RemoteViews(getPackageName(), R.layout.record_status_bar);
+        Notification status = new Notification();
+        status.contentView = views;
+        status.flags |= Notification.FLAG_ONGOING_EVENT;
+        status.icon = R.drawable.ic_menu_record;
+        startForeground(102, status);
     }
 
     private void stopRecord() {
@@ -301,6 +318,7 @@ public class FMRecordingService extends Service {
 
         sendRecordingStatusIntent(STOP);
         saveFile();
+        stopForeground(true);
     }
 
     private void saveFile() {
