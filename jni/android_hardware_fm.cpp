@@ -534,10 +534,11 @@ static jint android_hardware_fmradio_FmReceiverJNI_setPINative
 static jint android_hardware_fmradio_FmReceiverJNI_startRTNative
     (JNIEnv * env, jobject thiz, jint fd, jstring radio_text, jint count )
 {
-    ALOGD("->android_hardware_fmradio_FmReceiverJNI_startRTNative\n");
+    ALOGE("->android_hardware_fmradio_FmReceiverJNI_startRTNative\n");
 
     struct v4l2_ext_control ext_ctl;
     struct v4l2_ext_controls v4l2_ctls;
+    size_t len = 0;
 
     int err = 0;
     jboolean isCopy = false;
@@ -547,18 +548,21 @@ static jint android_hardware_fmradio_FmReceiverJNI_startRTNative
         ALOGE("RT string is not valid \n");
         return FM_JNI_FAILURE;
     }
-
+    len = strlen(rt_string);
+    if (len > TX_RT_LENGTH) {
+        ALOGE("RT string length more than max size");
+        env->ReleaseStringUTFChars(radio_text, rt_string);
+        return FM_JNI_FAILURE;
+    }
     rt_string1 = (char*) malloc(TX_RT_LENGTH + 1);
     if (rt_string1 == NULL) {
        ALOGE("out of memory \n");
        env->ReleaseStringUTFChars(radio_text, rt_string);
        return FM_JNI_FAILURE;
     }
-    memset (rt_string1, 0, TX_RT_LENGTH + 1);
-    memcpy(rt_string1, rt_string, count);
+    memset(rt_string1, 0, TX_RT_LENGTH + 1);
+    memcpy(rt_string1, rt_string, len);
 
-    if(count < TX_RT_LENGTH)
-       rt_string1[count] = TX_RT_DELIMITER;
 
     ext_ctl.id     = V4L2_CID_RDS_TX_RADIO_TEXT;
     ext_ctl.string = rt_string1;
