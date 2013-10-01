@@ -685,7 +685,7 @@ public class FMRadioService extends Service
          // an in-progress call ends, so don't stop the service now.
          return true;
       }
-      gotoIdleState();
+      stopSelf(mServiceStartId);
       return true;
    }
 
