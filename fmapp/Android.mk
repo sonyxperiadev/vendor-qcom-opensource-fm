@@ -10,7 +10,7 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src/com/codeaurora/fmradio) \
         src/com/codeaurora/fmradio/IFMTransmitterService.aidl \
 
 
-ifeq ($(call is-android-codename-in-list,JELLY_BEAN ICECREAM_SANDWICH HONEYCOMB),true)
+ifeq ($(call is-platform-sdk-version-at-least,11),true)
 LOCAL_SRC_FILES +=  $(call all-java-files-under, src/com/codeaurora/hc_utils)
 else
 LOCAL_SRC_FILES +=  $(call all-java-files-under, src/com/codeaurora/utils)
