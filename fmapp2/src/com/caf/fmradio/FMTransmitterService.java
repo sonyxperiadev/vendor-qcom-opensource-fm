@@ -1159,6 +1159,11 @@ public class FMTransmitterService extends Service
         public void setCurrentClientId(int clientGeneration, PendingIntent clientMediaIntent,
                 boolean clearing) {
         }
+
+        @Override
+        public void setEnabled(boolean enabled) {
+        }
+
    }
 
    class Metadata {
