@@ -135,7 +135,7 @@ class FmRxEventListner {
                                       Log.v(TAG, "Aborting on-going search command...");
                                       FmReceiver.setSearchState(FmTransceiver.subSrchLevel_SrchComplete);
                                       Log.v(TAG, "RxEvtList: CURRENT-STATE : Search ---> NEW-STATE : FMRxOn");
-                                      cb.FmRxEvSearchCancelled();
+                                      cb.FmRxEvSearchComplete(FmReceiverJNI.getFreqNative(fd));
                                       break;
                                 }
                                 break;
