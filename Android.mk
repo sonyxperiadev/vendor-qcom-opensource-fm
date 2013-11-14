@@ -1,4 +1,4 @@
-ifeq ($(call is-vendor-board-platform,QCOM),true)
+ifneq (,$(filter $(QCOM_BOARD_PLATFORMS),$(TARGET_BOARD_PLATFORM)))
 LOCAL_PATH:= $(call my-dir)
 LOCAL_DIR_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
