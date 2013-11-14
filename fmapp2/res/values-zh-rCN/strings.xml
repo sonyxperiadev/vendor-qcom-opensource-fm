@@ -106,5 +106,9 @@
     <string name="station_name_exist">已存在名为\"<xliff:g id="name">%s</xliff:g>\"的电台，请输入其他名称。</string>
     <!-- the title of rename dialog lack of translation -->
     <string name="dialog_presetlist_rename_title">"请输入名字"</string>
-
+    <string name="menu_display_tags">显示标签</string>
+    <string name="usr_def_band_min">下限频率（Mhz）</string>
+    <string name="usr_def_band_max">更高的频率限制(Mhz)</string>
+    <string name="sel_chanl_spacing">选择信道间隔</string>
+    <string name="chanl_spacing">信道间隔</string>
 </resources>
