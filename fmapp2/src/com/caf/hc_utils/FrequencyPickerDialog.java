@@ -95,8 +95,8 @@ OnFrequencyChangedListener {
             setTitle("FM - "+MHz+"."+KHz);
         mCallBack = callback;
 
-        setButton("Set", this);
-        setButton2("Cancel", (OnClickListener) null);
+        setButton(context.getString(R.string.set), this);
+        setButton2(context.getString(R.string.cancel),  (OnClickListener) null);
         setIcon(R.drawable.alert_dialog_icon);
 
         LayoutInflater inflater =
