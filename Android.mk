@@ -14,8 +14,6 @@ include $(BUILD_JAVA_LIBRARY)
 
 include $(LOCAL_PATH)/jni/Android.mk
 LOCAL_PATH := $(LOCAL_DIR_PATH)
-include $(LOCAL_PATH)/fmapp/Android.mk
-LOCAL_PATH := $(LOCAL_DIR_PATH)
 include $(LOCAL_PATH)/fmapp2/Android.mk
 LOCAL_PATH := $(LOCAL_DIR_PATH)
 include $(LOCAL_PATH)/FMRecord/Android.mk
