@@ -10,7 +10,7 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src/com/codeaurora/fmradio) \
         src/com/codeaurora/fmradio/IFMTransmitterService.aidl \
 
 
-ifeq ($(call is-platform-sdk-version-at-least,11),true)
+ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) >= 11 ))" )))
 LOCAL_SRC_FILES +=  $(call all-java-files-under, src/com/codeaurora/hc_utils)
 else
 LOCAL_SRC_FILES +=  $(call all-java-files-under, src/com/codeaurora/utils)
