@@ -111,4 +111,6 @@
     <string name="usr_def_band_max">更高的频率限制(Mhz)</string>
     <string name="sel_chanl_spacing">选择信道间隔</string>
     <string name="chanl_spacing">信道间隔</string>
+    <string name="set">设置</string>
+    <string name="cancel">取消</string>
 </resources>
