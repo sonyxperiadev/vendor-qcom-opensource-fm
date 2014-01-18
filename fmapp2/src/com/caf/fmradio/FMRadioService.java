@@ -359,6 +359,7 @@ public class FMRadioService extends Service
                             Log.d(LOGTAG, "A2DP device is dis-connected!");
                             mA2dpDisconnected = true;
                         } else {
+                            Log.d(LOGTAG, "A2DP device is connected!");
                             mA2dpDisconnected = false;
                         }
                         if (isAnalogModeEnabled()) {
@@ -371,8 +372,8 @@ public class FMRadioService extends Service
                        // will take care of audio routing
                        if( (isFmOn()) &&
                            (true == ((bA2dpConnected)^(mOverA2DP))) &&
-                           (false == mStoppedOnFocusLoss) &&
-                           (!isSpeakerEnabled())) {
+                           (false == mStoppedOnFocusLoss)) {
+                           Log.d(LOGTAG, "stopping and starting FM\n");
                            stopFM();
                            startFM();
                        }
@@ -759,7 +760,7 @@ public class FMRadioService extends Service
        mStoppedOnFocusLoss = false;
 
        if (!mA2dpDeviceSupportInHal &&  (true == mA2dpDeviceState.isDeviceAvailable()) &&
-            (!isSpeakerEnabled()) && !isAnalogModeEnabled()
+           !isAnalogModeEnabled()
             && (true == startA2dpPlayback())) {
             mOverA2DP=true;
        } else {
