@@ -14,7 +14,21 @@ LOCAL_JNI_SHARED_LIBRARIES := libqcomfm_jni
 
 LOCAL_MODULE:= qcom.fmradio
 
+LOCAL_ADDITIONAL_DEPENDENCIES := qcom.fmradio.xml
+
 include $(BUILD_JAVA_LIBRARY)
+
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := qcom.fmradio.xml
+LOCAL_SRC_FILES := qcom/fmradio/$(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT)/etc/permissions
+
+include $(BUILD_PREBUILT)
+
 
 include $(LOCAL_PATH)/jni/Android.mk
 LOCAL_PATH := $(LOCAL_DIR_PATH)
