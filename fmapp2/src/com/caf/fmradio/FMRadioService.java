@@ -728,6 +728,7 @@ public class FMRadioService extends Service
    private void sendRecordServiceIntent(int action) {
        Intent intent = new Intent(ACTION_FM);
        intent.putExtra("state", action);
+       intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
        Log.d(LOGTAG, "Sending Recording intent for = " +action);
        getApplicationContext().sendBroadcast(intent);
    }
