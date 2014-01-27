@@ -40,4 +40,5 @@
     <string name="audio_db_album_name">FM 录音</string>
     <!-- all recordings will show up in the media database in a playlist with this name -->
     <string name="audio_db_playlist_name">FM 录音</string>
+    <string name="fm_record_progress">FM 录音进行中</string>
 </resources>
