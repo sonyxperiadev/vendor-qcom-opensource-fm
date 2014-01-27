@@ -81,6 +81,7 @@
     <string name="audio_type_mono">单声道</string>
     <string name="alert_dialog_ok">确定</string>
     <string name="alert_dialog_cancel">取消</string>
+    <string name="alert_dialog_hint">输入一个名称</string>
     <string name="search_dialog_title">搜索电台</string>
 
         <string name="fm_command_timeout_title">超时</string>
