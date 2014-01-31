@@ -778,8 +778,8 @@ public class FMRadioService extends Service
                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
            }
 
-           sendRecordServiceIntent(RECORD_START);
        }
+       sendRecordServiceIntent(RECORD_START);
        mPlaybackInProgress = true;
    }
 
