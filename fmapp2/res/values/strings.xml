@@ -145,6 +145,8 @@
     <string name="menu_delete_list">Delete List</string>
     <string name="alert_dialog_ok">Ok</string>
     <string name="alert_dialog_cancel">Cancel</string>
+    <!-- The messsage shown when long pressed on a station. -->
+    <string name="alert_dialog_hint">Enter a name</string>
 
     <string name="search_dialog_title">Scan Stations</string>
 

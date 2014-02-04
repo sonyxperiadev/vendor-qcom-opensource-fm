@@ -38,7 +38,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:scrollHorizontally="true"
-        android:hint="Enter a name"
+        android:hint="@string/alert_dialog_hint"
         android:singleLine="true"
         android:inputType="text"
         android:autoText="false"
