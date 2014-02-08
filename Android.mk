@@ -1,3 +1,6 @@
+ifneq (, $(filter aarch64 arm64, $(TARGET_ARCH)))
+    $(info TODOAArch64: $(LOCAL_PATH)/Android.mk: Enable build support for 64 bit)
+else
 ifneq (,$(filter $(QCOM_BOARD_PLATFORMS),$(TARGET_BOARD_PLATFORM)))
 LOCAL_PATH:= $(call my-dir)
 LOCAL_DIR_PATH:= $(call my-dir)
@@ -18,3 +21,4 @@ include $(LOCAL_PATH)/fmapp2/Android.mk
 LOCAL_PATH := $(LOCAL_DIR_PATH)
 include $(LOCAL_PATH)/FMRecord/Android.mk
 endif # is-vendor-board-platform
+endif # TARGET_ARCH
