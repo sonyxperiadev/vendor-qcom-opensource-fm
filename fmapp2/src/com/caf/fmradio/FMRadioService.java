@@ -175,6 +175,7 @@ public class FMRadioService extends Service
    private BroadcastReceiver mFmRecordingStatus  = null;
    static final int RECORD_START = 1;
    static final int RECORD_STOP = 0;
+   private Thread mRecordServiceCheckThread = null;
 
    public FMRadioService() {
    }
@@ -304,6 +305,7 @@ public class FMRadioService extends Service
                                       Log.d(LOGTAG, "start recording thread");
                                       mCallbacks.onRecordingStarted();
                                   }
+                                  startRecordServiceStatusCheck();
                              } catch (RemoteException e) {
                                   e.printStackTrace();
                              }
@@ -318,6 +320,7 @@ public class FMRadioService extends Service
                                   e.printStackTrace();
                              }
                              mSampleStart = 0;
+                             stopRecordServiceStatusCheck();
                         }
                      }
                  }
@@ -810,9 +813,81 @@ public class FMRadioService extends Service
        mPlaybackInProgress = false;
    }
 
-   public void startRecording() {
+   private boolean getRecordServiceStatus() {
+       boolean status = false;
+       ActivityManager actvityManager =
+                (ActivityManager)this.getSystemService(this.ACTIVITY_SERVICE);
+       List<RunningAppProcessInfo> procInfos =
+                                    actvityManager.getRunningAppProcesses();
+       for(RunningAppProcessInfo procInfo : procInfos) {
+           if (procInfo.processName.equals("com.codeaurora.fmrecording")) {
+               status = true;
+               break;
+           }
+       }
+       procInfos.clear();
+       return status;
+   }
 
+   private Runnable recordStatusCheckThread = new Runnable() {
+       @Override
+       public void run() {
+          while(!Thread.currentThread().isInterrupted()) {
+               try {
+                     if(!getRecordServiceStatus()) {
+                        Log.d(LOGTAG, "FM Recording Service stopped");
+                        mFmRecordingOn = false;
+                        try {
+                            if ((mServiceInUse) && (mCallbacks != null) ) {
+                                Log.d(LOGTAG, "Callback for stop recording");
+                                mCallbacks.onRecordingStopped();
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        mSampleStart = 0;
+                        break;
+                     };
+                     Thread.sleep(500);
+                }catch(Exception e) {
+                     Log.d(LOGTAG, "RecordService status check thread interrupted");
+                     break;
+                }
+          }
+       }
+   };
+
+   private void startRecordServiceStatusCheck() {
+       if((mRecordServiceCheckThread == null) ||
+          (mRecordServiceCheckThread.getState() == Thread.State.TERMINATED)) {
+           mRecordServiceCheckThread = new Thread(null,
+                                           recordStatusCheckThread,
+                                           "getRecordServiceStatus");
+       }
+       if((mRecordServiceCheckThread != null) &&
+          (mRecordServiceCheckThread.getState() == Thread.State.NEW)) {
+           mRecordServiceCheckThread.start();
+       }
+   }
+
+   private void stopRecordServiceStatusCheck() {
+       if(mRecordServiceCheckThread != null) {
+          mRecordServiceCheckThread.interrupt();
+       }
+   }
+
+   public void startRecording() {
        Log.d(LOGTAG, "In startRecording of Recorder");
+       if (!getRecordServiceStatus()) {
+           Log.d(LOGTAG, "Recording Service is not in running state");
+           sendRecordServiceIntent(RECORD_START);
+           try {
+               Thread.sleep(200);
+           } catch (Exception ex) {
+               Log.d( LOGTAG, "RunningThread InterruptedException");
+               return;
+           }
+       }
        if ((true == mSingleRecordingInstanceSupported) &&
                                (true == mOverA2DP )) {
             Toast.makeText( this,
