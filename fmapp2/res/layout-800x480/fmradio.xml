@@ -129,9 +129,9 @@
                 style="@style/ButtonStripLeft"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
@@ -139,9 +139,9 @@
                 style="@style/ButtonStripMiddle"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
@@ -149,9 +149,9 @@
                 style="@style/ButtonStripMiddle"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
@@ -159,9 +159,9 @@
                 style="@style/ButtonStripMiddle"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
@@ -169,9 +169,9 @@
                 style="@style/ButtonStripMiddle"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
@@ -179,9 +179,9 @@
                 style="@style/ButtonStripMiddle"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
@@ -189,9 +189,9 @@
                 style="@style/ButtonStripRight"
                 android:text="@string/add_station"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:singleLine="true"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
