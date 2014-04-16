@@ -317,7 +317,8 @@ public class Settings extends PreferenceActivity implements
                   setBandSummary(summaryBandItems.length - 1);
                   clearStationList();
                }else {
-                  displayToast(USR_BAND_MSG);
+                  Toast.makeText(this, getString(R.string.user_defind_band_msg),
+                                                            Toast.LENGTH_SHORT).show();
                }
            }else if(key.equals(USER_DEFINED_BAND_MAX_KEY)) {
                String valStr = mUserBandMaxPref.getText();
@@ -336,7 +337,8 @@ public class Settings extends PreferenceActivity implements
                   setBandSummary(summaryBandItems.length - 1);
                   clearStationList();
                }else {
-                  displayToast(USR_BAND_MSG);
+                  Toast.makeText(this, getString(R.string.user_defind_band_msg),
+                                                            Toast.LENGTH_SHORT).show();
                }
           }else {
               if(mRxMode) {

@@ -115,5 +115,6 @@
     <string name="chanl_spacing">信道间隔</string>
     <string name="set">设置</string>
     <string name="cancel">取消</string>
-	<string name="rt_plus_tags">标签</string>
+    <string name="rt_plus_tags">标签</string>
+    <string name="user_defind_band_msg">请输入有效的频段范围 76.0 - 108.0</string>
 </resources>
