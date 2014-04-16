@@ -29,7 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import qcom.fmradio.FmConfig;
 import qcom.fmradio.FmReceiver;
-
+import java.util.Locale;
 import com.caf.fmradio.R;
 import com.caf.utils.FrequencyPicker.OnFrequencyChangedListener;
 
@@ -92,7 +92,11 @@ OnFrequencyChangedListener {
         }
         int MHz = frequency/1000;
         int KHz = (frequency%1000)/100;
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            setTitle("调频 - "+MHz+"."+KHz);
+        } else {
             setTitle("FM - "+MHz+"."+KHz);
+        }
         mCallBack = callback;
 
         setButton(context.getString(R.string.set), this);
@@ -118,7 +122,11 @@ OnFrequencyChangedListener {
     {
         int MHz = frequency/1000;
         int KHz = (frequency%1000)/100;
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            setTitle("调频 - "+MHz+"."+KHz);
+        } else {
             setTitle("FM - "+MHz+"."+KHz);
+        }
             mFrequencyPicker.updateFrequency(frequency);
     }
 
@@ -154,6 +162,10 @@ OnFrequencyChangedListener {
         mFrequencyPicker.init(mMinFrequency, mMaxFrequency, mChannelSpacing, frequency, this);
         int MHz = frequency/1000;
         int KHz = (frequency%1000)/100;
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            setTitle("调频 - "+MHz+"."+KHz);
+        } else {
             setTitle("FM - "+MHz+"."+KHz);
+        }
     }
 }
