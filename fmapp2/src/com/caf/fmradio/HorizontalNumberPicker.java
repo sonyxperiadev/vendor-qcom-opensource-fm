@@ -1600,7 +1600,11 @@ public class HorizontalNumberPicker extends LinearLayout {
         for (int i = 0; i < mSelectorIndices.length; i++) {
             int selectorIndex = current + (i - mSelectorMiddleItemIndex);
             if (mWrapSelectorWheel) {
-                selectorIndex = getWrappedSelectorIndex(selectorIndex);
+                try {
+                    selectorIndex = getWrappedSelectorIndex(selectorIndex);
+                } catch(RuntimeException e) {
+                    e.printStackTrace();
+                }
             }
             mSelectorIndices[i] = selectorIndex;
             ensureCachedScrollSelectorValue(mSelectorIndices[i]);
@@ -1622,7 +1626,11 @@ public class HorizontalNumberPicker extends LinearLayout {
         }
         // Wrap around the values if we go past the start or end
         if (mWrapSelectorWheel) {
-            current = getWrappedSelectorIndex(current);
+            try {
+                current = getWrappedSelectorIndex(current);
+            } catch(RuntimeException e) {
+                e.printStackTrace();
+            }
         }
         int previous = mValue;
         setValue(current);
