@@ -1735,6 +1735,12 @@ public class FMRadioService extends Service
       if (isFmRecordingOn())
       {
           stopRecording();
+          try {
+               Thread.sleep(300);
+          } catch (Exception ex) {
+               Log.d( LOGTAG, "RunningThread InterruptedException");
+               return;
+          }
       }
       AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
       if(audioManager != null)
