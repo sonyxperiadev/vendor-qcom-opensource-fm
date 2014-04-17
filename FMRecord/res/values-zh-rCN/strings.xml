@@ -41,4 +41,6 @@
     <!-- all recordings will show up in the media database in a playlist with this name -->
     <string name="audio_db_playlist_name">FM 录音</string>
     <string name="fm_record_progress">FM 录音进行中</string>
+    <string name="FMRecording_reach_size_limit">已到达最长限制.</string>
+    <string name="unable_to_store">无法保存已录音频</string>
 </resources>
