@@ -309,9 +309,12 @@ public class FMRecordingService extends Service {
                          Log.d(TAG, "Maximum file size/duration reached, stopping the recording");
                          stopRecord();
                      }
-                     // Show the toast.
-                     Toast.makeText(FMRecordingService.this, R.string.FMRecording_reach_size_limit,
-                               Toast.LENGTH_LONG).show();
+                     if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED) {
+                         // Show the toast.
+                         Toast.makeText(FMRecordingService.this,
+                                        R.string.FMRecording_reach_size_limit,
+                                        Toast.LENGTH_LONG).show();
+                     }
                  }
              }
              // from MediaRecorder.OnErrorListener
