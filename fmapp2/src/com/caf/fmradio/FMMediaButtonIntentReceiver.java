@@ -36,6 +36,7 @@ import android.content.BroadcastReceiver;
 import android.content.pm.PackageManager;
 import android.content.Context;
 import android.content.ComponentName;
+import android.media.AudioManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.os.Bundle;
@@ -45,9 +46,14 @@ public class FMMediaButtonIntentReceiver extends BroadcastReceiver {
 
 private static final String TAG = "FMMediaButtonIntentReceiver";
 public static final String FM_MEDIA_BUTTON = "com.caf.fmradio.action.MEDIA_BUTTON";
+public static final String AUDIO_BECOMING_NOISY = "com.caf.fmradio.action.AUDIO_BECOMING_NOISY";
 public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-       if ((action != null) && action.equals("android.intent.action.MEDIA_BUTTON")) {
+       String action = intent.getAction();
+       if ((action != null) && action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+           Log.d(TAG, "ACTION_AUDIO_BECOMING_NOISY intent received for ACTION_HEADSET_PLUG");
+           Intent i = new Intent(AUDIO_BECOMING_NOISY);
+           context.sendBroadcast(i);
+       } else if ((action != null) && action.equals("android.intent.action.MEDIA_BUTTON")) {
            KeyEvent event = (KeyEvent)
                     intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 

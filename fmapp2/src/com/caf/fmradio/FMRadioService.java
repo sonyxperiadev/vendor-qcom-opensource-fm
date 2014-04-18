@@ -106,6 +106,7 @@ public class FMRadioService extends Service
    private boolean mSleepActive = false;
    private BroadcastReceiver mRecordTimeoutListener = null;
    private BroadcastReceiver mDelayedServiceStopListener = null;
+   private BroadcastReceiver mAudioBecomeNoisyListener = null;
    private boolean mOverA2DP = false;
    private BroadcastReceiver mFmMediaButtonListener;
    private IFMRadioServiceCallbacks mCallbacks;
@@ -204,6 +205,7 @@ public class FMRadioService extends Service
       // registering media button receiver seperately as we need to set
       // different priority for receiving media events
       registerFmMediaButtonReceiver();
+      registerAudioBecomeNoisy();
       if ( false == SystemProperties.getBoolean("ro.fm.mulinst.recording.support",true)) {
            mSingleRecordingInstanceSupported = true;
       }
@@ -256,6 +258,10 @@ public class FMRadioService extends Service
       if( mFmMediaButtonListener != null ) {
           unregisterReceiver(mFmMediaButtonListener);
           mFmMediaButtonListener = null;
+      }
+      if (mAudioBecomeNoisyListener != null) {
+          unregisterReceiver(mAudioBecomeNoisyListener);
+          mAudioBecomeNoisyListener = null;
       }
       if (mSleepExpiredListener != null ) {
           unregisterReceiver(mSleepExpiredListener);
@@ -505,6 +511,40 @@ public class FMRadioService extends Service
          }
      }
 
+    public void registerAudioBecomeNoisy() {
+        if (mAudioBecomeNoisyListener == null) {
+            mAudioBecomeNoisyListener = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    Log.d(LOGTAG, "FMMediaButtonIntentReceiver.AUDIO_BECOMING_NOISY");
+                    String intentAction = intent.getAction();
+                    if (FMMediaButtonIntentReceiver.AUDIO_BECOMING_NOISY.equals(intentAction)) {
+                       if (isFmOn())
+                       {
+                           /* Disable FM and let the UI know */
+                           fmOff();
+                           try
+                           {
+                              /* Notify the UI/Activity, only if the service is "bound"
+                              by an activity and if Callbacks are registered
+                              */
+                              if((mServiceInUse) && (mCallbacks != null) )
+                              {
+                                  mCallbacks.onDisabled();
+                              }
+                           } catch (RemoteException e)
+                           {
+                               e.printStackTrace();
+                           }
+                       }
+                    }
+                }
+            };
+            IntentFilter intentFilter = new IntentFilter(FMMediaButtonIntentReceiver.AUDIO_BECOMING_NOISY);
+            registerReceiver(mAudioBecomeNoisyListener, intentFilter);
+        }
+    }
+
     public void registerMusicServiceCommandReceiver() {
         if (mMusicCommandListener == null) {
             mMusicCommandListener = new BroadcastReceiver() {
@@ -599,6 +639,8 @@ public class FMRadioService extends Service
             /* Update the UI based on the state change of the headset/antenna*/
             if(!isAntennaAvailable())
             {
+                if (!isFmOn())
+                    return;
                 /* Disable FM and let the UI know */
                 fmOff();
                 try
