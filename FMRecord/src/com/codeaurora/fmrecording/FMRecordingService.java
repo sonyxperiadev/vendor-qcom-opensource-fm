@@ -259,7 +259,10 @@ public class FMRecordingService extends Service {
 
         }
         mSampleFile = null;
-        File sampleDir = Environment.getExternalStorageDirectory();
+        File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/FMRecording");
+
+        if(!(sampleDir.mkdirs() || sampleDir.isDirectory()))
+            return false;
 
         try {
              mSampleFile = File.createTempFile("FMRecording", ".3gpp", sampleDir);
