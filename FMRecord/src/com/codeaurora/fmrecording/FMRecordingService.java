@@ -423,7 +423,7 @@ public class FMRecordingService extends Service {
         Log.d(TAG, "ContentURI: " + base);
         Uri result = resolver.insert(base, cv);
         if (result == null) {
-            Toast.makeText(this, "Unable to save recorded audio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.unable_to_store, Toast.LENGTH_SHORT).show();
             return null;
         }
         if (getPlaylistId(res) == -1) {
@@ -475,7 +475,7 @@ public class FMRecordingService extends Service {
         cv.put(MediaStore.Audio.Playlists.NAME, res.getString(R.string.audio_db_playlist_name));
         Uri uri = resolver.insert(MediaStore.Audio.Playlists.getContentUri("external"), cv);
         if (uri == null) {
-            Toast.makeText(this, "Unable to save recorded audio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.unable_to_store, Toast.LENGTH_SHORT).show();
         }
         return uri;
     }
