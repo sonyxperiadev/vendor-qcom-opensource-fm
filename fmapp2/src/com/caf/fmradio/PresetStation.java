@@ -29,7 +29,7 @@
 package com.caf.fmradio;
 
 import qcom.fmradio.FmReceiver;
-
+import java.util.Locale;
 import android.text.TextUtils;
 //import android.util.Log;
 
@@ -638,132 +638,236 @@ public class PresetStation
       {
          case 1:
          {
-            ptyStr = "News";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "新闻";
+            else
+                ptyStr = "News";
             break;
          }
          case 2:
          {
-            ptyStr = "Information";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "信息频道";
+            else
+                ptyStr = "Information";
             break;
          }
          case 3:
          {
-            ptyStr = "Sports";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "体育";
+            else
+                ptyStr = "Sports";
             break;
          }
          case 4:
          {
-            ptyStr = "Talk";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "交流";
+            else
+                ptyStr = "Talk";
             break;
          }
          case 5:
          {
-            ptyStr = "Rock";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "摇滚";
+            else
+                ptyStr = "Rock";
             break;
          }
          case 6:
          {
-            ptyStr = "Classic Rock";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "经典摇滚";
+            else
+                ptyStr = "Classic Rock";
             break;
          }
          case 7:
          {
-            ptyStr = "Adult Hits";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "成人点击";
+            else
+                ptyStr = "Adult Hits";
             break;
          }
          case 8:
          {
-            ptyStr = "Soft Rock";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "轻摇滚";
+            else
+                ptyStr = "Soft Rock";
             break;
          }
          case 9:
          {
-            ptyStr = "Top 40";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "前40";
+            else
+                ptyStr = "Top 40";
             break;
          }
          case 10:
          {
-            ptyStr = "Country";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "乡村";
+            else
+                ptyStr = "Country";
             break;
          }
          case 11:
          {
-            ptyStr = "Oldies";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "老歌";
+            else
+                ptyStr = "Oldies";
             break;
          }
          case 12:
          {
-            ptyStr = "Soft";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "轻音乐";
+            else
+                ptyStr = "Soft";
             break;
          }
          case 13:
          {
-            ptyStr = "Nostalgia";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "怀旧";
+            else
+                ptyStr = "Nostalgia";
             break;
          }
          case 14:
          {
-            ptyStr = "Jazz";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "爵士";
+            else
+                ptyStr = "Jazz";
             break;
          }
          case 15:
          {
-            ptyStr = "Classical";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "古典";
+            else
+                ptyStr = "Classical";
             break;
          }
          case 16:
          {
-            ptyStr = "Rhythm and Blues";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "节奏布鲁斯";
+            else
+                ptyStr = "Rhythm and Blues";
             break;
          }
          case 17:
          {
-            ptyStr = "Soft Rhythm and Blues";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "轻节奏布鲁斯";
+            else
+                ptyStr = "Soft Rhythm and Blues";
             break;
          }
          case 18:
          {
-            ptyStr = "Foreign Language";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "外语频道";
+            else
+                ptyStr = "Foreign Language";
             break;
          }
          case 19:
          {
-            ptyStr = "Religious Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "宗教音乐";
+            else
+                ptyStr = "Religious Music";
             break;
          }
          case 20:
          {
-            ptyStr = "Religious Talk";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "宗教交流";
+            else
+                ptyStr = "Religious Talk";
             break;
          }
          case 21:
          {
-            ptyStr = "Personality";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "个性";
+            else
+                ptyStr = "Personality";
             break;
          }
          case 22:
          {
-            ptyStr = "Public";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "公共频道";
+            else
+                ptyStr = "Public";
             break;
          }
          case 23:
          {
-            ptyStr = "College";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "校园";
+            else
+                ptyStr = "College";
             break;
          }
          case 29:
          {
-            ptyStr = "Weather";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "天气";
+            else
+                ptyStr = "Weather";
             break;
          }
          case 30:
          {
-            ptyStr = "Emergency Test";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "紧急 测试";
+            else
+                ptyStr = "Emergency Test";
             break;
          }
          case 31:
          {
-            ptyStr = "Emergency";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "紧急";
+            else
+                ptyStr = "Emergency";
             break;
          }
          default:
@@ -784,157 +888,281 @@ public class PresetStation
       {
          case 1:
          {
-            ptyStr = "News";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "新闻";
+            else
+                ptyStr = "News";
             break;
          }
          case 2:
          {
-            ptyStr = "Current Affairs";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "新闻时事";
+            else
+                ptyStr = "Current Affairs";
             break;
          }
          case 3:
          {
-            ptyStr = "Information";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "信息";
+            else
+                ptyStr = "Information";
             break;
          }
          case 4:
          {
-            ptyStr = "Sport";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "体育";
+            else
+                ptyStr = "Sport";
             break;
          }
          case 5:
          {
-            ptyStr = "Education";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "教育";
+            else
+                ptyStr = "Education";
             break;
          }
          case 6:
          {
-            ptyStr = "Drama";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "戏剧";
+            else
+                ptyStr = "Drama";
             break;
          }
          case 7:
          {
-            ptyStr = "Culture";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "文化";
+            else
+                ptyStr = "Culture";
             break;
          }
          case 8:
          {
-            ptyStr = "Science";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "科学";
+            else
+                ptyStr = "Science";
             break;
          }
          case 9:
          {
-            ptyStr = "Varied";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "变奏";
+            else
+                ptyStr = "Varied";
             break;
          }
          case 10:
          {
-            ptyStr = "Pop Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "流行音乐";
+            else
+                ptyStr = "Pop Music";
             break;
          }
          case 11:
          {
-            ptyStr = "Rock Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "摇滚音乐";
+            else
+                ptyStr = "Rock Music";
             break;
          }
          case 12:
          {
-            ptyStr = "Easy Listening Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "轻音乐";
+            else
+                ptyStr = "Easy Listening Music";
             break;
          }
          case 13:
          {
-            ptyStr = "Light classical";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "轻古典音乐";
+            else
+                ptyStr = "Light classical";
             break;
          }
          case 14:
          {
-            ptyStr = "Serious classical";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "古典";
+            else
+                ptyStr = "Serious classical";
             break;
          }
          case 15:
          {
-            ptyStr = "Other Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "其他音乐";
+            else
+                ptyStr = "Other Music";
             break;
          }
          case 16:
          {
-            ptyStr = "Weather";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "天气";
+            else
+                ptyStr = "Weather";
             break;
          }
          case 17:
          {
-            ptyStr = "Finance";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "经济";
+            else
+                ptyStr = "Finance";
             break;
          }
          case 18:
          {
-            ptyStr = "Children programs";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "儿童节目";
+            else
+                ptyStr = "Children programs";
             break;
          }
          case 19:
          {
-            ptyStr = "Social Affairs";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "社会事务";
+            else
+                ptyStr = "Social Affairs";
             break;
          }
          case 20:
          {
-            ptyStr = "Religion";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "宗教";
+            else
+                ptyStr = "Religion";
             break;
          }
          case 21:
          {
-            ptyStr = "Phone In";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "听众来电";
+            else
+                ptyStr = "Phone In";
             break;
          }
          case 22:
          {
-            ptyStr = "Travel";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "旅行";
+            else
+                ptyStr = "Travel";
             break;
          }
          case 23:
          {
-            ptyStr = "Leisure";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "休闲";
+            else
+                ptyStr = "Leisure";
             break;
          }
          case 24:
          {
-            ptyStr = "Jazz Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "爵士音乐";
+            else
+                ptyStr = "Jazz Music";
             break;
          }
          case 25:
          {
-            ptyStr = "Country Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "乡村音乐";
+            else
+                ptyStr = "Country Music";
             break;
          }
          case 26:
          {
-            ptyStr = "National Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "民族音乐";
+            else
+                ptyStr = "National Music";
             break;
          }
          case 27:
          {
-            ptyStr = "Oldies Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "怀旧";
+            else
+                ptyStr = "Oldies Music";
             break;
          }
          case 28:
          {
-            ptyStr = "Folk Music";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "民族音乐";
+            else
+                ptyStr = "Folk Music";
             break;
          }
          case 29:
          {
-            ptyStr = "Documentary";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "记录";
+            else
+                ptyStr = "Documentary";
             break;
          }
          case 30:
          {
-            ptyStr = "Emergency Test";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "紧急测试";
+            else
+                ptyStr = "Emergency Test";
             break;
          }
          case 31:
          {
-            ptyStr = "Emergency";
+            if ((Locale.getDefault().getLanguage().equals("zh"))
+                || (Locale.getDefault().getLanguage().equals("zh_CN")))
+                ptyStr = "紧急";
+            else
+                ptyStr = "Emergency";
             break;
          }
          default:
