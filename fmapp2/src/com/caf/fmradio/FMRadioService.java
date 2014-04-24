@@ -805,7 +805,7 @@ public class FMRadioService extends Service
        mAudioManager.registerMediaButtonEventReceiver(fmRadio);
        mStoppedOnFocusLoss = false;
 
-       if (!mA2dpDeviceSupportInHal &&  (true == mA2dpDeviceState.isDeviceAvailable()) &&
+       if (!isSpeakerEnabled() && !mA2dpDeviceSupportInHal &&  (true == mA2dpDeviceState.isDeviceAvailable()) &&
            !isAnalogModeEnabled()
             && (true == startA2dpPlayback())) {
             mOverA2DP=true;
