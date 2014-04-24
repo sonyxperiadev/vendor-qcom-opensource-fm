@@ -809,6 +809,8 @@ public class FMRadioService extends Service
            !isAnalogModeEnabled()
             && (true == startA2dpPlayback())) {
             mOverA2DP=true;
+            Log.d(LOGTAG, "Audio source set it as A2DP");
+            AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_BT_A2DP);
        } else {
            Log.d(LOGTAG, "FMRadio: Requesting to start FM");
            //reason for resending the Speaker option is we are sending
@@ -818,8 +820,10 @@ public class FMRadioService extends Service
                                AudioSystem.DEVICE_STATE_AVAILABLE, "");
            if (isSpeakerEnabled()) {
                mSpeakerPhoneOn = true;
+               Log.d(LOGTAG, "Audio source set it as speaker");
                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_SPEAKER);
            } else {
+               Log.d(LOGTAG, "Audio source set it as headset");
                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
            }
 
