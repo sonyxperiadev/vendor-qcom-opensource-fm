@@ -458,17 +458,12 @@ public class FMRadio extends Activity
    public void onStart() {
       super.onStart();
       Log.d(LOGTAG, "FMRadio: onStart");
-      if (isHdmiOn()) {
-          showDialog(DIALOG_CMD_FAILED_HDMI_ON);
+      if ((mService == null ) && (false == bindToService(this, osc))) {
+          Log.d(LOGTAG, "onStart: Failed to Start Service");
+      } else {
+          Log.d(LOGTAG, "onStart: Start Service completed successfully");
       }
-      else {
-         if ((mService == null ) && (false == bindToService(this, osc))) {
-             Log.d(LOGTAG, "onStart: Failed to Start Service");
-         } else {
-             Log.d(LOGTAG, "onStart: Start Service completed successfully");
-         }
-         registerFMSettingListner();
-      }
+      registerFMSettingListner();
       mPrefs.Load();
       if (mPicker != null) {
           setDisplayvalue();
@@ -734,16 +729,6 @@ public class FMRadio extends Activity
           break;
       }
       return super.onOptionsItemSelected(item);
-   }
-
-   private boolean isHdmiOn() {
-     //HDMI and FM concurrecny is not supported.
-          try {
-              String hdmiUserOption = android.provider.Settings.System.getString(
-                                            getContentResolver(), "HDMI_USEROPTION");
-          }catch (Exception ex) {
-          }
-          return false;
    }
 
    private void enableSpeaker() {
@@ -1625,33 +1610,29 @@ public class FMRadio extends Activity
       mIsSeeking = false;
       mIsSearching = false;
       boolean bStatus = false;
-      if (isHdmiOn()) {
-          showDialog(DIALOG_CMD_FAILED_HDMI_ON);
-      }else {
-          if (mService != null) {
-             try {
-                if((false == mService.isFmOn()) && isAntennaAvailable()) {
-                    bStatus = mService.fmOn();
-                    if(bStatus) {
-                       tuneRadio(FmSharedPreferences.getTunedFrequency());
-                       enableRadioOnOffUI();
-                    }else {
-                       Log.e(LOGTAG, "mService.fmOn failed");
-                       mCommandFailed = CMD_FMON;
-                       if(isCallActive()) {
-                          enableRadioOnOffUI();
-                          showDialog(DIALOG_CMD_FAILED_CALL_ON);
-                       }else {
-                          showDialog(DIALOG_CMD_FAILED);
-                       }
-                    }
+      if (mService != null) {
+          try {
+            if((false == mService.isFmOn()) && isAntennaAvailable()) {
+                bStatus = mService.fmOn();
+                if(bStatus) {
+                   tuneRadio(FmSharedPreferences.getTunedFrequency());
+                   enableRadioOnOffUI();
                 }else {
-                    enableRadioOnOffUI();
+                   Log.e(LOGTAG, "mService.fmOn failed");
+                   mCommandFailed = CMD_FMON;
+                   if(isCallActive()) {
+                      enableRadioOnOffUI();
+                      showDialog(DIALOG_CMD_FAILED_CALL_ON);
+                   }else {
+                      showDialog(DIALOG_CMD_FAILED);
+                   }
                 }
-             }catch (RemoteException e) {
-                e.printStackTrace();
-             }
-          }
+            }else {
+                enableRadioOnOffUI();
+            }
+         }catch (RemoteException e) {
+            e.printStackTrace();
+         }
       }
    }
 
