@@ -282,4 +282,12 @@ class FmReceiverJNI {
      *         {@link #FM_JNI_FAILURE}
      */
     static native int configureSpurTable(int fd);
+
+    /**
+     * native method: Configures the new spur table
+     * @param fd file descriptor of device
+     * @return {@link #FM_JNI_SUCCESS}
+     *         {@link #FM_JNI_FAILURE}
+     */
+    static native int setSpurDataNative(int fd, short  buff[], int len);
 }

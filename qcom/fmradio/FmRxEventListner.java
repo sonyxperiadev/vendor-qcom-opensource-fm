@@ -230,6 +230,10 @@ class FmRxEventListner {
                                 Log.d(TAG, "got eRT event");
                                 cb.FmRxEvERTInfo();
                                 break;
+                            case 22:
+                                Log.d(TAG, "got IRIS_EVT_SPUR_TBL event");
+                                FmReceiver.getSpurTableData();
+                                break;
                             default:
                                 Log.d(TAG, "Unknown event");
                                 break;

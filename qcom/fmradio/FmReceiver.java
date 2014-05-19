@@ -259,6 +259,8 @@ public class FmReceiver extends FmTransceiver
 
    private static final int V4L2_CID_PRIVATE_BASE = 0x8000000;
    private static final int V4L2_CID_PRIVATE_TAVARUA_SIGNAL_TH = V4L2_CID_PRIVATE_BASE + 8;
+   private static final int V4L2_CTRL_CLASS_USER = 0x00980000;
+   private static final int V4L2_CID_PRIVATE_IRIS_GET_SPUR_TBL = (V4L2_CTRL_CLASS_USER + 0x92E);
 
 
    private static final int TAVARUA_BUF_SRCH_LIST=0;
@@ -2534,5 +2536,49 @@ public class FmReceiver extends FmTransceiver
    public int configureSpurTable()
    {
        return mControl.configureSpurTable(sFd);
+   }
+
+   public static int getSpurConfiguration(int freq)
+   {
+       int retval;
+
+       retval = FmReceiverJNI.setControlNative(sFd, V4L2_CID_PRIVATE_IRIS_GET_SPUR_TBL, freq);
+
+        if (retval !=0)
+            Log.d(TAG, "Failed/No Spurs for " +freq);
+       return retval;
+   }
+
+   public static void getSpurTableData()
+   {
+     int freq;
+     byte no_of_spurs;
+     int rotation_value;
+     byte lsbOfLen;
+     byte filterCoe;
+     byte isEnbale;
+     byte [] buff = new byte[STD_BUF_SIZE];
+     int i = 0;
+     FmReceiverJNI.getBufferNative(sFd, buff, 13);
+
+     freq = buff[0] & 0xFF;
+     freq |= ((buff[1] & 0xFF) << 8);
+     freq |= ((buff[2] & 0xFF) << 16);
+     Log.d (TAG, "freq = " +freq);
+     no_of_spurs =  buff[3];
+     Log.d (TAG, "no_of_spurs = " + no_of_spurs);
+     for(i = 0; i < FmConfig.no_Of_Spurs_For_Entry; i++) {
+         rotation_value =  buff[(i * 4) + 4] & 0xFF;
+         rotation_value |= ((buff[(i * 4) + 5] & 0xFF) << 8);
+         rotation_value |= ((buff[(i * 4) + 6] & 0x0F) << 12);
+         Log.d (TAG, "rotation_value = " +rotation_value);
+         lsbOfLen = (byte) (((buff[(i * 4) + 6] & 0xF0) >> 4) & 0x01);
+         Log.d (TAG, "lsbOfLen = "+lsbOfLen);
+         filterCoe = (byte) (((buff[(i * 4) + 6] & 0xF0) >> 5) & 0x03);
+         Log.d (TAG, "filterCoe = " +filterCoe);
+         isEnbale = (byte) (((buff[(i * 4) + 6] & 0xF0) >> 7) & 0x01);
+         Log.d (TAG, "spur level: " +buff[(i * 4) + 7]);
+     }
+     return;
    }
 }
