@@ -2023,6 +2023,7 @@ public class FMRadio extends Activity
        */
       for (int buttonIndex = 0; (buttonIndex < MAX_PRESETS_PER_PAGE); buttonIndex++) {
          if (mPresetButtons[buttonIndex] != null) {
+            mPresetButtons[buttonIndex].setHeight(-1);
             int stationIdex = (mPresetPageNumber * MAX_PRESETS_PER_PAGE)
                                 + buttonIndex;
             PresetStation station = FmSharedPreferences.getStationInList(stationIdex);
@@ -2034,7 +2035,6 @@ public class FMRadio extends Activity
 	       mPresetButtons[buttonIndex].setEllipsize(TextUtils.TruncateAt.END);
                mPresetButtons[buttonIndex].setText(display);
                mPresetButtons[buttonIndex].setTag(station);
-               mPresetButtons[buttonIndex].setHeight(-1);
                addedStations++;
             }else {
                mPresetButtons[buttonIndex].setText(R.string.add_station);
