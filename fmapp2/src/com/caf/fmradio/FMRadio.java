@@ -2624,9 +2624,15 @@ public class FMRadio extends Activity
    Runnable mOnStereo = new Runnable() {
       public void run() {
          if (FMRADIO_UI_STATION_AUDIO_STEREO == mStereo) {
-             mStereoTV.setText(R.string.audio_type_stereo);
-         }else if (FMRADIO_UI_STATION_AUDIO_MONO == mStereo) {
-             mStereoTV.setText(R.string.audio_type_mono);
+             if ((Locale.getDefault().getLanguage().equals("zh")))
+                 mStereoTV.setText("立體聲");
+             else
+                 mStereoTV.setText(R.string.audio_type_stereo);
+         } else if (FMRADIO_UI_STATION_AUDIO_MONO == mStereo) {
+             if ((Locale.getDefault().getLanguage().equals("zh")))
+                 mStereoTV.setText("單聲道");
+             else
+                 mStereoTV.setText(R.string.audio_type_mono);
          }else {
              mStereoTV.setText("");
          }
