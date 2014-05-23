@@ -317,7 +317,11 @@ public class Settings extends PreferenceActivity implements
                   setBandSummary(summaryBandItems.length - 1);
                   clearStationList();
                }else {
-                  Toast.makeText(this, getString(R.string.user_defind_band_msg),
+                  if ((Locale.getDefault().getLanguage().equals("zh")))
+                      Toast.makeText(this,"請輸入有效的頻道範圍76.0-108.0",
+                                                            Toast.LENGTH_SHORT).show();
+                  else
+                      Toast.makeText(this, getString(R.string.user_defind_band_msg),
                                                             Toast.LENGTH_SHORT).show();
                }
            }else if(key.equals(USER_DEFINED_BAND_MAX_KEY)) {
@@ -337,7 +341,11 @@ public class Settings extends PreferenceActivity implements
                   setBandSummary(summaryBandItems.length - 1);
                   clearStationList();
                }else {
-                  Toast.makeText(this, getString(R.string.user_defind_band_msg),
+                  if ((Locale.getDefault().getLanguage().equals("zh")))
+                      Toast.makeText(this,"請輸入有效的頻道範圍76.0-108.0",
+                                                            Toast.LENGTH_SHORT).show();
+                  else
+                      Toast.makeText(this, getString(R.string.user_defind_band_msg),
                                                             Toast.LENGTH_SHORT).show();
                }
           }else {
