@@ -230,10 +230,6 @@ public class Settings extends PreferenceActivity implements
              }
           }
 
-          // Add a new category
-          PreferenceCategory prefCat = new PreferenceCategory(this);
-          root.addPreference(prefCat);
-
           mRestoreDefaultPreference = new Preference(this);
           mRestoreDefaultPreference.setTitle(
                                        R.string.settings_revert_defaults_title);
