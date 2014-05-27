@@ -1056,12 +1056,6 @@ public class FMRadioService extends Service
 
        if((TelephonyManager.CALL_STATE_OFFHOOK == state)||
           (TelephonyManager.CALL_STATE_RINGING == state)) {
-           if (state == TelephonyManager.CALL_STATE_RINGING) {
-               int ringvolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-               if (ringvolume == 0) {
-                   return;
-               }
-           }
            boolean bTempSpeaker = mSpeakerPhoneOn; //need to restore SpeakerPhone
            boolean bTempMute = mMuted;// need to restore Mute status
            int bTempCall = mCallStatus;//need to restore call status
