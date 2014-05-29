@@ -53,6 +53,7 @@
 #define V4L2_CID_PRIVATE_IRIS_SET_CALIBRATION           (V4L2_CTRL_CLASS_USER + 0x92A)
 #define V4L2_CID_PRIVATE_TAVARUA_ON_CHANNEL_THRESHOLD   (V4L2_CTRL_CLASS_USER + 0x92B)
 #define V4L2_CID_PRIVATE_TAVARUA_OFF_CHANNEL_THRESHOLD  (V4L2_CTRL_CLASS_USER + 0x92C)
+#define V4L2_CID_PRIVATE_IRIS_SET_SPURTABLE             (V4L2_CTRL_CLASS_USER + 0x92D)
 #define TX_RT_LENGTH       63
 #define WAIT_TIMEOUT 200000 /* 200*1000us */
 #define TX_RT_DELIMITER    0x0d
@@ -766,6 +767,45 @@ static jint android_hardware_fmradio_FmReceiverJNI_setTxPowerLevelNative
     return FM_JNI_SUCCESS;
 }
 
+/* native interface */
+static jint android_hardware_fmradio_FmReceiverJNI_setSpurDataNative
+ (JNIEnv * env, jobject thiz, jint fd, jshortArray buff, jint count)
+{
+    ALOGE("entered JNI's setSpurDataNative\n");
+    int err, i = 0;
+    struct v4l2_ext_control ext_ctl;
+    struct v4l2_ext_controls v4l2_ctls;
+    uint8_t *data;
+    short *spur_data = env->GetShortArrayElements(buff, NULL);
+    if (spur_data == NULL) {
+        ALOGE("Spur data is NULL\n");
+        return FM_JNI_FAILURE;
+    }
+    data = (uint8_t *) malloc(count);
+    if (data == NULL) {
+        ALOGE("Allocation failed for data\n");
+        return FM_JNI_FAILURE;
+    }
+    for(i = 0; i < count; i++)
+        data[i] = (uint8_t) spur_data[i];
+
+    ext_ctl.id = V4L2_CID_PRIVATE_IRIS_SET_SPURTABLE;
+    ext_ctl.string = (char*)data;
+    ext_ctl.size = count;
+    v4l2_ctls.ctrl_class = V4L2_CTRL_CLASS_USER;
+    v4l2_ctls.count   = 1;
+    v4l2_ctls.controls  = &ext_ctl;
+
+    err = ioctl(fd, VIDIOC_S_EXT_CTRLS, &v4l2_ctls );
+    if (err < 0){
+        ALOGE("Set ioctl failed\n");
+        free(data);
+        return FM_JNI_FAILURE;
+    }
+    free(data);
+    return FM_JNI_SUCCESS;
+}
+
 /*
  * JNI registration.
  */
@@ -825,7 +865,8 @@ static JNINativeMethod gMethods[] = {
             (void*)android_hardware_fmradio_FmReceiverJNI_SetCalibrationNative},
         { "configureSpurTable", "(I)I",
             (void*)android_hardware_fmradio_FmReceiverJNI_configureSpurTable},
-
+        { "setSpurDataNative", "(I[SI)I",
+            (void*)android_hardware_fmradio_FmReceiverJNI_setSpurDataNative},
 };
 
 int register_android_hardware_fm_fmradio(JNIEnv* env)

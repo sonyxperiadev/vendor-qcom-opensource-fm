@@ -29,6 +29,7 @@
 
 package qcom.fmradio;
 import android.util.Log;
+import java.io.File;
 
 /** <code>FmTransceiver</code> is the superclass of classes
  * <code>FmReceiver</code> and <code>FmTransmitter</code>
@@ -405,6 +406,12 @@ public class FmTransceiver
       //Acquire the deviceon Enable
       if( !acquire("/dev/radio0")){
          return false;
+      }
+      if (new File("/etc/fm/SpurTableFile.txt").isFile()) {
+          Log.d(TAG, "Send Spur roation table");
+          FmConfig.fmSpurConfig(sFd);
+      } else {
+          Log.d(TAG, "No existing file to do spur configuration");
       }
       Log.d(TAG, "turning on " + device);
       mControl.fmOn(sFd, device);
