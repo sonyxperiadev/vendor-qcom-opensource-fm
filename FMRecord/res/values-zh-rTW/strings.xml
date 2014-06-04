@@ -30,6 +30,14 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="spaceIsLow_content">USB 存儲設備空間不足，請更改錄音時長設置，或刪除某些錄音或者其他檔案。</string>
     <string name="sdcard_no_space_cannot_recording">SD卡空間不足，不能錄音</string>
     <string name="recording_stop_no_space">SD卡空間不足，錄音停止</string>
+	<string name="audio_db_artist_name">我的FM錄音</string>
+	<!-- all recordings will show up in the media database with this 'album' name -->
+	<string name="audio_db_album_name">FM 錄音</string>
+	<!-- all recordings will show up in the media database in a playlist with this name -->
+	<string name="audio_db_playlist_name">FM 錄音</string>
+	<string name="fm_record_progress">FM 錄音進行中</string>
+	<string name="unable_to_store">無法保存已錄音頻</string>
+	<string name="FMRecording_reach_size_limit">已到達最長限制.</string>
     <!-- prompt message for stopping record -->
     <string name="save_record_file">錄音已保存至 "<xliff:g id="record_file">%1$s</xliff:g>"</string>
 </resources>

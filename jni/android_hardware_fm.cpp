@@ -53,6 +53,7 @@
 #define V4L2_CID_PRIVATE_IRIS_SET_CALIBRATION           (V4L2_CTRL_CLASS_USER + 0x92A)
 #define V4L2_CID_PRIVATE_TAVARUA_ON_CHANNEL_THRESHOLD   (V4L2_CTRL_CLASS_USER + 0x92B)
 #define V4L2_CID_PRIVATE_TAVARUA_OFF_CHANNEL_THRESHOLD  (V4L2_CTRL_CLASS_USER + 0x92C)
+#define V4L2_CID_PRIVATE_IRIS_SET_SPURTABLE             (V4L2_CTRL_CLASS_USER + 0x92D)
 #define TX_RT_LENGTH       63
 #define WAIT_TIMEOUT 200000 /* 200*1000us */
 #define TX_RT_DELIMITER    0x0d
@@ -103,28 +104,35 @@ static jint android_hardware_fmradio_FmReceiverJNI_acquireFdNative
     } else {
        return FM_JNI_FAILURE;
     }
-    /*Set the mode for soc downloader*/
-    property_set("hw.fm.mode", "normal");
-    /* Need to clear the hw.fm.init firstly */
-    property_set("hw.fm.init", "0");
-    property_set("ctl.start", "fm_dl");
-    sched_yield();
-    for(i=0; i<45; i++) {
-        property_get("hw.fm.init", value, NULL);
-        if (strcmp(value, "1") == 0) {
+
+    property_get("qcom.bluetooth.soc", value, NULL);
+
+    ALOGD("BT soc is %s\n", value);
+
+    if (strcmp(value, "rome") != 0)
+    {
+       /*Set the mode for soc downloader*/
+       property_set("hw.fm.mode", "normal");
+       /* Need to clear the hw.fm.init firstly */
+       property_set("hw.fm.init", "0");
+       property_set("ctl.start", "fm_dl");
+       sched_yield();
+       for(i=0; i<45; i++) {
+         property_get("hw.fm.init", value, NULL);
+         if (strcmp(value, "1") == 0) {
             init_success = 1;
             break;
-        } else {
+         } else {
             usleep(WAIT_TIMEOUT);
-        }
-    }
-    ALOGE("init_success:%d after %f seconds \n", init_success, 0.2*i);
-    if(!init_success) {
-        property_set("ctl.stop", "fm_dl");
-       // close the fd(power down)
-
-       close(fd);
-        return FM_JNI_FAILURE;
+         }
+       }
+       ALOGE("init_success:%d after %f seconds \n", init_success, 0.2*i);
+       if(!init_success) {
+         property_set("ctl.stop", "fm_dl");
+         // close the fd(power down)
+         close(fd);
+         return FM_JNI_FAILURE;
+       }
     }
     return fd;
 }
@@ -135,9 +143,17 @@ static jint android_hardware_fmradio_FmReceiverJNI_closeFdNative
 {
     int i = 0;
     int cleanup_success = 0;
-    char value = 0, retval =0;
+    char retval =0;
+    char value[PROPERTY_VALUE_MAX] = {'\0'};
 
-    property_set("ctl.stop", "fm_dl");
+    property_get("qcom.bluetooth.soc", value, NULL);
+
+    ALOGD("BT soc is %s\n", value);
+
+    if (strcmp(value, "rome") != 0)
+    {
+       property_set("ctl.stop", "fm_dl");
+    }
     close(fd);
     return FM_JNI_SUCCESS;
 }
@@ -418,40 +434,48 @@ static jint android_hardware_fmradio_FmReceiverJNI_setNotchFilterNative(JNIEnv *
     char notch[PROPERTY_VALUE_MAX] = {0x00};
     struct v4l2_control control;
     int err;
-    /*Enable/Disable the WAN avoidance*/
-    property_set("hw.fm.init", "0");
-    if (aValue)
-       property_set("hw.fm.mode", "wa_enable");
-    else
-       property_set("hw.fm.mode", "wa_disable");
 
-    property_set("ctl.start", "fm_dl");
-    sched_yield();
-    for(i=0; i<10; i++) {
-       property_get("hw.fm.init", value, NULL);
-       if (strcmp(value, "1") == 0) {
-          init_success = 1;
-          break;
-       } else {
-          usleep(WAIT_TIMEOUT);
+    property_get("qcom.bluetooth.soc", value, NULL);
+
+    ALOGD("BT soc is %s\n", value);
+
+    if (strcmp(value, "rome") != 0)
+    {
+       /*Enable/Disable the WAN avoidance*/
+       property_set("hw.fm.init", "0");
+       if (aValue)
+          property_set("hw.fm.mode", "wa_enable");
+       else
+          property_set("hw.fm.mode", "wa_disable");
+
+       property_set("ctl.start", "fm_dl");
+       sched_yield();
+       for(i=0; i<10; i++) {
+          property_get("hw.fm.init", value, NULL);
+          if (strcmp(value, "1") == 0) {
+             init_success = 1;
+             break;
+          } else {
+             usleep(WAIT_TIMEOUT);
+          }
        }
-    }
-    ALOGE("init_success:%d after %f seconds \n", init_success, 0.2*i);
+       ALOGE("init_success:%d after %f seconds \n", init_success, 0.2*i);
 
-    property_get("notch.value", notch, NULL);
-    ALOGE("Notch = %s",notch);
-    if (!strncmp("HIGH",notch,strlen("HIGH")))
-        control.value = HIGH_BAND;
-    else if(!strncmp("LOW",notch,strlen("LOW")))
-        control.value = LOW_BAND;
-    else
-        control.value = 0;
+       property_get("notch.value", notch, NULL);
+       ALOGE("Notch = %s",notch);
+       if (!strncmp("HIGH",notch,strlen("HIGH")))
+           control.value = HIGH_BAND;
+       else if(!strncmp("LOW",notch,strlen("LOW")))
+           control.value = LOW_BAND;
+       else
+           control.value = 0;
 
-    ALOGE("Notch value : %d", control.value);
-    control.id = id;
-    err = ioctl(fd, VIDIOC_S_CTRL,&control );
-    if(err < 0){
-          return FM_JNI_FAILURE;
+       ALOGE("Notch value : %d", control.value);
+       control.id = id;
+       err = ioctl(fd, VIDIOC_S_CTRL,&control );
+       if(err < 0){
+             return FM_JNI_FAILURE;
+       }
     }
     return FM_JNI_SUCCESS;
 }
@@ -464,22 +488,29 @@ static jint android_hardware_fmradio_FmReceiverJNI_setAnalogModeNative(JNIEnv * 
     char value[PROPERTY_VALUE_MAX] = {'\0'};
     char firmwareVersion[80];
 
-    /*Enable/Disable Analog Mode FM*/
-    property_set("hw.fm.init", "0");
-    if (aValue) {
-        property_set("hw.fm.isAnalog", "true");
-    } else {
-        property_set("hw.fm.isAnalog", "false");
-    }
-    property_set("hw.fm.mode","config_dac");
-    property_set("ctl.start", "fm_dl");
-    sched_yield();
-    for(i=0; i<10; i++) {
-       property_get("hw.fm.init", value, NULL);
-       if (strcmp(value, "1") == 0) {
-          return 1;
+    property_get("qcom.bluetooth.soc", value, NULL);
+
+    ALOGD("BT soc is %s\n", value);
+
+    if (strcmp(value, "rome") != 0)
+    {
+       /*Enable/Disable Analog Mode FM*/
+       property_set("hw.fm.init", "0");
+       if (aValue) {
+           property_set("hw.fm.isAnalog", "true");
        } else {
-          usleep(WAIT_TIMEOUT);
+           property_set("hw.fm.isAnalog", "false");
+       }
+       property_set("hw.fm.mode","config_dac");
+       property_set("ctl.start", "fm_dl");
+       sched_yield();
+       for(i=0; i<10; i++) {
+          property_get("hw.fm.init", value, NULL);
+          if (strcmp(value, "1") == 0) {
+             return 1;
+          } else {
+             usleep(WAIT_TIMEOUT);
+          }
        }
     }
 
@@ -736,6 +767,45 @@ static jint android_hardware_fmradio_FmReceiverJNI_setTxPowerLevelNative
     return FM_JNI_SUCCESS;
 }
 
+/* native interface */
+static jint android_hardware_fmradio_FmReceiverJNI_setSpurDataNative
+ (JNIEnv * env, jobject thiz, jint fd, jshortArray buff, jint count)
+{
+    ALOGE("entered JNI's setSpurDataNative\n");
+    int err, i = 0;
+    struct v4l2_ext_control ext_ctl;
+    struct v4l2_ext_controls v4l2_ctls;
+    uint8_t *data;
+    short *spur_data = env->GetShortArrayElements(buff, NULL);
+    if (spur_data == NULL) {
+        ALOGE("Spur data is NULL\n");
+        return FM_JNI_FAILURE;
+    }
+    data = (uint8_t *) malloc(count);
+    if (data == NULL) {
+        ALOGE("Allocation failed for data\n");
+        return FM_JNI_FAILURE;
+    }
+    for(i = 0; i < count; i++)
+        data[i] = (uint8_t) spur_data[i];
+
+    ext_ctl.id = V4L2_CID_PRIVATE_IRIS_SET_SPURTABLE;
+    ext_ctl.string = (char*)data;
+    ext_ctl.size = count;
+    v4l2_ctls.ctrl_class = V4L2_CTRL_CLASS_USER;
+    v4l2_ctls.count   = 1;
+    v4l2_ctls.controls  = &ext_ctl;
+
+    err = ioctl(fd, VIDIOC_S_EXT_CTRLS, &v4l2_ctls );
+    if (err < 0){
+        ALOGE("Set ioctl failed\n");
+        free(data);
+        return FM_JNI_FAILURE;
+    }
+    free(data);
+    return FM_JNI_SUCCESS;
+}
+
 /*
  * JNI registration.
  */
@@ -795,7 +865,8 @@ static JNINativeMethod gMethods[] = {
             (void*)android_hardware_fmradio_FmReceiverJNI_SetCalibrationNative},
         { "configureSpurTable", "(I)I",
             (void*)android_hardware_fmradio_FmReceiverJNI_configureSpurTable},
-
+        { "setSpurDataNative", "(I[SI)I",
+            (void*)android_hardware_fmradio_FmReceiverJNI_setSpurDataNative},
 };
 
 int register_android_hardware_fm_fmradio(JNIEnv* env)
