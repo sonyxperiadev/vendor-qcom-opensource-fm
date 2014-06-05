@@ -2867,7 +2867,7 @@ public class FMRadio extends Activity
       void startScroll() {
          TextView textView = mView.get();
          if (textView != null) {
-            mOriginalString = (String)textView.getText();
+            mOriginalString = textView.getText().toString();
             mStringlength = mOriginalString.length();
             if (mStringlength > 0) {
                mStatus = SCROLLER_STARTING;
