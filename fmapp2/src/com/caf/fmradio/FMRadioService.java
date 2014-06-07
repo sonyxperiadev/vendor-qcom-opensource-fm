@@ -817,8 +817,6 @@ public class FMRadioService extends Service
            //reason for resending the Speaker option is we are sending
            //ACTION_FM=1 to AudioManager, the previous state of Speaker we set
            //need not be retained by the Audio Manager.
-           AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
-                               AudioSystem.DEVICE_STATE_AVAILABLE, "");
            if (isSpeakerEnabled()) {
                mSpeakerPhoneOn = true;
                Log.d(LOGTAG, "Audio source set it as speaker");
@@ -827,6 +825,8 @@ public class FMRadioService extends Service
                Log.d(LOGTAG, "Audio source set it as headset");
                AudioSystem.setForceUse(AudioSystem.FOR_MEDIA, AudioSystem.FORCE_NONE);
            }
+           AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM,
+                               AudioSystem.DEVICE_STATE_AVAILABLE, "");
 
        }
        sendRecordServiceIntent(RECORD_START);
