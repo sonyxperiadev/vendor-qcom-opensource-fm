@@ -313,7 +313,7 @@ public class Settings extends PreferenceActivity implements
                   setBandSummary(summaryBandItems.length - 1);
                   clearStationList();
                }else {
-                  if ((Locale.getDefault().getLanguage().equals("zh")))
+                  if ((Locale.getDefault().toString().equals("zh_HK")))
                       Toast.makeText(this,"請輸入有效的頻道範圍76.0-108.0",
                                                             Toast.LENGTH_SHORT).show();
                   else
@@ -337,7 +337,7 @@ public class Settings extends PreferenceActivity implements
                   setBandSummary(summaryBandItems.length - 1);
                   clearStationList();
                }else {
-                  if ((Locale.getDefault().getLanguage().equals("zh")))
+                  if ((Locale.getDefault().toString().equals("zh_HK")))
                       Toast.makeText(this,"請輸入有效的頻道範圍76.0-108.0",
                                                             Toast.LENGTH_SHORT).show();
                   else

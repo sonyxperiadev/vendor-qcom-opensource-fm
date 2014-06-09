@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -93,6 +93,8 @@ public class FMRecordingService extends Service {
     private int clientPid = -1;
     private String clientProcessName = "";
     private String mAudioType = "audio/*";
+    private long startTimerMs = 0;
+    private long stopTimerMs = 0;
 
     public void onCreate() {
 
@@ -259,6 +261,7 @@ public class FMRecordingService extends Service {
              mRecorder.prepare();
              Log.d(TAG, "start");
              mRecorder.start();
+             startTimerMs = System.currentTimeMillis();
         } catch (IOException e) {
              Log.d(TAG, "IOException while start");
              mRecorder.reset();
@@ -324,6 +327,7 @@ public class FMRecordingService extends Service {
             return;
         try {
              mRecorder.stop();
+             stopTimerMs = System.currentTimeMillis();
              mRecorder.reset();
              mRecorder.release();
              mRecorder = null;
@@ -370,6 +374,7 @@ public class FMRecordingService extends Service {
         ContentValues cv = new ContentValues();
         long current = System.currentTimeMillis();
         long modDate = file.lastModified();
+        long recordDuration = stopTimerMs - startTimerMs;
         Date date = new Date(current);
         SimpleDateFormat formatter = new SimpleDateFormat(
                   res.getString(R.string.audio_db_title_format));
@@ -382,6 +387,7 @@ public class FMRecordingService extends Service {
         cv.put(MediaStore.Audio.Media.DATA, file.getAbsolutePath());
         cv.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
         cv.put(MediaStore.Audio.Media.DATE_MODIFIED, (int) (modDate / 1000));
+        cv.put(MediaStore.Audio.Media.DURATION, recordDuration);
         cv.put(MediaStore.Audio.Media.MIME_TYPE, mAudioType);
         cv.put(MediaStore.Audio.Media.ARTIST,
                 res.getString(R.string.audio_db_artist_name));

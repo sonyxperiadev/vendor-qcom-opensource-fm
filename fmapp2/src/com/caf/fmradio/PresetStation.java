@@ -639,9 +639,9 @@ public class PresetStation
       {
          case 1:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "新聞";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "新闻";
             else
                 ptyStr = "News";
@@ -649,9 +649,9 @@ public class PresetStation
          }
          case 2:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "資訊";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "信息频道";
             else
                 ptyStr = "Information";
@@ -659,9 +659,9 @@ public class PresetStation
          }
          case 3:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "体育";
             else
                 ptyStr = "Sports";
@@ -669,9 +669,9 @@ public class PresetStation
          }
          case 4:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "討論";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "交流";
             else
                 ptyStr = "Talk";
@@ -679,9 +679,9 @@ public class PresetStation
          }
          case 5:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "搖滾";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "摇滚";
             else
                 ptyStr = "Rock";
@@ -689,9 +689,9 @@ public class PresetStation
          }
          case 6:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "古典搖滾";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "经典摇滚";
             else
                 ptyStr = "Classic Rock";
@@ -699,9 +699,9 @@ public class PresetStation
          }
          case 7:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "成人熱門精選";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "成人点击";
             else
                 ptyStr = "Adult Hits";
@@ -709,9 +709,9 @@ public class PresetStation
          }
          case 8:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "輕柔搖滾樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "轻摇滚";
             else
                 ptyStr = "Soft Rock";
@@ -719,9 +719,9 @@ public class PresetStation
          }
          case 9:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "前40首最熱門歌曲";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "前40";
             else
                 ptyStr = "Top 40";
@@ -729,9 +729,9 @@ public class PresetStation
          }
          case 10:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "鄉村音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "乡村";
             else
                 ptyStr = "Country";
@@ -739,9 +739,9 @@ public class PresetStation
          }
          case 11:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "懷舊";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "老歌";
             else
                 ptyStr = "Oldies";
@@ -749,9 +749,9 @@ public class PresetStation
          }
          case 12:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "輕柔";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "轻音乐";
             else
                 ptyStr = "Soft";
@@ -759,9 +759,9 @@ public class PresetStation
          }
          case 13:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "思鄉";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "怀旧";
             else
                 ptyStr = "Nostalgia";
@@ -769,9 +769,9 @@ public class PresetStation
          }
          case 14:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "爵士樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "爵士";
             else
                 ptyStr = "Jazz";
@@ -779,9 +779,9 @@ public class PresetStation
          }
          case 15:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "古典";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "古典";
             else
                 ptyStr = "Classical";
@@ -789,9 +789,9 @@ public class PresetStation
          }
          case 16:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "節奏藍調";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "节奏布鲁斯";
             else
                 ptyStr = "Rhythm and Blues";
@@ -799,9 +799,9 @@ public class PresetStation
          }
          case 17:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "輕柔節奏藍調";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "轻节奏布鲁斯";
             else
                 ptyStr = "Soft Rhythm and Blues";
@@ -809,9 +809,9 @@ public class PresetStation
          }
          case 18:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "外語";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "外语频道";
             else
                 ptyStr = "Foreign Language";
@@ -819,9 +819,9 @@ public class PresetStation
          }
          case 19:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "宗教音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "宗教音乐";
             else
                 ptyStr = "Religious Music";
@@ -829,9 +829,9 @@ public class PresetStation
          }
          case 20:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "宗教討論";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "宗教交流";
             else
                 ptyStr = "Religious Talk";
@@ -839,9 +839,9 @@ public class PresetStation
          }
          case 21:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "個人";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "个性";
             else
                 ptyStr = "Personality";
@@ -849,9 +849,9 @@ public class PresetStation
          }
          case 22:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "公開";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "公共频道";
             else
                 ptyStr = "Public";
@@ -859,9 +859,9 @@ public class PresetStation
          }
          case 23:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "學院";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "校园";
             else
                 ptyStr = "College";
@@ -869,9 +869,9 @@ public class PresetStation
          }
          case 29:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "天氣";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "天气";
             else
                 ptyStr = "Weather";
@@ -879,9 +879,9 @@ public class PresetStation
          }
          case 30:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "緊急測試";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "紧急 测试";
             else
                 ptyStr = "Emergency Test";
@@ -889,9 +889,9 @@ public class PresetStation
          }
          case 31:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "緊急";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "紧急";
             else
                 ptyStr = "Emergency";
@@ -915,9 +915,9 @@ public class PresetStation
       {
          case 1:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "新聞";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "新闻";
             else
                 ptyStr = "News";
@@ -925,9 +925,9 @@ public class PresetStation
          }
          case 2:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "新聞時事";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "新闻时事";
             else
                 ptyStr = "Current Affairs";
@@ -935,9 +935,9 @@ public class PresetStation
          }
          case 3:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "資訊";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "信息";
             else
                 ptyStr = "Information";
@@ -945,9 +945,9 @@ public class PresetStation
          }
          case 4:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "體育";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "体育";
             else
                 ptyStr = "Sport";
@@ -955,9 +955,9 @@ public class PresetStation
          }
          case 5:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "教育";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "教育";
             else
                 ptyStr = "Education";
@@ -965,9 +965,9 @@ public class PresetStation
          }
          case 6:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "戲劇";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "戏剧";
             else
                 ptyStr = "Drama";
@@ -975,9 +975,9 @@ public class PresetStation
          }
          case 7:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "文化";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "文化";
             else
                 ptyStr = "Culture";
@@ -985,9 +985,9 @@ public class PresetStation
          }
          case 8:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "科學";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "科学";
             else
                 ptyStr = "Science";
@@ -995,9 +995,9 @@ public class PresetStation
          }
          case 9:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "多樣化";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "变奏";
             else
                 ptyStr = "Varied";
@@ -1005,9 +1005,9 @@ public class PresetStation
          }
          case 10:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "流行音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "流行音乐";
             else
                 ptyStr = "Pop Music";
@@ -1015,9 +1015,9 @@ public class PresetStation
          }
          case 11:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "搖滾樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "摇滚音乐";
             else
                 ptyStr = "Rock Music";
@@ -1025,9 +1025,9 @@ public class PresetStation
          }
          case 12:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "輕音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "轻音乐";
             else
                 ptyStr = "Easy Listening Music";
@@ -1035,9 +1035,9 @@ public class PresetStation
          }
          case 13:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "輕古典音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "轻古典音乐";
             else
                 ptyStr = "Light classical";
@@ -1045,9 +1045,9 @@ public class PresetStation
          }
          case 14:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "正統古典";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "古典";
             else
                 ptyStr = "Serious classical";
@@ -1055,9 +1055,9 @@ public class PresetStation
          }
          case 15:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "其他音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "其他音乐";
             else
                 ptyStr = "Other Music";
@@ -1065,9 +1065,9 @@ public class PresetStation
          }
          case 16:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "天氣";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "天气";
             else
                 ptyStr = "Weather";
@@ -1075,9 +1075,9 @@ public class PresetStation
          }
          case 17:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "財政";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "经济";
             else
                 ptyStr = "Finance";
@@ -1085,9 +1085,9 @@ public class PresetStation
          }
          case 18:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "少兒節目";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "儿童节目";
             else
                 ptyStr = "Children programs";
@@ -1095,9 +1095,9 @@ public class PresetStation
          }
          case 19:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "社會事務";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "社会事务";
             else
                 ptyStr = "Social Affairs";
@@ -1105,9 +1105,9 @@ public class PresetStation
          }
          case 20:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "宗教";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "宗教";
             else
                 ptyStr = "Religion";
@@ -1115,9 +1115,9 @@ public class PresetStation
          }
          case 21:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "聽眾來得";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "听众来电";
             else
                 ptyStr = "Phone In";
@@ -1125,9 +1125,9 @@ public class PresetStation
          }
          case 22:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "旅遊";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "旅行";
             else
                 ptyStr = "Travel";
@@ -1135,9 +1135,9 @@ public class PresetStation
          }
          case 23:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "休閒";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "休闲";
             else
                 ptyStr = "Leisure";
@@ -1145,9 +1145,9 @@ public class PresetStation
          }
          case 24:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "爵士樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "爵士音乐";
             else
                 ptyStr = "Jazz Music";
@@ -1155,9 +1155,9 @@ public class PresetStation
          }
          case 25:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "鄉村音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "乡村音乐";
             else
                 ptyStr = "Country Music";
@@ -1165,9 +1165,9 @@ public class PresetStation
          }
          case 26:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "國樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "民族音乐";
             else
                 ptyStr = "National Music";
@@ -1175,9 +1175,9 @@ public class PresetStation
          }
          case 27:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "懷舊金曲";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "怀旧";
             else
                 ptyStr = "Oldies Music";
@@ -1185,9 +1185,9 @@ public class PresetStation
          }
          case 28:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "民俗音樂";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "民族音乐";
             else
                 ptyStr = "Folk Music";
@@ -1195,9 +1195,9 @@ public class PresetStation
          }
          case 29:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "紀實";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "记录";
             else
                 ptyStr = "Documentary";
@@ -1205,9 +1205,9 @@ public class PresetStation
          }
          case 30:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "緊急測試";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "紧急测试";
             else
                 ptyStr = "Emergency Test";
@@ -1215,9 +1215,9 @@ public class PresetStation
          }
          case 31:
          {
-            if (Locale.getDefault().getLanguage().equals("zh"))
+            if (Locale.getDefault().toString().equals("zh_HK"))
                 ptyStr = "緊急";
-            else if (Locale.getDefault().getLanguage().equals("zh_CN"))
+            else if (Locale.getDefault().toString().equals("zh_CN"))
                 ptyStr = "紧急";
             else
                 ptyStr = "Emergency";
