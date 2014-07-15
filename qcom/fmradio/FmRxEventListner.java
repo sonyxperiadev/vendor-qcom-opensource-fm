@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009,2012-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009,2012-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -91,6 +91,7 @@ class FmRxEventListner {
                                     FmTransceiver.setFMPowerState(FmTransceiver.FMState_Rx_Turned_On);
                                     Log.v(TAG, "RxEvtList: CURRENT-STATE : FMRxStarting ---> NEW-STATE : FMRxOn");
                                     cb.FmRxEvEnableReceiver();
+                                    FmReceiverJNI.configurePerformanceParams(fd);
                                 }
                                 else if (FmTransceiver.getFMPowerState() == FmTransceiver.subPwrLevel_FMTurning_Off) {
                                     /*Set the state as FMOff */

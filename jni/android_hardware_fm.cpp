@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -26,13 +26,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define LOG_TAG "fmradio"
+#define LOG_TAG "android_hardware_fm"
 
 #include "jni.h"
 #include "JNIHelp.h"
 #include "android_runtime/AndroidRuntime.h"
 #include "utils/Log.h"
 #include "utils/misc.h"
+#include "FmIoctlsInterface.h"
+#include "ConfigFmThs.h"
 #include <cutils/properties.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -45,7 +47,6 @@
 #define FM_JNI_FAILURE -1L
 #define SEARCH_DOWN 0
 #define SEARCH_UP 1
-#define TUNE_MULT 16000
 #define HIGH_BAND 2
 #define LOW_BAND  1
 #define CAL_DATA_SIZE 23
@@ -58,7 +59,6 @@
 #define WAIT_TIMEOUT 200000 /* 200*1000us */
 #define TX_RT_DELIMITER    0x0d
 #define PS_LEN    9
-#define STD_BUF_SIZE 256
 enum search_dir_t {
     SEEK_UP,
     SEEK_DN,
@@ -167,13 +167,22 @@ static jint android_hardware_fmradio_FmReceiverJNI_getFreqNative
     (JNIEnv * env, jobject thiz, jint fd)
 {
     int err;
-    struct v4l2_frequency freq;
-    freq.type = V4L2_TUNER_RADIO;
-    err = ioctl(fd, VIDIOC_G_FREQUENCY, &freq);
-    if(err < 0){
-      return FM_JNI_FAILURE;
+    long freq;
+
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: get_cur_freq(fd, freq);
+        if(err < 0) {
+           err = FM_JNI_FAILURE;
+           ALOGE("%s: get freq failed\n", LOG_TAG);
+        } else {
+           err = freq;
+        }
+    } else {
+        ALOGE("%s: get freq failed because fd is negative, fd: %d\n",
+              LOG_TAG, fd);
+        err = FM_JNI_FAILURE;
     }
-    return ((freq.frequency*1000)/TUNE_MULT);
+    return err;
 }
 
 /*native interface */
@@ -181,209 +190,257 @@ static jint android_hardware_fmradio_FmReceiverJNI_setFreqNative
     (JNIEnv * env, jobject thiz, jint fd, jint freq)
 {
     int err;
-    double tune;
-    struct v4l2_frequency freq_struct;
-    freq_struct.type = V4L2_TUNER_RADIO;
-    freq_struct.frequency = (freq*TUNE_MULT/1000);
-    err = ioctl(fd, VIDIOC_S_FREQUENCY, &freq_struct);
-    if(err < 0){
-            return FM_JNI_FAILURE;
+
+    if ((fd >= 0) && (freq > 0)) {
+        err = FmIoctlsInterface :: set_freq(fd, freq);
+        if (err < 0) {
+            ALOGE("%s: set freq failed, freq: %d\n", LOG_TAG, freq);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        ALOGE("%s: set freq failed because either fd/freq is negative,\
+              fd: %d, freq: %d\n", LOG_TAG, fd, freq);
+        err = FM_JNI_FAILURE;
     }
-    return FM_JNI_SUCCESS;
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_setControlNative
     (JNIEnv * env, jobject thiz, jint fd, jint id, jint value)
 {
-    struct v4l2_control control;
-    int i;
     int err;
     ALOGE("id(%x) value: %x\n", id, value);
-    control.value = value;
 
-    control.id = id;
-    for(i=0;i<3;i++) {
-        err = ioctl(fd,VIDIOC_S_CTRL,&control);
-        if(err >= 0){
-            return FM_JNI_SUCCESS;
+    if ((fd >= 0) && (id >= 0)) {
+        err = FmIoctlsInterface :: set_control(fd, id, value);
+        if (err < 0) {
+            ALOGE("%s: set control failed, id: %d\n", LOG_TAG, id);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
         }
+    } else {
+        ALOGE("%s: set control failed because either fd/id is negavtive,\
+               fd: %d, id: %d\n", LOG_TAG, fd, id);
+        err = FM_JNI_FAILURE;
     }
-    ALOGE("setControl native returned with err %d", err);
-    return FM_JNI_FAILURE;
+
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_SetCalibrationNative
      (JNIEnv * env, jobject thiz, jint fd, jbyteArray buff)
 {
 
-    struct v4l2_ext_control ext_ctl;
-    char tmp[CAL_DATA_SIZE] = {0x00};
-    int err;
-    FILE* cal_file;
+   int err;
 
-    cal_file = fopen("/data/app/Riva_fm_cal", "r" );
-    if(cal_file != NULL) {
-        ext_ctl.id = V4L2_CID_PRIVATE_IRIS_SET_CALIBRATION;
-        if (fread(&tmp[0],1,CAL_DATA_SIZE,cal_file) < CAL_DATA_SIZE)
-        {
-            ALOGE("File read failed");
-            return FM_JNI_FAILURE;
-        }
-        ext_ctl.string = tmp;
-        ext_ctl.size = CAL_DATA_SIZE;
-        struct v4l2_ext_controls v4l2_ctls;
+   if (fd >= 0) {
+       err = FmIoctlsInterface :: set_calibration(fd);
+       if (err < 0) {
+           ALOGE("%s: set calibration failed\n", LOG_TAG);
+           err = FM_JNI_FAILURE;
+       } else {
+           err = FM_JNI_SUCCESS;
+       }
+   } else {
+       ALOGE("%s: set calibration failed because fd is negative, fd: %d\n",
+              LOG_TAG, fd);
+       err = FM_JNI_FAILURE;
+   }
 
-        v4l2_ctls.ctrl_class = V4L2_CTRL_CLASS_USER,
-        v4l2_ctls.count   = 1,
-        v4l2_ctls.controls  = &ext_ctl;
-        err = ioctl(fd, VIDIOC_S_EXT_CTRLS, &v4l2_ctls );
-        if(err >= 0){
-            return FM_JNI_SUCCESS;
-        }
-    }else {
-        return FM_JNI_SUCCESS;
-    }
-  return FM_JNI_SUCCESS;
+   return err;
 }
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_getControlNative
     (JNIEnv * env, jobject thiz, jint fd, jint id)
 {
-    struct v4l2_control control;
     int err;
+    long val;
+
     ALOGE("id(%x)\n", id);
 
-    control.id = id;
-    err = ioctl(fd,VIDIOC_G_CTRL,&control);
-    if(err < 0){
-        return FM_JNI_FAILURE;
+    if ((fd >= 0) && (id >= 0)) {
+        err = FmIoctlsInterface :: get_control(fd, id, val);
+        if (err < 0) {
+            ALOGE("%s: get control failed, id: %d\n", LOG_TAG, id);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = val;
+        }
+    } else {
+        ALOGE("%s: get control failed because either fd/id is negavtive,\
+               fd: %d, id: %d\n", LOG_TAG, fd, id);
+        err = FM_JNI_FAILURE;
     }
-    return control.value;
+
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_startSearchNative
     (JNIEnv * env, jobject thiz, jint fd, jint dir)
 {
-    ALOGE("startSearchNative: Issuing the VIDIOC_S_HW_FREQ_SEEK");
-    struct v4l2_hw_freq_seek hw_seek;
     int err;
-    hw_seek.seek_upward = dir;
-    hw_seek.type = V4L2_TUNER_RADIO;
-    err = ioctl(fd,VIDIOC_S_HW_FREQ_SEEK,&hw_seek);
-    if(err < 0){
-        ALOGE("startSearchNative: ioctl failed!!! with error %d\n", err);
-        return FM_JNI_FAILURE;
-    } else
-        ALOGE("startSearchNative: ioctl succedded!!!");
-    return FM_JNI_SUCCESS;
+
+    if ((fd >= 0) && (dir >= 0)) {
+        ALOGD("startSearchNative: Issuing the VIDIOC_S_HW_FREQ_SEEK");
+        err = FmIoctlsInterface :: start_search(fd, dir);
+        if (err < 0) {
+            ALOGE("%s: search failed, dir: %d\n", LOG_TAG, dir);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        ALOGE("%s: search failed because either fd/dir is negative,\
+               fd: %d, dir: %d\n", LOG_TAG, fd, dir);
+        err = FM_JNI_FAILURE;
+    }
+
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_cancelSearchNative
     (JNIEnv * env, jobject thiz, jint fd)
 {
-    struct v4l2_control control;
     int err;
-    control.id=V4L2_CID_PRIVATE_TAVARUA_SRCHON;
-    control.value=0;
-    err = ioctl(fd,VIDIOC_S_CTRL,&control);
-    if(err < 0){
-        return FM_JNI_FAILURE;
+
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: set_control(fd, V4L2_CID_PRV_SRCHON, 0);
+        if (err < 0) {
+            ALOGE("%s: cancel search failed\n", LOG_TAG);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        ALOGE("%s: cancel search failed because fd is negative, fd: %d\n",
+               LOG_TAG, fd);
+        err = FM_JNI_FAILURE;
     }
-    return FM_JNI_SUCCESS;
+
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_getRSSINative
     (JNIEnv * env, jobject thiz, jint fd)
 {
-    struct v4l2_tuner tuner;
     int err;
+    long rmssi;
 
-    tuner.index = 0;
-    tuner.signal = 0;
-    err = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(err < 0){
-        return FM_JNI_FAILURE;
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: get_rmssi(fd, rmssi);
+        if (err < 0) {
+            ALOGE("%s: get rmssi failed\n", LOG_TAG);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = rmssi;
+        }
+    } else {
+        ALOGE("%s: get rmssi failed because fd is negative, fd: %d\n",
+               LOG_TAG, fd);
+        err = FM_JNI_FAILURE;
     }
-    return tuner.signal;
+
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_setBandNative
     (JNIEnv * env, jobject thiz, jint fd, jint low, jint high)
 {
-    struct v4l2_tuner tuner;
     int err;
 
-    tuner.index = 0;
-    tuner.signal = 0;
-    tuner.rangelow = low * (TUNE_MULT/1000);
-    tuner.rangehigh = high * (TUNE_MULT/1000);
-    err = ioctl(fd, VIDIOC_S_TUNER, &tuner);
-    if(err < 0){
-        return FM_JNI_FAILURE;
+    if ((fd >= 0) && (low >= 0) && (high >= 0)) {
+        err = FmIoctlsInterface :: set_band(fd, low, high);
+        if (err < 0) {
+            ALOGE("%s: set band failed, low: %d, high: %d\n",
+                   LOG_TAG, low, high);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        ALOGE("%s: set band failed because either fd/band is negative,\
+               fd: %d, low: %d, high: %d\n", LOG_TAG, fd, low, high);
+        err = FM_JNI_FAILURE;
     }
-    return FM_JNI_SUCCESS;
+
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_getLowerBandNative
     (JNIEnv * env, jobject thiz, jint fd)
 {
-    struct v4l2_tuner tuner;
     int err;
-    tuner.index = 0;
+    ULINT freq;
 
-    err = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(err < 0){
-        ALOGE("low_band value: <%x> \n", tuner.rangelow);
-        return FM_JNI_FAILURE;
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: get_lowerband_limit(fd, freq);
+        if (err < 0) {
+            ALOGE("%s: get lower band failed\n", LOG_TAG);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = freq;
+        }
+    } else {
+        ALOGE("%s: get lower band failed because fd is negative,\
+               fd: %d\n", LOG_TAG, fd);
+        err = FM_JNI_FAILURE;
     }
-    return ((tuner.rangelow * 1000)/ TUNE_MULT);
+
+    return err;
 }
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_getUpperBandNative
     (JNIEnv * env, jobject thiz, jint fd)
 {
-    struct v4l2_tuner tuner;
     int err;
-    tuner.index = 0;
+    ULINT freq;
 
-    err = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(err < 0){
-        ALOGE("high_band value: <%x> \n", tuner.rangehigh);
-        return FM_JNI_FAILURE;
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: get_upperband_limit(fd, freq);
+        if (err < 0) {
+            ALOGE("%s: get lower band failed\n", LOG_TAG);
+            err = FM_JNI_FAILURE;
+        } else {
+            err = freq;
+        }
+    } else {
+        ALOGE("%s: get lower band failed because fd is negative,\
+               fd: %d\n", LOG_TAG, fd);
+        err = FM_JNI_FAILURE;
     }
-    return ((tuner.rangehigh * 1000) / TUNE_MULT);
+
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_setMonoStereoNative
     (JNIEnv * env, jobject thiz, jint fd, jint val)
 {
 
-    struct v4l2_tuner tuner;
     int err;
 
-    tuner.index = 0;
-    err = ioctl(fd, VIDIOC_G_TUNER, &tuner);
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: set_audio_mode(fd, (enum AUDIO_MODE)val);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
+    }
 
-    if(err < 0)
-        return FM_JNI_FAILURE;
-
-    tuner.audmode = val;
-    err = ioctl(fd, VIDIOC_S_TUNER, &tuner);
-
-    if(err < 0)
-        return FM_JNI_FAILURE;
-
-    return FM_JNI_SUCCESS;
-
+    return err;
 }
-
 
 
 /* native interface */
@@ -392,29 +449,23 @@ static jint android_hardware_fmradio_FmReceiverJNI_getBufferNative
 {
     int err;
     jboolean isCopy;
-    struct v4l2_requestbuffers reqbuf;
-    struct v4l2_buffer v4l2_buf;
-    memset(&reqbuf, 0, sizeof (reqbuf));
-    enum v4l2_buf_type type = V4L2_BUF_TYPE_PRIVATE;
-    reqbuf.type = V4L2_BUF_TYPE_PRIVATE;
-    reqbuf.memory = V4L2_MEMORY_USERPTR;
-    jboolean *bool_buffer = env->GetBooleanArrayElements(buff,&isCopy);
-    memset(&v4l2_buf, 0, sizeof (v4l2_buf));
-    v4l2_buf.index = index;
-    v4l2_buf.type = type;
-    v4l2_buf.length = STD_BUF_SIZE;
-    v4l2_buf.m.userptr = (unsigned long)bool_buffer;
-    err = ioctl(fd,VIDIOC_DQBUF,&v4l2_buf);
-    if(err < 0){
-        /* free up the memory in failure case*/
+    jboolean *bool_buffer;
+
+    if ((fd >= 0) && (index >= 0)) {
+        bool_buffer = env->GetBooleanArrayElements(buff, &isCopy);
+        err = FmIoctlsInterface :: get_buffer(fd,
+                                               (char *)bool_buffer,
+                                               STD_BUF_SIZE,
+                                               index);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        }
         env->ReleaseBooleanArrayElements(buff, bool_buffer, 0);
-        return FM_JNI_FAILURE;
+    } else {
+        err = FM_JNI_FAILURE;
     }
 
-    /* Always copy buffer and free up the memory */
-    env->ReleaseBooleanArrayElements(buff, bool_buffer, 0);
-
-    return v4l2_buf.bytesused;
+    return err;
 }
 
 /* native interface */
@@ -432,8 +483,8 @@ static jint android_hardware_fmradio_FmReceiverJNI_setNotchFilterNative(JNIEnv *
     char value[PROPERTY_VALUE_MAX] = {'\0'};
     int init_success = 0,i;
     char notch[PROPERTY_VALUE_MAX] = {0x00};
-    struct v4l2_control control;
-    int err;
+    int band;
+    int err = 0;
 
     property_get("qcom.bluetooth.soc", value, NULL);
 
@@ -464,20 +515,27 @@ static jint android_hardware_fmradio_FmReceiverJNI_setNotchFilterNative(JNIEnv *
        property_get("notch.value", notch, NULL);
        ALOGE("Notch = %s",notch);
        if (!strncmp("HIGH",notch,strlen("HIGH")))
-           control.value = HIGH_BAND;
+           band = HIGH_BAND;
        else if(!strncmp("LOW",notch,strlen("LOW")))
-           control.value = LOW_BAND;
+           band = LOW_BAND;
        else
-           control.value = 0;
+           band = 0;
 
-       ALOGE("Notch value : %d", control.value);
-       control.id = id;
-       err = ioctl(fd, VIDIOC_S_CTRL,&control );
-       if(err < 0){
-             return FM_JNI_FAILURE;
-       }
+       ALOGE("Notch value : %d", band);
+
+        if ((fd >= 0) && (id >= 0)) {
+            err = FmIoctlsInterface :: set_control(fd, id, band);
+            if (err < 0) {
+                err = FM_JNI_FAILURE;
+            } else {
+                err = FM_JNI_SUCCESS;
+            }
+        } else {
+            err = FM_JNI_FAILURE;
+        }
     }
-    return FM_JNI_SUCCESS;
+
+    return err;
 }
 
 
@@ -528,38 +586,51 @@ static jint android_hardware_fmradio_FmReceiverJNI_setAnalogModeNative(JNIEnv * 
 static jint android_hardware_fmradio_FmReceiverJNI_setPTYNative
     (JNIEnv * env, jobject thiz, jint fd, jint pty)
 {
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_setPTYNative\n");
-    struct v4l2_control control;
-
-    control.id = V4L2_CID_RDS_TX_PTY;
-    control.value = pty & MASK_PTY;
-
+    int masked_pty;
     int err;
-    err = ioctl(fd, VIDIOC_S_CTRL,&control );
-    if(err < 0){
-            return FM_JNI_FAILURE;
+
+    ALOGE("->android_hardware_fmradio_FmReceiverJNI_setPTYNative\n");
+
+    if (fd >= 0) {
+        masked_pty = pty & MASK_PTY;
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_RDS_TX_PTY,
+                                                masked_pty);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
     }
-    return FM_JNI_SUCCESS;
+
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_setPINative
     (JNIEnv * env, jobject thiz, jint fd, jint pi)
 {
+    int err;
+    int masked_pi;
+
     ALOGE("->android_hardware_fmradio_FmReceiverJNI_setPINative\n");
 
-    struct v4l2_control control;
-
-    control.id = V4L2_CID_RDS_TX_PI;
-    control.value = pi & MASK_PI;
-
-    int err;
-    err = ioctl(fd, VIDIOC_S_CTRL,&control );
-    if(err < 0){
-		ALOGE("->pty native failed");
-            return FM_JNI_FAILURE;
+    if (fd >= 0) {
+        masked_pi = pi & MASK_PI;
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_RDS_TX_PI,
+                                                masked_pi);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
     }
 
-    return FM_JNI_SUCCESS;
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_startRTNative
@@ -623,17 +694,23 @@ static jint android_hardware_fmradio_FmReceiverJNI_startRTNative
 static jint android_hardware_fmradio_FmReceiverJNI_stopRTNative
     (JNIEnv * env, jobject thiz, jint fd )
 {
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_stopRTNative\n");
     int err;
-    struct v4l2_control control;
-    control.id = V4L2_CID_PRIVATE_TAVARUA_STOP_RDS_TX_RT;
 
-    err = ioctl(fd, VIDIOC_S_CTRL , &control);
-    if(err < 0){
-            return FM_JNI_FAILURE;
+    ALOGE("->android_hardware_fmradio_FmReceiverJNI_stopRTNative\n");
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_PRIVATE_TAVARUA_STOP_RDS_TX_RT,
+                                                0);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
     }
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_stopRTNative is SUCCESS\n");
-    return FM_JNI_SUCCESS;
+
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_startPSNative
@@ -696,75 +773,105 @@ static jint android_hardware_fmradio_FmReceiverJNI_startPSNative
 static jint android_hardware_fmradio_FmReceiverJNI_stopPSNative
     (JNIEnv * env, jobject thiz, jint fd)
 {
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_stopPSNative\n");
-    struct v4l2_control control;
-    control.id = V4L2_CID_PRIVATE_TAVARUA_STOP_RDS_TX_PS_NAME;
 
     int err;
-    err = ioctl(fd, VIDIOC_S_CTRL , &control);
-    if(err < 0){
-            return FM_JNI_FAILURE;
+
+    ALOGE("->android_hardware_fmradio_FmReceiverJNI_stopPSNative\n");
+
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_PRIVATE_TAVARUA_STOP_RDS_TX_PS_NAME,
+                                                0);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
     }
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_stopPSNative is SUCCESS\n");
-    return FM_JNI_SUCCESS;
+
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_configureSpurTable
     (JNIEnv * env, jobject thiz, jint fd)
 {
+    int err;
+
     ALOGD("->android_hardware_fmradio_FmReceiverJNI_configureSpurTable\n");
-    int retval = 0;
-    struct v4l2_control control;
 
-    control.id = V4L2_CID_PRIVATE_UPDATE_SPUR_TABLE;
-    retval = ioctl(fd, VIDIOC_S_CTRL, &control);
-    if (retval < 0) {
-            ALOGE("configureSpurTable: Failed to Write the SPUR Table\n");
-            return FM_JNI_FAILURE;
-    } else
-            ALOGD("configureSpurTable: SPUR Table Configuration successful\n");
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_PRIVATE_UPDATE_SPUR_TABLE,
+                                                0);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
+    }
 
-    return FM_JNI_SUCCESS;
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_setPSRepeatCountNative
     (JNIEnv * env, jobject thiz, jint fd, jint repCount)
 {
+    int masked_ps_repeat_cnt;
+    int err;
+
     ALOGE("->android_hardware_fmradio_FmReceiverJNI_setPSRepeatCountNative\n");
 
-    struct v4l2_control control;
-
-    control.id = V4L2_CID_PRIVATE_TAVARUA_TX_SETPSREPEATCOUNT;
-    control.value = repCount & MASK_TXREPCOUNT;
-
-    int err;
-    err = ioctl(fd, VIDIOC_S_CTRL,&control );
-    if(err < 0){
-            return FM_JNI_FAILURE;
+    if (fd >= 0) {
+        masked_ps_repeat_cnt = repCount & MASK_TXREPCOUNT;
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_PRIVATE_TAVARUA_TX_SETPSREPEATCOUNT,
+                                                masked_ps_repeat_cnt);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
     }
 
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_setPSRepeatCountNative is SUCCESS\n");
-    return FM_JNI_SUCCESS;
+    return err;
 }
 
 static jint android_hardware_fmradio_FmReceiverJNI_setTxPowerLevelNative
     (JNIEnv * env, jobject thiz, jint fd, jint powLevel)
 {
+    int err;
+
     ALOGE("->android_hardware_fmradio_FmReceiverJNI_setTxPowerLevelNative\n");
 
-    struct v4l2_control control;
-
-    control.id = V4L2_CID_TUNE_POWER_LEVEL;
-    control.value = powLevel;
-
-    int err;
-    err = ioctl(fd, VIDIOC_S_CTRL,&control );
-    if(err < 0){
-            return FM_JNI_FAILURE;
+    if (fd >= 0) {
+        err = FmIoctlsInterface :: set_control(fd,
+                                                V4L2_CID_TUNE_POWER_LEVEL,
+                                                powLevel);
+        if (err < 0) {
+            err = FM_JNI_FAILURE;
+        } else {
+            err = FM_JNI_SUCCESS;
+        }
+    } else {
+        err = FM_JNI_FAILURE;
     }
 
-    ALOGE("->android_hardware_fmradio_FmReceiverJNI_setTxPowerLevelNative is SUCCESS\n");
-    return FM_JNI_SUCCESS;
+    return err;
+}
+
+static void android_hardware_fmradio_FmReceiverJNI_configurePerformanceParams
+    (JNIEnv * env, jobject thiz, jint fd)
+{
+
+     ConfigFmThs thsObj;
+
+     thsObj.SetRxSearchAfThs(FM_PERFORMANCE_PARAMS, fd);
 }
 
 /* native interface */
@@ -867,6 +974,8 @@ static JNINativeMethod gMethods[] = {
             (void*)android_hardware_fmradio_FmReceiverJNI_configureSpurTable},
         { "setSpurDataNative", "(I[SI)I",
             (void*)android_hardware_fmradio_FmReceiverJNI_setSpurDataNative},
+        { "configurePerformanceParams", "(I)V",
+             (void*)android_hardware_fmradio_FmReceiverJNI_configurePerformanceParams},
 };
 
 int register_android_hardware_fm_fmradio(JNIEnv* env)

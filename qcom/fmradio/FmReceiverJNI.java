@@ -290,4 +290,5 @@ class FmReceiverJNI {
      *         {@link #FM_JNI_FAILURE}
      */
     static native int setSpurDataNative(int fd, short  buff[], int len);
+    static native void configurePerformanceParams(int fd);
 }
