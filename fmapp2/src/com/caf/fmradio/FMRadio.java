@@ -269,6 +269,7 @@ public class FMRadio extends Activity
    public static boolean mUpdatePickerValue = false;
 
    private LoadedDataAndState SavedDataAndState = null;
+   private static String mBTsoc = "invalid";
 
    /** fm stats property string */
    public static final String FM_STATS_PROP = "persist.fm.stats";
@@ -387,6 +388,7 @@ public class FMRadio extends Activity
       if ((mERadioTextScroller == null) && (mERadioTextTV != null)) {
           mERadioTextScroller = new ScrollerText(mERadioTextTV);
       }
+      mBTsoc = SystemProperties.get("qcom.bluetooth.soc");
    }
 
    protected void setDisplayvalue(){
@@ -697,7 +699,12 @@ public class FMRadio extends Activity
           startActivity(launchFMStatIntent);
           return true;
       case MENU_SCAN_START:
-         showDialog(DIALOG_SEARCH);
+         if (mBTsoc.equals("rome")) {
+             clearStationList();
+             initiateSearch(0); // 0 - All stations
+         } else {
+             showDialog(DIALOG_SEARCH);
+         }
          return true;
       case MENU_SCAN_STOP:
          cancelSearch();
