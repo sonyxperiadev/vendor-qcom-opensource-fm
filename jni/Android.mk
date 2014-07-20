@@ -3,7 +3,11 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= \
-android_hardware_fm.cpp
+android_hardware_fm.cpp \
+ConfFileParser.cpp \
+ConfigFmThs.cpp \
+FmIoctlsInterface.cpp \
+FmPerformanceParams.cpp
 
 LOCAL_SHARED_LIBRARIES := \
         libnativehelper \
