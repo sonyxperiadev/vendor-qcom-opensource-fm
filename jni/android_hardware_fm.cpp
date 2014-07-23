@@ -445,22 +445,22 @@ static jint android_hardware_fmradio_FmReceiverJNI_setMonoStereoNative
 
 /* native interface */
 static jint android_hardware_fmradio_FmReceiverJNI_getBufferNative
- (JNIEnv * env, jobject thiz, jint fd, jbooleanArray buff, jint index)
+ (JNIEnv * env, jobject thiz, jint fd, jbyteArray buff, jint index)
 {
     int err;
     jboolean isCopy;
-    jboolean *bool_buffer;
+    jbyte *byte_buffer;
 
     if ((fd >= 0) && (index >= 0)) {
-        bool_buffer = env->GetBooleanArrayElements(buff, &isCopy);
+        byte_buffer = env->GetByteArrayElements(buff, &isCopy);
         err = FmIoctlsInterface :: get_buffer(fd,
-                                               (char *)bool_buffer,
+                                               (char *)byte_buffer,
                                                STD_BUF_SIZE,
                                                index);
         if (err < 0) {
             err = FM_JNI_FAILURE;
         }
-        env->ReleaseBooleanArrayElements(buff, bool_buffer, 0);
+        env->ReleaseByteArrayElements(buff, byte_buffer, 0);
     } else {
         err = FM_JNI_FAILURE;
     }

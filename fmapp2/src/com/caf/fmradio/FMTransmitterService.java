@@ -1163,22 +1163,6 @@ public class FMTransmitterService extends Service
         @Override
         public void setEnabled(boolean enabled) {
         }
-
-        @Override
-        public void updateFolderInfoBrowsedPlayer(String stringUri) {
-        }
-
-        @Override
-        public void updateNowPlayingContentChange() {
-        }
-
-        @Override
-        public void playItemResponse(boolean success) {
-        }
-
-        @Override
-        public void updateNowPlayingEntries(long[] playList) {
-        }
    }
 
    class Metadata {
