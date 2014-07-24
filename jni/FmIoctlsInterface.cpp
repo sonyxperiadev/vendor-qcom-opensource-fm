@@ -50,7 +50,7 @@ int  FmIoctlsInterface :: get_cur_freq
     channel.type = V4L2_TUNER_RADIO;
     ret = ioctl(fd, VIDIOC_G_FREQUENCY, &channel);
 
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         freq = (channel.frequency / TUNE_MULT);
@@ -70,7 +70,7 @@ int  FmIoctlsInterface :: set_freq
     channel.frequency = (freq * TUNE_MULT);
 
     ret = ioctl(fd, VIDIOC_S_FREQUENCY, &channel);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         return FM_SUCCESS;
@@ -90,7 +90,7 @@ int FmIoctlsInterface :: set_control
 
     for(int i = 0; i < 3; i++) {
         ret = ioctl(fd, VIDIOC_S_CTRL, &control);
-        if(ret != IOCTL_SUCC) {
+        if(ret < IOCTL_SUCC) {
            ret = FM_FAILURE;
         }else {
            ret = FM_SUCCESS;
@@ -127,7 +127,7 @@ int  FmIoctlsInterface :: set_calibration
        v4l2_ctls.count = 1;
        v4l2_ctls.controls = &ext_ctl;
        ret = ioctl(fd, VIDIOC_S_EXT_CTRLS, &v4l2_ctls);
-       if(ret != IOCTL_SUCC) {
+       if(ret < IOCTL_SUCC) {
            ALOGE("%s: ioctl call failed\n", LOGTAG);
            return FM_FAILURE;
        }else {
@@ -148,7 +148,7 @@ int  FmIoctlsInterface :: get_control
 
     control.id = id;
     ret = ioctl(fd, VIDIOC_G_CTRL, &control);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         val = control.value;
@@ -168,7 +168,7 @@ int  FmIoctlsInterface :: start_search
     hw_seek.type = V4L2_TUNER_RADIO;
 
     ret = ioctl(fd, VIDIOC_S_HW_FREQ_SEEK, &hw_seek);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         return FM_SUCCESS;
@@ -190,7 +190,7 @@ int  FmIoctlsInterface :: set_band
 
     ret = ioctl(fd, VIDIOC_S_TUNER, &tuner);
     ret = set_control(fd, V4L2_CID_PRV_REGION, 0);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         return FM_SUCCESS;
@@ -208,7 +208,7 @@ int FmIoctlsInterface :: get_rmssi
     tuner.index = 0;
     tuner.signal = 0;
     ret = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         ret = FM_FAILURE;
     }else {
         rmssi = tuner.signal;
@@ -227,7 +227,7 @@ int FmIoctlsInterface :: get_upperband_limit
 
     tuner.index = 0;
     ret = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         freq = (tuner.rangehigh / TUNE_MULT);
@@ -245,7 +245,7 @@ int FmIoctlsInterface :: get_lowerband_limit
 
     tuner.index = 0;
     ret = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         freq = (tuner.rangelow / TUNE_MULT);
@@ -263,12 +263,12 @@ int FmIoctlsInterface :: set_audio_mode
 
     tuner.index = 0;
     ret = ioctl(fd, VIDIOC_G_TUNER, &tuner);
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
         return FM_FAILURE;
     }else {
         tuner.audmode = mode;
         ret = ioctl(fd, VIDIOC_S_TUNER, &tuner);
-        if(ret != IOCTL_SUCC) {
+        if(ret < IOCTL_SUCC) {
             return FM_FAILURE;
         }else {
             return FM_SUCCESS;
@@ -293,7 +293,7 @@ int FmIoctlsInterface :: get_buffer
         v4l2_buf.length = STD_BUF_SIZE;
         v4l2_buf.m.userptr = (ULINT)buff;
         ret = ioctl(fd, VIDIOC_DQBUF, &v4l2_buf);
-        if(ret != IOCTL_SUCC) {
+        if(ret < IOCTL_SUCC) {
             return FM_FAILURE;
         }else {
             return v4l2_buf.bytesused;
@@ -311,7 +311,7 @@ int FmIoctlsInterface :: set_ext_control
 
     ret = ioctl(fd, VIDIOC_S_EXT_CTRLS, v4l2_ctls);
 
-    if(ret != IOCTL_SUCC) {
+    if(ret < IOCTL_SUCC) {
        return FM_FAILURE;
     }else {
        return FM_SUCCESS;
