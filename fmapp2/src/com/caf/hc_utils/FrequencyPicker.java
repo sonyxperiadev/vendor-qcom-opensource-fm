@@ -32,7 +32,7 @@ import android.widget.FrameLayout;
 import com.caf.fmradio.R;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
-
+import android.graphics.Color;
 /**
  * A view for selecting the frequency
  *
@@ -86,6 +86,7 @@ public class FrequencyPicker extends FrameLayout {
         mMHzPicker = (NumberPicker) findViewById(R.id.mhz);
         if (mMHzPicker != null) {
            mMHzPicker.setOnLongPressUpdateInterval(100);
+           mMHzPicker.setBackgroundColor(Color.WHITE);
 
            mMHzPicker.setOnValueChangedListener(new OnValueChangeListener() {
               public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -101,6 +102,7 @@ public class FrequencyPicker extends FrameLayout {
         mKHzPicker = (NumberPicker) findViewById(R.id.khz);
         if (mKHzPicker != null) {
            mKHzPicker.setOnLongPressUpdateInterval(100);
+           mKHzPicker.setBackgroundColor(Color.WHITE);
            mKHzPicker.setOnValueChangedListener(new OnValueChangeListener() {
               public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                   mKhz = newVal;

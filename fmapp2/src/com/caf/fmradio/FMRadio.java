@@ -96,6 +96,7 @@ import com.caf.fmradio.HorizontalNumberPicker.OnValueChangeListener;
 import com.caf.fmradio.HorizontalNumberPicker.Scale;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 
 public class FMRadio extends Activity
 {
@@ -1870,12 +1871,22 @@ public class FMRadio extends Activity
          }else {
             setRecordingStartImage();
          }
+         for (int nButton = 0; nButton < MAX_PRESETS_PER_PAGE; nButton++) {
+             if (mPresetButtons[nButton] != null) {
+                  mPresetButtons[nButton].setTextColor(Color.WHITE);
+             }
+        }
       }else {
          if (mRadioTextScroller != null) {
              mRadioTextScroller.stopScroll();
          }
          if (mERadioTextScroller != null) {
              mERadioTextScroller.stopScroll();
+         }
+         for (int nButton = 0; nButton < MAX_PRESETS_PER_PAGE; nButton++) {
+             if (mPresetButtons[nButton] != null) {
+                  mPresetButtons[nButton].setTextColor(Color.BLACK);
+             }
          }
       }
       if (mForwardButton != null) {
