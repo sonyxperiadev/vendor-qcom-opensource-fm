@@ -519,6 +519,7 @@ public class FMRadioService extends Service
                     Log.d(LOGTAG, "FMMediaButtonIntentReceiver.AUDIO_BECOMING_NOISY");
                     String intentAction = intent.getAction();
                     if (FMMediaButtonIntentReceiver.AUDIO_BECOMING_NOISY.equals(intentAction)) {
+                        mHeadsetPlugged = false;
                        if (isFmOn())
                        {
                            /* Disable FM and let the UI know */
