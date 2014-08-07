@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -916,12 +917,22 @@ public class FMTransmitterActivity extends Activity {
          if(mRadioTextScroller != null) {
             mRadioTextScroller.startScroll();
          }
+         for (int nButton = 0; nButton < MAX_PRESETS; nButton++) {
+             if (mPresetButtons[nButton] != null) {
+                 mPresetButtons[nButton].setTextColor(Color.WHITE);
+             }
+         }
       }else {
          if(mTuneStationFrequencyTV != null) {
             mTuneStationFrequencyTV.setOnLongClickListener(null);
          }
          if(mRadioTextScroller != null) {
             mRadioTextScroller.stopScroll();
+         }
+         for (int nButton = 0; nButton < MAX_PRESETS; nButton++) {
+             if (mPresetButtons[nButton] != null) {
+                 mPresetButtons[nButton].setTextColor(Color.BLACK);
+             }
          }
       }
 
