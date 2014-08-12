@@ -372,6 +372,7 @@ public class FMRecordingService extends Service {
         Log.d(TAG, "In addToMediaDB");
         Resources res = getResources();
         ContentValues cv = new ContentValues();
+        int audioId = -1;
         long current = System.currentTimeMillis();
         long modDate = file.lastModified();
         long recordDuration = stopTimerMs - startTimerMs;
@@ -393,6 +394,11 @@ public class FMRecordingService extends Service {
                 res.getString(R.string.audio_db_artist_name));
         cv.put(MediaStore.Audio.Media.ALBUM,
                 res.getString(R.string.audio_db_album_name));
+        audioId = getFileIdInVideoDB(file);
+        if (audioId != -1) {//remove the record if it is already added into video table.
+            removeRecordInVideoDB(audioId);
+            Log.d(TAG, "Remove audio record " + audioId + " in video database");
+        }
         Log.d(TAG, "Inserting audio record: " + cv.toString());
         ContentResolver resolver = getContentResolver();
         Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -405,13 +411,43 @@ public class FMRecordingService extends Service {
         if (getPlaylistId(res) == -1) {
             createPlaylist(res, resolver);
         }
-        int audioId = Integer.valueOf(result.getLastPathSegment());
+        audioId = Integer.valueOf(result.getLastPathSegment());
         addToPlaylist(resolver, audioId, getPlaylistId(res));
 
         // Notify those applications such as Music listening to the
         // scanner events that a recorded audio file just created.
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, result));
         return result;
+    }
+
+    private int getFileIdInVideoDB(File file) {
+        int id = -1;
+        final String where = MediaStore.Video.Media.DATA + "=?";
+        final String[] args = new String[] { file.getAbsolutePath() };
+        final String[] ids = new String[] { MediaStore.Video.Media._ID };
+        Uri base = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+
+        Cursor cursor = query(base, ids, where, args, null);
+        if (cursor == null) {
+            Log.v(TAG, "Data query returns null");
+        } else {
+            if (cursor.moveToNext() != false) {
+                id = cursor.getInt(0);
+                cursor.close();
+            }
+        }
+        return id;
+    }
+
+    private void removeRecordInVideoDB(int id) {
+        final String where = MediaStore.Video.Media._ID + "=" + id;
+        Uri base = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        ContentValues cv = new ContentValues();
+        ContentResolver resolver = getContentResolver();
+
+        cv.put(MediaStore.Video.Media.DATA, "null");
+        resolver.update(base, cv, where, null);
+        resolver.delete(base, where, null);
     }
 
     private int getPlaylistId(Resources res) {
