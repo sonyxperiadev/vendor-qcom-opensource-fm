@@ -1058,7 +1058,6 @@ public class FMRadioService extends Service
        if((TelephonyManager.CALL_STATE_OFFHOOK == state)||
           (TelephonyManager.CALL_STATE_RINGING == state)) {
            boolean bTempSpeaker = mSpeakerPhoneOn; //need to restore SpeakerPhone
-           boolean bTempMute = mMuted;// need to restore Mute status
            int bTempCall = mCallStatus;//need to restore call status
            if (isFmOn() && fmOff()) {
                if((mServiceInUse) && (mCallbacks != null)) {
@@ -1071,12 +1070,10 @@ public class FMRadioService extends Service
                mResumeAfterCall = true;
                mSpeakerPhoneOn = bTempSpeaker;
                mCallStatus = bTempCall;
-               mMuted = bTempMute;
            } else if (!mResumeAfterCall) {
                mResumeAfterCall = false;
                mSpeakerPhoneOn = bTempSpeaker;
                mCallStatus = bTempCall;
-               mMuted = bTempMute;
            }
        }
        else if (state == TelephonyManager.CALL_STATE_IDLE) {
@@ -2065,8 +2062,6 @@ public class FMRadioService extends Service
       boolean bCommandSent=true;
       if(isMuted())
           return bCommandSent;
-      if(isCallActive())
-         return false;
       AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
       Log.d(LOGTAG, "mute:");
       if (audioManager != null)
@@ -2085,8 +2080,6 @@ public class FMRadioService extends Service
       boolean bCommandSent=true;
       if(!isMuted())
           return bCommandSent;
-      if(isCallActive())
-         return false;
       Log.d(LOGTAG, "unMute:");
       AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
       if (audioManager != null)
