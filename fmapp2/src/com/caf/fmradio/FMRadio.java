@@ -3099,7 +3099,7 @@ public class FMRadio extends Activity
                               fmConfigure();
                               break;
                          case Settings.FM_AF_OPTION_CHANGED:
-                              fmAudioOutputMode();
+                              fmAutoAFSwitch();
                               break;
                          case Settings.FM_AUDIO_MODE_CHANGED:
                               fmAudioOutputMode();
