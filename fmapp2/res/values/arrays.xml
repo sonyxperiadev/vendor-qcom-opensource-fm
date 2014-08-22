@@ -365,6 +365,18 @@
       <item> Set RXREPEAT Count</item>
   </string-array>
 
+
+  <string-array name="cfg_rf3">
+      <item> Set SINR Threshold</item>
+      <item> Get SINR Threshold</item>
+      <item> Set RSSI Threshold</item>
+      <item> Get RSSI Threshold</item>
+      <item> Set AFJumpRssi Threshold</item>
+      <item> Get AFJumpRssi Threshold</item>
+      <item> Set RDS FIFO count</item>
+      <item> Get RDS FIFO count</item>
+  </string-array>
+
   <string-array name="stats_options">
       <item> Select the option</item>
       <item> Configure Performance parameters</item>

@@ -248,6 +248,12 @@
     <string name="rt_plus_tags">Tags</string>
     <string name="enter_RxRePeatCount">Enter RxRePeat count</string>
     <string name="set_RxRePeatCount">Config RxRePeat count</string>
+    <string name="enter_RssiTh">Enter RSSI Threshold</string>
+    <string name="set_RssiTh">Config RSSI Threshold</string>
+    <string name="enter_AfJumpRssiTh">Enter AF jump RSSI Threshold</string>
+    <string name="set_AfJumpRssiTh">Config AF jump RSSI Threshold</string>
+    <string name="enter_RdsFifoCnt">Enter RDS FIFO count</string>
+    <string name="set_RdsFifoCnt">Config RDS FIFO count</string>
 
     <string name="usr_def_band_min">Lower Freq Limit(In Mhz)</string>
     <string name="usr_def_band_max">Higher Freq Limit(In Mhz)</string>
