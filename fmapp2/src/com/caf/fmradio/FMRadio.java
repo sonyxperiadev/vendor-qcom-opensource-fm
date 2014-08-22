@@ -2315,7 +2315,7 @@ public class FMRadio extends Activity
                                                 "SleepUpdateThread");
       }
       /* If the thread state is "new" then the thread has not yet started */
-      if(mSleepUpdateHandlerThread.getState() == Thread.State.NEW && isFmOn()) {
+      if(mSleepUpdateHandlerThread.getState() != Thread.State.TERMINATED && isFmOn()) {
           try {
               if((mService != null) &&
                  !mService.isSleepTimerActive()) {
