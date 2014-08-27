@@ -72,6 +72,7 @@ class FmRxControls
    private static final int V4L2_CID_PRIVATE_TAVARUA_RDSON                 = V4L2_CID_PRIVATE_BASE + 15;
    private static final int V4L2_CID_PRIVATE_TAVARUA_RDSGROUP_PROC         = V4L2_CID_PRIVATE_BASE + 16;
    private static final int V4L2_CID_PRIVATE_TAVARUA_LP_MODE               = V4L2_CID_PRIVATE_BASE + 17;
+   private static final int V4L2_CID_PRIVATE_TAVARUA_RDSD_BUF              = V4L2_CID_PRIVATE_BASE + 19;
    private static final int V4L2_CID_PRIVATE_TAVARUA_IOVERC                = V4L2_CID_PRIVATE_BASE + 24;
    private static final int V4L2_CID_PRIVATE_TAVARUA_INTDET                = V4L2_CID_PRIVATE_BASE + 25;
    private static final int V4L2_CID_PRIVATE_TAVARUA_MPX_DCC               = V4L2_CID_PRIVATE_BASE + 26;
@@ -95,6 +96,8 @@ class FmRxControls
    private static final int V4L2_CID_PRIVATE_SINRFIRSTSTAGE                = V4L2_CID_PRIVATE_BASE + 0x3B;
    private static final int V4L2_CID_PRIVATE_RMSSIFIRSTSTAGE               = V4L2_CID_PRIVATE_BASE + 0x3C;
    private static final int V4L2_CID_PRIVATE_RXREPEATCOUNT                 = V4L2_CID_PRIVATE_BASE + 0x3D;
+   private static final int V4L2_CID_PRIVATE_RSSI_TH                       = V4L2_CID_PRIVATE_BASE + 0x3E;
+   private static final int V4L2_CID_PRIVATE_AF_JUMP_RSSI_TH               = V4L2_CID_PRIVATE_BASE + 0x3F;
 
    private static final int V4L2_CTRL_CLASS_USER = 0x980000;
    private static final int V4L2_CID_BASE        = V4L2_CTRL_CLASS_USER | 0x900;
@@ -222,6 +225,63 @@ class FmRxControls
       if ( re < 0)
          Log.e(TAG, "Failed to set SINR threshold data");
       return re;
+   }
+
+   /*
+    * Set rssi threshold
+    */
+   public int setRssiThreshold(int fd, int sBuff)
+   {
+      int re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_RSSI_TH, sBuff);
+      if ( re < 0)
+         Log.e(TAG, "Failed to set RSSI threshold data");
+      return re;
+   }
+
+   /*
+    * Get Rssi threshold
+    */
+   public int getRssiThreshold(int fd)
+   {
+      return  FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_RSSI_TH);
+   }
+
+   /*
+    * Set AF jump rssi threshold
+    */
+   public int setAfJumpRssiThreshold(int fd, int sBuff)
+   {
+      int re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_AF_JUMP_RSSI_TH, sBuff);
+      if ( re < 0)
+         Log.e(TAG, "Failed to set AF Jump Rssithreshold data");
+      return re;
+   }
+
+   /*
+    * Get AF jump Rssi threshold
+    */
+   public int getAfJumpRssiThreshold(int fd)
+   {
+      return  FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_AF_JUMP_RSSI_TH);
+   }
+
+   /*
+    * Set RDS FIFO count
+    */
+   public int setRdsFifoCnt(int fd, int sBuff)
+   {
+      int re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_TAVARUA_RDSD_BUF, sBuff);
+      if ( re < 0)
+         Log.e(TAG, "Failed to set RDS fifo count data");
+      return re;
+   }
+
+   /*
+    * Get RDS FIFO count
+    */
+   public int getRdsFifoCnt(int fd)
+   {
+      return  FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_TAVARUA_RDSD_BUF);
    }
 
    /*

@@ -172,6 +172,7 @@ public class FMStats extends Activity  {
                                      new RfCfgItemSelectedListener();
     CfgRfItemSelectedListener1 mSpinCfgRfListener1 = null;
     CfgRfItemSelectedListener2 mSpinCfgRfListener2 = null;
+    CfgRfItemSelectedListener3 mSpinCfgRfListener3 = null;
     BandSweepMthdsSelectedListener mSweepMthdsListener =
                                      new BandSweepMthdsSelectedListener();
 
@@ -228,6 +229,12 @@ public class FMStats extends Activity  {
     private static final int MAX_GD_CH_RMSSI_TH = 127;
     private static final int MIN_AF_JMP_RMSSI_SAMPLES = 0;
     private static final int MAX_AF_JMP_RMSSI_SAMPLES = 255;
+    private static final int MIN_SINR_TH_SILABS = 0;
+    private static final int MAX_SINR_TH_SILABS = 127;
+    private static final int MIN_RSSI_TH_SILABS = 0;
+    private static final int MAX_RSSI_TH_SILABS = 127;
+    private static final int MIN_RDS_FIFO_CNT_SILABS = 0;
+    private static final int MAX_RDS_FIFO_CNT_SILABS = 25;
 
     private static final int DIALOG_BAND_SWEEP_SETTING = 1;
 
@@ -279,17 +286,23 @@ public class FMStats extends Activity  {
                             android.R.layout.simple_spinner_item);
 
         checkTransportLayer();
-        if (!isTransportLayerSMD()) {
-            mSpinCfgRfListener1 = new CfgRfItemSelectedListener1();
+        if (isRomeChip()) {
+            mSpinCfgRfListener3 = new CfgRfItemSelectedListener3();
             adaptCfgRf = ArrayAdapter.createFromResource(
-                           this, R.array.cfg_rf1,
+                           this, R.array.cfg_rf3,
                            android.R.layout.simple_spinner_item);
-        }else {
+        }else if (isTransportLayerSMD()) {
             mSpinCfgRfListener2 = new CfgRfItemSelectedListener2();
             adaptCfgRf = ArrayAdapter.createFromResource(
                            this, R.array.cfg_rf2,
                            android.R.layout.simple_spinner_item);
+        }else {
+            mSpinCfgRfListener1 = new CfgRfItemSelectedListener1();
+            adaptCfgRf = ArrayAdapter.createFromResource(
+                           this, R.array.cfg_rf1,
+                           android.R.layout.simple_spinner_item);
         }
+
         adaptRfCfg = ArrayAdapter.createFromResource(
             this, R.array.rf_cfg, android.R.layout.simple_spinner_item);
 
@@ -486,7 +499,10 @@ public class FMStats extends Activity  {
                adaptCfgRf.setDropDownViewResource
                            (android.R.layout.simple_spinner_dropdown_item);
                spinOptionFmRf.setAdapter(adaptCfgRf);
-               if(isTransportLayerSMD())
+               if (isRomeChip())
+                  spinOptionFmRf.setOnItemSelectedListener
+                                   (mSpinCfgRfListener3);
+               else if(isTransportLayerSMD())
                   spinOptionFmRf.setOnItemSelectedListener
                                    (mSpinCfgRfListener2);
                else
@@ -494,6 +510,10 @@ public class FMStats extends Activity  {
                                    (mSpinCfgRfListener1);
                break;
        case 2:
+               /* RF statics option is for non-Silabs targets */
+               if (isRomeChip())
+                   break;
+
                txtbox1 = (EditText)findViewById(R.id.txtbox1);
                tv1 = (TextView)findViewById(R.id.label);
                if(txtbox1 != null) {
@@ -837,6 +857,98 @@ public class FMStats extends Activity  {
               txtbox1.setText("");
           }
        }
+    };
+
+    private View.OnClickListener mOnSetSinrThListenerSilabs =
+    new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a = txtbox1.getText().toString();
+          try {
+              int rdel = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value of Sinr Th is : " + rdel);
+              if(mService != null) {
+                 try {
+                     if((rdel >= MIN_SINR_TH_SILABS) &&
+                             (rdel <= MAX_SINR_TH_SILABS))
+                             mService.setSinrTh(rdel);
+                     else
+                        Log.d(LOGTAG, "SINR out of valid range");
+                 }catch (RemoteException e) {
+                     e.printStackTrace();
+                 }
+              }
+          }catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format: " + a);
+              txtbox1.setText("");
+          }
+      }
+    };
+
+    private View.OnClickListener mOnSetRssiThListenerSilabs =
+    new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a = txtbox1.getText().toString();
+          try {
+              int rdel = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value of Rssi Th is : " + rdel);
+              if(mReceiver != null) {
+                  if((rdel >= MIN_RSSI_TH_SILABS) &&
+                          (rdel <= MAX_RSSI_TH_SILABS))
+                          mReceiver.setRssiThreshold(rdel);
+                  else
+                     Log.d(LOGTAG, "RSSI out of valid range");
+              }
+          }catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format: " + a);
+              txtbox1.setText("");
+          }
+      }
+    };
+
+    private View.OnClickListener mOnSetAfJumpRssiThListenerSilabs =
+    new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a = txtbox1.getText().toString();
+          try {
+              int rdel = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value of Af jump Rssi Th is : " + rdel);
+              if(mReceiver != null) {
+                  if((rdel >= MIN_RSSI_TH_SILABS) &&
+                          (rdel <= MAX_RSSI_TH_SILABS))
+                          mReceiver.setAfJumpRssiThreshold(rdel);
+                  else
+                     Log.d(LOGTAG, "Af jump rssi out of valid range");
+              }
+          }catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format: " + a);
+              txtbox1.setText("");
+          }
+      }
+    };
+
+    private View.OnClickListener mOnSetRdsFifoCntListenerSilabs =
+    new View.OnClickListener() {
+       public void onClick(View v) {
+          String a;
+          a = txtbox1.getText().toString();
+          try {
+              int rdel = Integer.parseInt(a);
+              Log.d(LOGTAG, "Value of RDS fifo count is : " + rdel);
+              if(mReceiver != null) {
+                  if((rdel >= MIN_RDS_FIFO_CNT_SILABS) &&
+                          (rdel <= MAX_RDS_FIFO_CNT_SILABS))
+                          mReceiver.setRdsFifoCnt(rdel);
+                  else
+                     Log.d(LOGTAG, "RDS fifo count out of valid range");
+              }
+          }catch (NumberFormatException e) {
+              Log.e(LOGTAG, "Value entered is not in correct format: " + a);
+              txtbox1.setText("");
+          }
+      }
     };
 
     public class CfgRfItemSelectedListener1 implements OnItemSelectedListener {
@@ -1461,6 +1573,235 @@ public class FMStats extends Activity  {
         }
     }
 
+    public class CfgRfItemSelectedListener3 implements OnItemSelectedListener {
+        public void onItemSelected(
+                     AdapterView<?> parent, View view, int pos, long id) {
+            Log.d("Table","onItemSelected is hit with " + pos);
+            int ret = Integer.MAX_VALUE;
+            txtbox1 = (EditText)findViewById(R.id.txtbox1);
+            tv1 = (TextView)findViewById(R.id.label);
+            button1 = (Button)findViewById(R.id.SearchMpxDcc);
+            button2 = (Button)findViewById(R.id.SearchSinrInt);
+            Button SetButton = (Button)findViewById(R.id.Setbutton);
+            tLayout.setVisibility(View.INVISIBLE);
+            switch(pos)
+            {
+            case 0:
+                   if (txtbox1 != null) {
+                      txtbox1.setText(R.string.type_rd);
+                      txtbox1.setVisibility(View.VISIBLE);
+                   }
+                   if (tv1 != null) {
+                      tv1.setText(R.string.enter_SinrTh);
+                      tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                      SetButton.setText(R.string.set_SinrTh);
+                      SetButton.setVisibility(View.VISIBLE);
+                      SetButton.setOnClickListener(mOnSetSinrThListenerSilabs);
+                   }
+                   break;
+            case 1:
+                   if (txtbox1 != null) {
+                       txtbox1.setVisibility(View.INVISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText("");
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setVisibility(View.INVISIBLE);
+                   }
+                   try {
+                       if(mService != null)
+                          ret = mService.getSinrTh();
+                          Log.d(LOGTAG, "Get Sinr Threshold: " + ret);
+                          if((ret >= MIN_SINR_TH_SILABS) &&
+                                  (ret <= MAX_SINR_TH_SILABS))
+                             tv1.setText(" " + String.valueOf(ret));
+                   }catch (RemoteException e) {
+
+                   }
+                   break;
+            case 2:
+                   if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText(R.string.enter_RssiTh);
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setText(R.string.set_RssiTh);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetRssiThListenerSilabs);
+                   }
+                   break;
+            case 3:
+                   if (txtbox1 != null) {
+                       txtbox1.setVisibility(View.INVISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText("");
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setVisibility(View.INVISIBLE);
+                   }
+                   if (mReceiver != null) {
+                      ret = mReceiver.getRssiThreshold();
+                      Log.d(LOGTAG, "Get Rssi Th: " + ret);
+                      if((ret >= MIN_RSSI_TH_SILABS) &&
+                             (ret <= MAX_RSSI_TH_SILABS))
+                         tv1.setText(" " + String.valueOf(ret));
+                   }
+                   break;
+            case 4:
+                   if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText(R.string.enter_AfJumpRssiTh);
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setText(R.string.set_AfJumpRssiTh);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetAfJumpRssiThListenerSilabs);
+                   }
+                   break;
+            case 5:
+                   if (txtbox1 != null) {
+                       txtbox1.setVisibility(View.INVISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText("");
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setVisibility(View.INVISIBLE);
+                   }
+                   if(mReceiver != null) {
+                      ret = mReceiver.getAfJumpRssiThreshold();
+                      Log.d(LOGTAG, "Get AF jump Rssi threshold: " + ret);
+                      if((ret >= MIN_RSSI_TH_SILABS) &&
+                             (ret <= MAX_RSSI_TH_SILABS))
+                         tv1.setText(" " + String.valueOf(ret));
+                   }
+                   break;
+            case 6:
+                   if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText(R.string.enter_AfJumpRssiTh);
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setText(R.string.set_RdsFifoCnt);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetRdsFifoCntListenerSilabs);
+                   }
+                   break;
+            case 7:
+                   if (txtbox1 != null) {
+                       txtbox1.setVisibility(View.INVISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText("");
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setVisibility(View.INVISIBLE);
+                   }
+                   if(mReceiver != null) {
+                      ret = mReceiver.getRdsFifoCnt();
+                      Log.d(LOGTAG, "Get RDS fifo count: " + ret);
+                      if((ret >= MIN_RDS_FIFO_CNT_SILABS) &&
+                             (ret <= MAX_RDS_FIFO_CNT_SILABS))
+                         tv1.setText(" " + String.valueOf(ret));
+                   }
+                   break;
+/*
+            case 2:
+                   tLayout.removeAllViewsInLayout();
+                   mNewRowIds = NEW_ROW_ID;
+                   tLayout.setVisibility(View.VISIBLE);
+                   if (txtbox1 != null) {
+                       txtbox1.setVisibility(View.INVISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setVisibility(View.INVISIBLE);
+                   }
+                   adaptRfCfg.setDropDownViewResource(
+                              android.R.layout.simple_spinner_dropdown_item);
+                   spinOptionFmRf.setAdapter(adaptRfCfg);
+                   spinOptionFmRf.setOnItemSelectedListener(
+                                                 mSpinRfCfgListener);
+                   break;
+*/
+            }
+        }
+
+        public void onNothingSelected(AdapterView<?> parent) {
+            // Do Nothing
+        }
+    }
+
     public class RfCfgItemSelectedListener implements OnItemSelectedListener {
         public void onItemSelected(AdapterView<?> parent,
                                     View view, int pos, long id) {
@@ -1502,7 +1843,9 @@ public class FMStats extends Activity  {
                     adaptCfgRf.setDropDownViewResource(
                                      android.R.layout.simple_spinner_dropdown_item);
                     spinOptionFmRf.setAdapter(adaptCfgRf);
-                    if(isTransportLayerSMD())
+                    if (isRomeChip())
+                       spinOptionFmRf.setOnItemSelectedListener(mSpinCfgRfListener3);
+                    else if(isTransportLayerSMD())
                        spinOptionFmRf.setOnItemSelectedListener(mSpinCfgRfListener2);
                     else
                        spinOptionFmRf.setOnItemSelectedListener(mSpinCfgRfListener1);
@@ -1536,6 +1879,15 @@ public class FMStats extends Activity  {
     private boolean isTransportLayerSMD() {
         return mIsTransportSMD;
     }
+    private boolean isRomeChip() {
+        String chip = "";
+
+        chip = SystemProperties.get("qcom.bluetooth.soc");
+        if(chip.equals("rome"))
+           return true;
+        return false;
+    }
+
     private void createResult(Result aRes) {
         // Get the TableLayout
         TableLayout tl = (TableLayout) findViewById(R.id.maintable);
