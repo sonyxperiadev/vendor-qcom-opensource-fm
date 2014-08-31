@@ -2493,6 +2493,114 @@ public class FmReceiver extends FmTransceiver
    }
 
 /*==============================================================
+   FUNCTION:  setRssiThreshold
+   ==============================================================*/
+   /**
+   *    Sets the RSSI threshold value
+   *
+   *    <p>
+   *    This method sets the RSSI threshold value.
+   *
+   *    <p>
+   */
+   public boolean setRssiThreshold(int data)
+   {
+      int re =  mControl.setRssiThreshold(sFd, data);
+      if (re < 0)
+          return false;
+      else
+          return true;
+   }
+
+/*==============================================================
+   FUNCTION:  getRssiThreshold
+   ==============================================================*/
+   /**
+   *    Gets the Rssi threshold value
+   *
+   *    <p>
+   *    This method gets the currently set Rssi threshold value.
+   *
+   *    <p>
+   */
+   public int getRssiThreshold()
+   {
+      return mControl.getRssiThreshold(sFd);
+   }
+
+/*==============================================================
+   FUNCTION:  setAfJumpRssiThreshold
+   ==============================================================*/
+   /**
+   *    Sets the Af jump RSSI threshold value
+   *
+   *    <p>
+   *    This method sets the AF jump RSSI threshold value.
+   *
+   *    <p>
+   */
+   public boolean setAfJumpRssiThreshold(int data)
+   {
+      int re =  mControl.setAfJumpRssiThreshold(sFd, data);
+      if (re < 0)
+          return false;
+      else
+          return true;
+   }
+
+/*==============================================================
+   FUNCTION:  getAfJumpRssiThreshold
+   ==============================================================*/
+   /**
+   *    Gets the Af jump RSSI threshold value
+   *
+   *    <p>
+   *    This method gets the currently set AF jump RSSI threshold value.
+   *
+   *    <p>
+   */
+   public int getAfJumpRssiThreshold()
+   {
+      return mControl.getAfJumpRssiThreshold(sFd);
+   }
+
+/*==============================================================
+   FUNCTION: setRdsFifoCnt
+   ==============================================================*/
+   /**
+   *    Sets the RDS FIFO count value
+   *
+   *    <p>
+   *    This method sets the RDS FIFO count value.
+   *
+   *    <p>
+   */
+   public boolean setRdsFifoCnt(int data)
+   {
+      int re =  mControl.setRdsFifoCnt(sFd, data);
+      if (re < 0)
+          return false;
+      else
+          return true;
+   }
+
+/*==============================================================
+   FUNCTION:  getRdsFifoCnt
+   ==============================================================*/
+   /**
+   *    Gets the RDS FIFO count value
+   *
+   *    <p>
+   *    This method gets the currently set RDS FIFO count value.
+   *
+   *    <p>
+   */
+   public int getRdsFifoCnt()
+   {
+      return mControl.getRdsFifoCnt(sFd);
+   }
+
+/*==============================================================
    FUNCTION:  setSINRsamples
    ==============================================================*/
    /**
