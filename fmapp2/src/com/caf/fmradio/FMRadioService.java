@@ -440,6 +440,12 @@ public class FMRadioService extends Service
                          int keycode = event.getKeyCode();
                          switch (keycode) {
                              case KeyEvent.KEYCODE_HEADSETHOOK :
+                                 if (isFmOn() && getResources()
+                                        .getBoolean(R.bool.def_headset_next_enabled)) {
+                                     Log.d(LOGTAG, "enabled the headset button function to seek next station");
+                                     seek(true);
+                                     break;
+                                 }
                                  toggleFM();
                                  if (isOrderedBroadcast()) {
                                      abortBroadcast();
