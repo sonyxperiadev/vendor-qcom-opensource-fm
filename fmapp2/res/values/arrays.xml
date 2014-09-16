@@ -375,6 +375,7 @@
       <item> Get AFJumpRssi Threshold</item>
       <item> Set RDS FIFO count</item>
       <item> Get RDS FIFO count</item>
+      <item> RF Statistics</item>
   </string-array>
 
   <string-array name="stats_options">
