@@ -1544,6 +1544,14 @@ public class FmReceiver extends FmTransceiver
        else
            return false;
    }
+
+   public boolean IsRomeChip() {
+       String chip = SystemProperties.get("qcom.bluetooth.soc");
+       if (chip.equals("rome"))
+           return true;
+       else
+           return false;
+   }
    /*==============================================================
    FUNCTION:  getAFInfo
    ==============================================================*/
@@ -1575,8 +1583,8 @@ public class FmReceiver extends FmTransceiver
 
       FmReceiverJNI.getBufferNative(sFd, buff, TAVARUA_BUF_AF_LIST);
 
-      if (IsSmdTransportLayer()) {
-          Log.d(TAG, "SMD transport layer");
+      if (IsSmdTransportLayer() || IsRomeChip()) {
+          Log.d(TAG, "SMD transport layer or Rome chip");
 
           tunedFreq = (buff[0] & 0xFF) |
                       ((buff[1] & 0xFF) << 8) |
