@@ -337,12 +337,18 @@ public class FMStats extends Activity  {
 
         /*Initialize the column header with
         constant values*/
-        mColumnHeader.setFreq("Freq");
-        mColumnHeader.setRSSI("RMSSI");
-        mColumnHeader.setIoC("IoC");
-        mColumnHeader.setSINR("SINR");
-        mColumnHeader.setMpxDcc("Offset");
-        mColumnHeader.setIntDet("IntDet");
+        if (isRomeChip()) {
+            mColumnHeader.setFreq("Freq");
+            mColumnHeader.setRSSI("RMSSI");
+            mColumnHeader.setSINR("SINR");
+        } else {
+            mColumnHeader.setFreq("Freq");
+            mColumnHeader.setRSSI("RMSSI");
+            mColumnHeader.setIoC("IoC");
+            mColumnHeader.setSINR("SINR");
+            mColumnHeader.setMpxDcc("Offset");
+            mColumnHeader.setIntDet("IntDet");
+        }
 
         bandSweepSettingButton = (TextView)findViewById(R.id.BandSweepSetting);
         if(bandSweepSettingButton != null) {
@@ -510,10 +516,6 @@ public class FMStats extends Activity  {
                                    (mSpinCfgRfListener1);
                break;
        case 2:
-               /* RF statics option is for non-Silabs targets */
-               if (isRomeChip())
-                   break;
-
                txtbox1 = (EditText)findViewById(R.id.txtbox1);
                tv1 = (TextView)findViewById(R.id.label);
                if(txtbox1 != null) {
@@ -1773,8 +1775,7 @@ public class FMStats extends Activity  {
                          tv1.setText(" " + String.valueOf(ret));
                    }
                    break;
-/*
-            case 2:
+            case 8:
                    tLayout.removeAllViewsInLayout();
                    mNewRowIds = NEW_ROW_ID;
                    tLayout.setVisibility(View.VISIBLE);
@@ -1793,7 +1794,6 @@ public class FMStats extends Activity  {
                    spinOptionFmRf.setOnItemSelectedListener(
                                                  mSpinRfCfgListener);
                    break;
-*/
             }
         }
 
@@ -1917,12 +1917,15 @@ public class FMStats extends Activity  {
         colRMSSI.setWidth(width/4);
         tr2.addView(colRMSSI);
 
-        TextView colIoC = new TextView(getApplicationContext());
-        colIoC.setText(aRes.getIoC());
-        colIoC.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-        colIoC.setWidth(width/4);
-        tr2.addView(colIoC);
-        if(isTransportLayerSMD())
+        if(!isRomeChip()) {
+            TextView colIoC = new TextView(getApplicationContext());
+            colIoC.setText(aRes.getIoC());
+            colIoC.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            colIoC.setWidth(width/4);
+            tr2.addView(colIoC);
+        }
+
+        if(isTransportLayerSMD() || isRomeChip())
         {
              TextView colSINR = new TextView(getApplicationContext());
              colSINR.setText(aRes.getSINR());
@@ -1948,9 +1951,13 @@ public class FMStats extends Activity  {
                  StringBuilder tempStr = new StringBuilder();
                  tempStr.append(String.format("%10s", aRes.getFreq()));
                  tempStr.append(String.format("%10s", aRes.getRSSI()));
-                 tempStr.append(String.format("%10s", aRes.getIoC()));
-                 tempStr.append(String.format("%10s", aRes.getIntDet()));
-                 if(isTransportLayerSMD())
+
+                 if(!isRomeChip()) {
+                     tempStr.append(String.format("%10s", aRes.getIoC()));
+                     tempStr.append(String.format("%10s", aRes.getIntDet()));
+                 }
+
+                 if(isTransportLayerSMD() || isRomeChip())
                  {
                     tempStr.append(String.format("%10s", aRes.getSINR()));
                  } else
@@ -2245,19 +2252,21 @@ public class FMStats extends Activity  {
                e.printStackTrace();
            }
 
-           try {
-               nIoC = mService.getIoC();
-               if (nIoC != Integer.MAX_VALUE)
-                   result.setIoC(Integer.toString(nIoC));
-               else
-                   return null;
-           } catch (RemoteException e) {
-               e.printStackTrace();
-           } catch(Exception e) {
-               e.printStackTrace();
+           if(!isRomeChip()) {
+              try {
+                  nIoC = mService.getIoC();
+                  if (nIoC != Integer.MAX_VALUE)
+                      result.setIoC(Integer.toString(nIoC));
+                  else
+                      return null;
+              } catch (RemoteException e) {
+                  e.printStackTrace();
+              } catch(Exception e) {
+                  e.printStackTrace();
+              }
            }
 
-           if(isTransportLayerSMD()) {
+           if(isTransportLayerSMD() || isRomeChip()) {
               try {
                   dummy = mService.getSINR();
                   if (dummy != Integer.MAX_VALUE) {
@@ -2285,16 +2294,18 @@ public class FMStats extends Activity  {
               }
            }
 
-           try {
-               nIntDet = mService.getIntDet();
-               if (nIntDet != Integer.MAX_VALUE)
-                   result.setIntDet(Integer.toString(nIntDet));
-               else
-                   return null;
-           } catch (RemoteException e) {
-               e.printStackTrace();
-           }catch (Exception e) {
-               e.printStackTrace();
+           if(!isRomeChip()) {
+              try {
+                  nIntDet = mService.getIntDet();
+                  if (nIntDet != Integer.MAX_VALUE)
+                      result.setIntDet(Integer.toString(nIntDet));
+                  else
+                      return null;
+              } catch (RemoteException e) {
+                  e.printStackTrace();
+              }catch (Exception e) {
+                  e.printStackTrace();
+              }
            }
         } else {
            return null;
