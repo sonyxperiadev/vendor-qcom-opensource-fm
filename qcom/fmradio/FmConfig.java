@@ -124,7 +124,7 @@ public class FmConfig {
                 buff[(j * 4) + 7 + (i * each_Spur_entry_size)]  =
                                  (short)((rotation_value >> 8) & 0xff);
                 buff[(j * 4) + 8 + (i * each_Spur_entry_size)]  =
-                                (short)((rotation_value >> 12) & 0xff);
+                                (short)((rotation_value >> 16) & 0x0f);
                 buff[(j * 4) + 8 + (i * each_Spur_entry_size)] |=
                  (short)(spurDetails.get(j).getLsbOfIntegrationLength() << 4);
                 buff[(j * 4) + 8 + (i * each_Spur_entry_size)] |=
