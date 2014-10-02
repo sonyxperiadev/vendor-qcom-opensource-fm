@@ -236,17 +236,13 @@ public class FMTransmitterActivity extends Activity {
        }
 
        enableRadioOnOffUI(false);
-       //HDMI and FM concurrecny is not supported.
-       if(isHdmiOn()) {
-          showDialog(DIALOG_CMD_FAILED_HDMI_ON);
+
+       if(false == bindToService(this, osc)) {
+          Log.d(LOGTAG, "onCreate: Failed to Start Service");
        }else {
-          if(false == bindToService(this, osc)) {
-             Log.d(LOGTAG, "onCreate: Failed to Start Service");
-          }else {
-             Log.d(LOGTAG, "onCreate: Start Service completed successfully");
-          }
-          registerFMSettingListner();
+          Log.d(LOGTAG, "onCreate: Start Service completed successfully");
        }
+       registerFMSettingListner();
    }
 
    @Override
@@ -462,17 +458,6 @@ public class FMTransmitterActivity extends Activity {
            break;
       }
       return super.onOptionsItemSelected(item);
-   }
-
-   private boolean isHdmiOn() {
-      //HDMI and FM concurrecny is not supported.
-      try {
-           String hdmiUserOption = android.provider.Settings.System.getString(
-                                            getContentResolver(), "HDMI_USEROPTION");
-      }catch(Exception ex){
-           Log.d(LOGTAG,"Get HDMI open failed");
-      }
-      return false;
    }
 
    @Override
@@ -1392,7 +1377,7 @@ public class FMTransmitterActivity extends Activity {
      void startScroll() {
         final TextView textView = mView.get();
            if(textView != null) {
-              mOriginalString = (String) textView.getText();
+              mOriginalString = (String) textView.getText().toString();
               mStringlength = mOriginalString.length();
               if(mStringlength > 0) {
                  mStatus = SCROLLER_STARTING;
