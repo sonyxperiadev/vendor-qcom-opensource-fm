@@ -1776,6 +1776,56 @@ public class FMStats extends Activity  {
                    }
                    break;
             case 8:
+                   if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText(R.string.enter_AfJmpRmssiSmplsCnt);
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setText(R.string.set_AfJmpRmssiSmplsCnt);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetAfJmpRmssiSmplsCntListener);
+                   }
+                   break;
+            case 9:
+                   if (txtbox1 != null) {
+                       txtbox1.setVisibility(View.INVISIBLE);
+                   }
+                   if (tv1 != null) {
+                       tv1.setText("");
+                       tv1.setVisibility(View.VISIBLE);
+                   }
+                   if(button1 != null) {
+                      button1.setVisibility(View.INVISIBLE);
+                   }
+                   if(button2 != null) {
+                      button2.setVisibility(View.INVISIBLE);
+                   }
+                   if (SetButton != null) {
+                       SetButton.setVisibility(View.INVISIBLE);
+                   }
+                   try {
+                        if (mService != null) {
+                            ret = mService.getAfJmpRmssiSamplesCnt();
+                            Log.d(LOGTAG, "Get AfJmpRmssiSamples count: " + ret);
+                            if ((ret >= MIN_AF_JMP_RMSSI_SAMPLES) &&
+                                (ret <= MAX_AF_JMP_RMSSI_SAMPLES))
+                                 tv1.setText(" " + String.valueOf(ret));
+                         }
+                   } catch (RemoteException e) {
+
+                   }
+                   break;
+            case 10:
                    tLayout.removeAllViewsInLayout();
                    mNewRowIds = NEW_ROW_ID;
                    tLayout.setVisibility(View.VISIBLE);
