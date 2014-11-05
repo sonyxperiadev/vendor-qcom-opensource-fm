@@ -252,6 +252,10 @@ public class Settings extends PreferenceActivity implements
                         String key) {
           int mTunedFreq = 0;
           boolean bStatus = false;
+          int noOfChannels = 0;
+          int channelSpacing = 0;
+          int preIndex;
+
           if (key.equals(REGIONAL_BAND_KEY)) {
               int curListIndex = FmSharedPreferences.getCurrentListIndex();
               PresetList curList = FmSharedPreferences.getStationList(curListIndex);
@@ -282,8 +286,25 @@ public class Settings extends PreferenceActivity implements
                PresetList curList = FmSharedPreferences.getStationList(curListIndex);
                String valStr = mChannelSpacingPref.getValue();
                int index = 0;
+               preIndex = FmSharedPreferences.getChSpacing();
                if(valStr != null) {
                   index  = mChannelSpacingPref.findIndexOfValue(valStr);
+               }
+               if (index == 0)
+                   channelSpacing = 50;
+               else if (index == 1)
+                   channelSpacing = 100;
+               else if (index == 2)
+                   channelSpacing = 200;
+               noOfChannels = 0;
+               max_freq = FmSharedPreferences.getUpperLimit();
+               min_freq = FmSharedPreferences.getLowerLimit();
+               noOfChannels =  (int) (max_freq - min_freq)/channelSpacing;
+               if (noOfChannels < 1) {
+                   index = 2 - preIndex;
+                   mChannelSpacingPref.setValueIndex(index);
+                   Toast.makeText(this, getString(R.string.user_defind_band_msg),
+                                                            Toast.LENGTH_SHORT).show();
                }
                if ((index < 0) || (index >= chSpacingItems.length)) {
                    index = 0;
@@ -305,9 +326,11 @@ public class Settings extends PreferenceActivity implements
                     e.printStackTrace();
                     return;
                }
+               noOfChannels = 0;
                max_freq = FmSharedPreferences.getUpperLimit();
                min_freq = FmSharedPreferences.getLowerLimit();
-               if((freq > 0) && (freq < max_freq) && (freq >= 76000)) {
+               noOfChannels =  (int) (max_freq - freq)/FmSharedPreferences.getFrequencyStepSize();
+               if((freq > 0) && (freq < max_freq) && (freq >= 76000) && (noOfChannels > 0)) {
                   FmSharedPreferences.setLowerLimit((int)freq);
                   sendSettingsChangedIntent(FM_BAND_CHANGED);
                   setBandSummary(summaryBandItems.length - 1);
@@ -329,9 +352,11 @@ public class Settings extends PreferenceActivity implements
                     e.printStackTrace();
                     return;
                }
+               noOfChannels = 0;
                min_freq = FmSharedPreferences.getLowerLimit();
                max_freq = FmSharedPreferences.getUpperLimit();
-               if((freq > 0) && (freq > min_freq) && (freq <= 108000)) {
+               noOfChannels = (int) (freq - min_freq)/FmSharedPreferences.getFrequencyStepSize();
+               if((freq > 0) && (freq > min_freq) && (freq <= 108000) && (noOfChannels > 0)) {
                   FmSharedPreferences.setUpperLimit((int)freq);
                   sendSettingsChangedIntent(FM_BAND_CHANGED);
                   setBandSummary(summaryBandItems.length - 1);
