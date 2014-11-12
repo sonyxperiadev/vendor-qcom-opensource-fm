@@ -248,6 +248,10 @@
     <string name="rt_plus_tags">Tags</string>
     <string name="enter_RxRePeatCount">Enter RxRePeat count</string>
     <string name="set_RxRePeatCount">Config RxRePeat count</string>
+    <string name="enter_BlendSinrHi">Enter Sig Blend SinrHi value</string>
+    <string name="set_BlendSinrHi">Configure Sig Blend SinrHi value</string>
+    <string name="enter_BlendRmssiHi">Enter Sig Blend RmssiHi value</string>
+    <string name="set_BlendRmssiHi">Configure Sig Blend RmssiHi value</string>
     <string name="enter_RssiTh">Enter RSSI Threshold</string>
     <string name="set_RssiTh">Config RSSI Threshold</string>
     <string name="enter_AfJumpRssiTh">Enter AF jump RSSI Threshold</string>

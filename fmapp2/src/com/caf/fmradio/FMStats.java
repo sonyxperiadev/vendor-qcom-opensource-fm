@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -235,6 +235,10 @@ public class FMStats extends Activity  {
     private static final int MAX_RSSI_TH_SILABS = 127;
     private static final int MIN_RDS_FIFO_CNT_SILABS = 0;
     private static final int MAX_RDS_FIFO_CNT_SILABS = 25;
+    private static final int MIN_BLEND_SINRHI = -128;
+    private static final int MAX_BLEND_SINRHI = 127;
+    private static final int MIN_BLEND_RMSSIHI = -128;
+    private static final int MAX_BLEND_RMSSIHI = 127;
 
     private static final int DIALOG_BAND_SWEEP_SETTING = 1;
 
@@ -570,6 +574,46 @@ public class FMStats extends Activity  {
                     } catch (RemoteException e) {
                          e.printStackTrace();
                     }
+                 }
+            } catch (NumberFormatException e) {
+                 Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+                 txtbox1.setText("");
+            }
+        }
+    };
+
+    private View.OnClickListener mOnSetBlendSinrHiListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            String a;
+            a =  txtbox1.getText().toString();
+            try {
+                 byte count = (byte) Integer.parseInt(a);
+                 Log.d(LOGTAG, "Value entered for mOnSetBlendSinrHiListener: " + count);
+                 if((count < MIN_BLEND_SINRHI ) ||
+                     (count > MAX_BLEND_SINRHI))
+                     return;
+                 if(mReceiver != null) {
+                         mReceiver.setBlendSinr(count);
+                 }
+            } catch (NumberFormatException e) {
+                 Log.e(LOGTAG, "Value entered is not in correct format : " + a);
+                 txtbox1.setText("");
+            }
+        }
+    };
+
+    private View.OnClickListener mOnSetBlendRmssiHiListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            String a;
+            a =  txtbox1.getText().toString();
+            try {
+                 byte count = (byte)Integer.parseInt(a);
+                 Log.d(LOGTAG, "Value entered for mOnSetBlendRmssiHiListener: " + count);
+                 if((count < MIN_BLEND_RMSSIHI) ||
+                     (count > MAX_BLEND_RMSSIHI))
+                     return;
+                 if(mReceiver != null) {
+                         mReceiver.setBlendRmssi(count);
                  }
             } catch (NumberFormatException e) {
                  Log.e(LOGTAG, "Value entered is not in correct format : " + a);
@@ -1025,6 +1069,7 @@ public class FMStats extends Activity  {
                                     View view, int pos, long id) {
             Log.d("Table","onItemSelected is hit with " + pos);
             int ret = Integer.MAX_VALUE;
+            byte retval = Byte.MAX_VALUE;
             txtbox1 = (EditText) findViewById(R.id.txtbox1);
             tv1 = (TextView) findViewById(R.id.label);
             button1 = (Button)findViewById(R.id.SearchMpxDcc);
@@ -1524,6 +1569,119 @@ public class FMStats extends Activity  {
                     }
                     break;
                 case 20:
+                    if (txtbox1 != null) {
+                        txtbox1.setText(R.string.type_rd);
+                        txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText(R.string.enter_RxRePeatCount);
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setText(R.string.set_RxRePeatCount);
+                        SetButton.setVisibility(View.VISIBLE);
+                        SetButton.setOnClickListener(mOnSetRxRePeatCount);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    break;
+                case 21:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_BlendSinrHi);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_BlendSinrHi);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetBlendSinrHiListener);
+                    }
+                    break;
+                case 22:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    if (mReceiver != null) {
+                        retval = mReceiver.getBlendSinr();
+                        Log.d(LOGTAG, "Get BlendSinrHi: " + retval);
+                        if((retval >= MIN_BLEND_RMSSIHI) &&
+                           (retval <= MAX_BLEND_RMSSIHI))
+                            tv1.setText(" " + String.valueOf(retval));
+                    }
+                    break;
+                case 23:
+                    if (txtbox1 != null) {
+                       txtbox1.setText(R.string.type_rd);
+                       txtbox1.setVisibility(View.VISIBLE);
+                    }
+                    if (tv1 != null) {
+                       tv1.setText(R.string.enter_BlendRmssiHi);
+                       tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                       SetButton.setText(R.string.set_BlendRmssiHi);
+                       SetButton.setVisibility(View.VISIBLE);
+                       SetButton.setOnClickListener(mOnSetBlendRmssiHiListener);
+                    }
+                    break;
+                case 24:
+                    if (txtbox1 != null) {
+                        txtbox1.setVisibility(View.INVISIBLE);
+                    }
+                    if (tv1 != null) {
+                        tv1.setText("");
+                        tv1.setVisibility(View.VISIBLE);
+                    }
+                    if(button1 != null) {
+                       button1.setVisibility(View.INVISIBLE);
+                    }
+                    if(button2 != null) {
+                       button2.setVisibility(View.INVISIBLE);
+                    }
+                    if (SetButton != null) {
+                        SetButton.setVisibility(View.INVISIBLE);
+                    }
+                    if (mReceiver != null) {
+                        retval = mReceiver.getBlendRmssi();
+                        Log.d(LOGTAG, "Get BlendRmssiHi: " + retval);
+                        if((retval >= MIN_BLEND_RMSSIHI) &&
+                           (retval <= MAX_BLEND_RMSSIHI))
+                            tv1.setText(" " + String.valueOf(retval));
+                    }
+                    break;
+                case 25:
                     tLayout.removeAllViewsInLayout();
                     mNewRowIds = NEW_ROW_ID;
                     tLayout.setVisibility(View.VISIBLE);
@@ -1546,27 +1704,6 @@ public class FMStats extends Activity  {
                               android.R.layout.simple_spinner_dropdown_item);
                     spinOptionFmRf.setAdapter(adaptRfCfg);
                     spinOptionFmRf.setOnItemSelectedListener(mSpinRfCfgListener);
-                    break;
-                case 21:
-                    if (txtbox1 != null) {
-                        txtbox1.setText(R.string.type_rd);
-                        txtbox1.setVisibility(View.VISIBLE);
-                    }
-                    if (tv1 != null) {
-                        tv1.setText(R.string.enter_RxRePeatCount);
-                        tv1.setVisibility(View.VISIBLE);
-                    }
-                    if (SetButton != null) {
-                        SetButton.setText(R.string.set_RxRePeatCount);
-                        SetButton.setVisibility(View.VISIBLE);
-                        SetButton.setOnClickListener(mOnSetRxRePeatCount);
-                    }
-                    if(button1 != null) {
-                       button1.setVisibility(View.INVISIBLE);
-                    }
-                    if(button2 != null) {
-                       button2.setVisibility(View.INVISIBLE);
-                    }
                     break;
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009,2012-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009,2012-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1949,6 +1949,42 @@ public class FmReceiver extends FmTransceiver
           return false;
       }
       return mControl.setPSRxRepeatCount(sFd, count);
+   }
+
+   public byte getBlendSinr() {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getBlendSinr: Device currently busy in executing another command.");
+          return Byte.MAX_VALUE;
+      }
+      return mControl.getBlendSinr(sFd);
+   }
+
+   public boolean setBlendSinr(byte sinrHi) {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setBlendSinr: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setBlendSinr(sFd, sinrHi);
+   }
+
+   public byte getBlendRmssi() {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "getBlendRmssi: Device currently busy in executing another command.");
+          return Byte.MAX_VALUE;
+      }
+      return mControl.getBlendRmssi(sFd);
+   }
+
+   public boolean setBlendRmssi(byte rmssiHi) {
+      int state = getFMState();
+      if ((state == FMState_Turned_Off) || (state == FMState_Srch_InProg)) {
+          Log.d(TAG, "setBlendRmssi: Device currently busy in executing another command.");
+          return false;
+      }
+      return mControl.setBlendRmssi(sFd, rmssiHi);
    }
 
    /*==============================================================

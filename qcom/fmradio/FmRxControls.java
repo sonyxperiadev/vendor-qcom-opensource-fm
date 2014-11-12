@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -98,6 +98,8 @@ class FmRxControls
    private static final int V4L2_CID_PRIVATE_RXREPEATCOUNT                 = V4L2_CID_PRIVATE_BASE + 0x3D;
    private static final int V4L2_CID_PRIVATE_RSSI_TH                       = V4L2_CID_PRIVATE_BASE + 0x3E;
    private static final int V4L2_CID_PRIVATE_AF_JUMP_RSSI_TH               = V4L2_CID_PRIVATE_BASE + 0x3F;
+   private static final int V4L2_CID_PRIVATE_BLEND_SINRHI                  = V4L2_CID_PRIVATE_BASE + 0x40;
+   private static final int V4L2_CID_PRIVATE_BLEND_RMSSIHI                 = V4L2_CID_PRIVATE_BASE + 0x41;
 
    private static final int V4L2_CTRL_CLASS_USER = 0x980000;
    private static final int V4L2_CID_BASE        = V4L2_CTRL_CLASS_USER | 0x900;
@@ -731,4 +733,33 @@ class FmRxControls
       }
    }
 
+   public byte getBlendSinr(int fd) {
+      return (byte)FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_BLEND_SINRHI);
+   }
+
+   public boolean setBlendSinr(int fd, byte sinrHi) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_BLEND_SINRHI, sinrHi);
+      if(ret < 0) {
+         Log.e(TAG, "Error in setting sinrHi ");
+         return false;
+      }else {
+         return true;
+      }
+   }
+
+   public byte getBlendRmssi(int fd) {
+      return (byte)FmReceiverJNI.getControlNative(fd, V4L2_CID_PRIVATE_BLEND_RMSSIHI);
+   }
+
+   public boolean setBlendRmssi(int fd, byte rmssiHi) {
+      int ret;
+      ret = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_BLEND_RMSSIHI, rmssiHi);
+      if(ret < 0) {
+         Log.e(TAG, "Error in setting RmssiHi ");
+         return false;
+      }else {
+         return true;
+      }
+   }
 }
