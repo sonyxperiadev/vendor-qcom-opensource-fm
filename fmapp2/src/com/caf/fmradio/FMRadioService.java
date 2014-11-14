@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -375,12 +375,10 @@ public class FMRadioService extends Service
                             Log.d(LOGTAG, "FM Audio Path is Analog Mode: FM Over BT not allowed");
                             return ;
                         }
-                       //when playback is overA2Dp and A2dp disconnected
-                       //when playback is not overA2DP and A2DP Connected
+                       //when A2dp connected/disconnected
                        // In above two cases we need to Stop and Start FM which
                        // will take care of audio routing
                        if( (isFmOn()) &&
-                           (true == ((bA2dpConnected)^(mOverA2DP))) &&
                            (false == mStoppedOnFocusLoss)) {
                            Log.d(LOGTAG, "stopping and starting FM\n");
                            stopFM();
