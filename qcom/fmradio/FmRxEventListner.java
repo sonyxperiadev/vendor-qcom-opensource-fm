@@ -107,6 +107,10 @@ class FmRxEventListner {
                                 freq = FmReceiverJNI.getFreqNative(fd);
                                 state = FmReceiver.getSearchState();
                                 switch(state) {
+                                   case FmTransceiver.subSrchLevel_SrchAbort:
+                                        Log.v(TAG, "Current state is SRCH_ABORTED");
+                                        Log.v(TAG, "Aborting on-going search command...");
+                                        /* intentional fall through */
                                    case FmTransceiver.subSrchLevel_SeekInPrg :
                                         Log.v(TAG, "Current state is " + state);
                                         FmReceiver.setSearchState(FmTransceiver.subSrchLevel_SrchComplete);
@@ -127,13 +131,6 @@ class FmRxEventListner {
                                 switch(state) {
                                    case FmTransceiver.subSrchLevel_ScanInProg:
                                       Log.v(TAG, "Current state is " + state);
-                                      FmReceiver.setSearchState(FmTransceiver.subSrchLevel_SrchComplete);
-                                      Log.v(TAG, "RxEvtList: CURRENT-STATE : Search ---> NEW-STATE : FMRxOn");
-                                      cb.FmRxEvSearchComplete(FmReceiverJNI.getFreqNative(fd));
-                                      break;
-                                   case FmTransceiver.subSrchLevel_SrchAbort:
-                                      Log.v(TAG, "Current state is SRCH_ABORTED");
-                                      Log.v(TAG, "Aborting on-going search command...");
                                       FmReceiver.setSearchState(FmTransceiver.subSrchLevel_SrchComplete);
                                       Log.v(TAG, "RxEvtList: CURRENT-STATE : Search ---> NEW-STATE : FMRxOn");
                                       cb.FmRxEvSearchComplete(FmReceiverJNI.getFreqNative(fd));
