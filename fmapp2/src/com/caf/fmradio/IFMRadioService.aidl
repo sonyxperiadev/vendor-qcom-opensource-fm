@@ -72,5 +72,6 @@ interface IFMRadioService
     boolean setRxRepeatCount(int count);
     long getRecordingStartTime();
     boolean isSleepTimerActive();
+    boolean isSSRInProgress();
 }
 
