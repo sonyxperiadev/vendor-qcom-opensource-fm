@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -158,22 +158,32 @@ public class Settings extends PreferenceActivity implements
            root.addPreference(mUserBandMinPref);
            root.addPreference(mUserBandMaxPref);
 
+           boolean audiomode = FmSharedPreferences.getAudioOutputMode();
            if (mRxMode) {
                // Audio Output (Stereo or Mono)
-               summaryAudioModeItems = getResources().getStringArray(
-                                        R.array.ster_mon_entries);
-               mAudioPreference = new ListPreference(this);
-               mAudioPreference.setEntries(R.array.ster_mon_entries);
-               mAudioPreference.setEntryValues(R.array.ster_mon_values);
+               if (getResources().getBoolean(R.bool.def_only_stereo_enabled)) {
+                   summaryAudioModeItems = getResources()
+                           .getStringArray(R.array.ster_entries);
+                   mAudioPreference = new ListPreference(this);
+                   mAudioPreference.setEntries(R.array.ster_entries);
+                   mAudioPreference.setEntryValues(R.array.ster_values);
+                   index = 0;
+               } else {
+                   summaryAudioModeItems = getResources()
+                           .getStringArray(R.array.ster_mon_entries);
+                   mAudioPreference = new ListPreference(this);
+                   mAudioPreference.setEntries(R.array.ster_mon_entries);
+                   mAudioPreference.setEntryValues(R.array.ster_mon_values);
+                   if (audiomode) {
+                      index = 0;
+                   } else {
+                      index = 1;
+                   }
+               }
                mAudioPreference.setDialogTitle(R.string.sel_audio_output);
                mAudioPreference.setKey(AUDIO_OUTPUT_KEY);
                mAudioPreference.setTitle(R.string.aud_output_mode);
-               boolean audiomode = FmSharedPreferences.getAudioOutputMode();
-               if (audiomode) {
-                   index = 0;
-               } else {
-                   index = 1;
-               }
+
                Log.d(LOGTAG, "createPreferenceHierarchy: audiomode: " + audiomode);
                mAudioPreference.setSummary(summaryAudioModeItems[index]);
                mAudioPreference.setValueIndex(index);

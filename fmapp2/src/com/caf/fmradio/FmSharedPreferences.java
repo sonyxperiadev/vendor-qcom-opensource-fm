@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,6 +39,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import qcom.fmradio.FmReceiver;
 import qcom.fmradio.FmConfig;
+import android.os.SystemProperties;
 import android.util.Log;
 
 public class FmSharedPreferences
@@ -167,6 +168,7 @@ public class FmSharedPreferences
    private static boolean mAFAutoSwitch = true;
    private static int mRecordDuration = 0;
    private static int mLastAudioMode = -1;
+   private static boolean mSpecialCarrierFlag = false;
 
    FmSharedPreferences(Context context){
       mContext = context.getApplicationContext();
@@ -446,6 +448,8 @@ public class FmSharedPreferences
       {
          return;
       }
+      mSpecialCarrierFlag = mContext.getResources().getBoolean(
+              R.bool.def_fm_special_carrier_enabled);
       SharedPreferences sp = mContext.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
       mTunedFrequency = sp.getInt(PREF_LAST_TUNED_FREQUENCY, DEFAULT_NO_FREQUENCY);
       mRecordDuration = sp.getInt(LAST_RECORD_DURATION, RECORD_DUR_INDEX_0_VAL);
@@ -498,6 +502,9 @@ public class FmSharedPreferences
       /* Load Configuration */
       if (Locale.getDefault().equals(Locale.CHINA)) {
           setCountry(sp.getInt(FMCONFIG_COUNTRY, REGIONAL_BAND_CHINA));
+        } else if (mContext.getResources()
+                .getBoolean(R.bool.def_fm_country_location_enabled)) {
+            setCountry(sp.getInt(FMCONFIG_COUNTRY, REGIONAL_BAND_INDIA));
       } else {
           setCountry(sp.getInt(FMCONFIG_COUNTRY, REGIONAL_BAND_NORTH_AMERICA));
       }
@@ -929,9 +936,15 @@ public class FmSharedPreferences
         }
         case REGIONAL_BAND_INDIA:
         {
-          /*INDIA : 91000 TO 106400 IN 100 KHZ STEPS*/
-          mFMConfiguration.setLowerLimit(91000);
-          mFMConfiguration.setUpperLimit(106400);
+          if (mSpecialCarrierFlag) {
+              /*87500 TO 108000 IN 100 KHZ STEPS*/
+              mFMConfiguration.setLowerLimit(87500);
+              mFMConfiguration.setUpperLimit(108000);
+          } else {
+              /*91000 TO 106400 IN 100 KHZ STEPS*/
+              mFMConfiguration.setLowerLimit(91000);
+              mFMConfiguration.setUpperLimit(106400);
+          }
           mFrequencyBand_Stepsize = 100;
           break;
         }

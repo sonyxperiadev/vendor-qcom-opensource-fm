@@ -233,11 +233,25 @@ public class FMRecordingService extends Service {
         mSampleFile = null;
         File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/FMRecording");
 
+        if (getResources().getBoolean(R.bool.def_save_name_prefix_enabled)) {
+            String fmRecordSavePath = getApplicationContext().getResources()
+                    .getString(R.string.def_fmRecord_savePath);
+            sampleDir = new File(Environment.getExternalStorageDirectory().toString()
+                    + fmRecordSavePath);
+            if (!sampleDir.exists()) {
+                sampleDir.mkdirs();
+            }
+        }
         if(!(sampleDir.mkdirs() || sampleDir.isDirectory()))
             return false;
 
         try {
              mSampleFile = File.createTempFile("FMRecording", ".3gpp", sampleDir);
+            if (getResources().getBoolean(R.bool.def_save_name_format_enabled)) {
+                String suffix = getResources().getString(R.string.def_save_name_suffix);
+                suffix = "".equals(suffix) ? ".3gpp" : suffix;
+                mSampleFile = createTempFile("FMRecording", suffix, sampleDir);
+            }
         } catch (IOException e) {
              Log.e(TAG, "Not able to access SD Card");
              Toast.makeText(this, "Not able to access SD Card", Toast.LENGTH_SHORT).show();
@@ -602,4 +616,30 @@ public class FMRecordingService extends Service {
        }
    }
 
+    public File createTempFile(String prefix, String suffix, File directory)
+            throws IOException {
+        prefix = getResources().getString(R.string.def_save_name_prefix) + '-';
+        // Force a prefix null check first
+        if (prefix.length() < 3) {
+            throw new IllegalArgumentException("prefix must be at least 3 characters");
+        }
+        if (suffix == null) {
+            suffix = ".tmp";
+        }
+        File tmpDirFile = directory;
+        if (tmpDirFile == null) {
+            String tmpDir = System.getProperty("java.io.tmpdir", ".");
+            tmpDirFile = new File(tmpDir);
+        }
+
+        String nameFormat = getResources().getString(R.string.def_save_name_format);
+        SimpleDateFormat df = new SimpleDateFormat(nameFormat);
+        String currentTime = df.format(System.currentTimeMillis());
+
+        File result;
+        do {
+            result = new File(tmpDirFile, prefix + currentTime + suffix);
+        } while (!result.createNewFile());
+        return result;
+   }
 }
