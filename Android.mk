@@ -20,6 +20,8 @@ LOCAL_PATH := $(LOCAL_DIR_PATH)
 include $(LOCAL_PATH)/fmapp2/Android.mk
 LOCAL_PATH := $(LOCAL_DIR_PATH)
 include $(LOCAL_PATH)/FMRecord/Android.mk
+LOCAL_PATH := $(LOCAL_DIR_PATH)
+include $(LOCAL_PATH)/libfm_jni/Android.mk
 endif # is-vendor-board-platform
 endif # BOARD_HAVE_QCOM_FM
 
