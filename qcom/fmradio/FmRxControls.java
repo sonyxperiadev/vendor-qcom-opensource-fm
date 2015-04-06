@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -114,13 +114,18 @@ class FmRxControls
     * Turn on FM Rx/Tx.
     * Rx = 1 and Tx = 2
     */
-   public void fmOn(int fd, int device) {
+   public int fmOn(int fd, int device) {
       int re;
-      FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_TAVARUA_STATE, device );
+      re = FmReceiverJNI.setControlNative(fd, V4L2_CID_PRIVATE_TAVARUA_STATE, device );
+      if (re < 0) {
+         Log.d(TAG,"setControlNative faile" + V4L2_CID_PRIVATE_TAVARUA_STATE);
+         return re;
+      }
       setAudioPath(fd, false);
       re = FmReceiverJNI.SetCalibrationNative(fd);
       if (re != 0)
          Log.d(TAG,"Calibration failed");
+      return re;
    }
 
    /*

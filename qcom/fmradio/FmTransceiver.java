@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2013, 2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -403,6 +403,7 @@ public class FmTransceiver
    public boolean enable (FmConfig configSettings, int device){
 
       boolean status;
+      int ret;
       //Acquire the deviceon Enable
       if( !acquire("/dev/radio0")){
          return false;
@@ -414,7 +415,13 @@ public class FmTransceiver
           Log.d(TAG, "No existing file to do spur configuration");
       }
       Log.d(TAG, "turning on " + device);
-      mControl.fmOn(sFd, device);
+      ret = mControl.fmOn(sFd, device);
+      if (ret < 0) {
+          Log.d(TAG, "turning on failed");
+          FmReceiverJNI.closeFdNative(sFd);
+          sFd = 0;
+          return false;
+      }
 
       Log.d(TAG, "Calling fmConfigure");
       status = FmConfig.fmConfigure (sFd, configSettings);
