@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -449,9 +449,10 @@ static jint android_hardware_fmradio_FmReceiverJNI_getBufferNative
 {
     int err;
     jboolean isCopy;
-    jbyte *byte_buffer;
+    jbyte *byte_buffer = NULL;
 
     if ((fd >= 0) && (index >= 0)) {
+        ALOGE("index: %d\n", index);
         byte_buffer = env->GetByteArrayElements(buff, &isCopy);
         err = FmIoctlsInterface :: get_buffer(fd,
                                                (char *)byte_buffer,
@@ -460,7 +461,11 @@ static jint android_hardware_fmradio_FmReceiverJNI_getBufferNative
         if (err < 0) {
             err = FM_JNI_FAILURE;
         }
-        env->ReleaseByteArrayElements(buff, byte_buffer, 0);
+        if (buff != NULL) {
+            ALOGE("Free the buffer\n");
+            env->ReleaseByteArrayElements(buff, byte_buffer, 0);
+            byte_buffer =  NULL;
+        }
     } else {
         err = FM_JNI_FAILURE;
     }
