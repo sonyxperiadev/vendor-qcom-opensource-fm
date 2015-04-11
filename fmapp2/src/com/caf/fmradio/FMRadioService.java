@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -110,6 +110,7 @@ public class FMRadioService extends Service
    private BroadcastReceiver mAudioBecomeNoisyListener = null;
    private boolean mOverA2DP = false;
    private BroadcastReceiver mFmMediaButtonListener;
+   private BroadcastReceiver mAirplaneModeChanged;
    private IFMRadioServiceCallbacks mCallbacks;
    private static FmSharedPreferences mPrefs;
    private boolean mHeadsetPlugged = false;
@@ -208,6 +209,7 @@ public class FMRadioService extends Service
       registerRecordTimeout();
       registerDelayedServiceStop();
       registerFMRecordingStatus();
+      registerAirplaneModeStatusChanged();
       // registering media button receiver seperately as we need to set
       // different priority for receiving media events
       registerFmMediaButtonReceiver();
@@ -290,6 +292,10 @@ public class FMRadioService extends Service
           unregisterReceiver(mFmRecordingStatus);
           mFmRecordingStatus = null;
       }
+      if (mAirplaneModeChanged != null) {
+          unregisterReceiver(mAirplaneModeChanged);
+          mAirplaneModeChanged = null;
+      }
       /* Since the service is closing, disable the receiver */
       fmOff();
 
@@ -346,6 +352,27 @@ public class FMRadioService extends Service
              iFilter.addAction(ACTION_FM_RECORDING_STATUS);
              registerReceiver(mFmRecordingStatus , iFilter);
          }
+   }
+
+   public void registerAirplaneModeStatusChanged() {
+       if (mAirplaneModeChanged == null) {
+           mAirplaneModeChanged = new BroadcastReceiver() {
+               @Override
+               public void onReceive(Context context, Intent intent) {
+                   String action = intent.getAction();
+                   if (action.equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
+                       Log.d(LOGTAG, "ACTION_AIRPLANE_MODE_CHANGED received");
+                       boolean state = intent.getBooleanExtra("state", false);
+                       if (state == true) {
+                           fmOff();
+                       }
+                   }
+               }
+           };
+           IntentFilter iFilter = new IntentFilter();
+           iFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+           registerReceiver(mAirplaneModeChanged, iFilter);
+       }
    }
 
      /**
