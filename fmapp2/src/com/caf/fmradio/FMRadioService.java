@@ -184,6 +184,7 @@ public class FMRadioService extends Service
    private MediaSession mSession;
    private boolean mIsSSRInProgress = false;
    private boolean mIsSSRInProgressFromActivity = false;
+   private int mKeyActionDownCount = 0;
 
    public FMRadioService() {
    }
@@ -826,10 +827,18 @@ public class FMRadioService extends Service
             Log.d(LOGTAG, "SessionCallback.onMediaButton()...  event = " +event);
             int key_action = event.getAction();
             if ((event != null) && ((event.getKeyCode() == KeyEvent.KEYCODE_HEADSETHOOK)
-                                    || (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE))
-                                && (key_action == KeyEvent.ACTION_DOWN)) {
-                Log.d(LOGTAG, "SessionCallback: HEADSETHOOK/MEDIA_PLAY_PAUSE");
-                toggleFM();
+                                    || (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE))) {
+                if (key_action == KeyEvent.ACTION_DOWN) {
+                    mKeyActionDownCount++;
+                }
+                if ((mKeyActionDownCount == 1) && (key_action == KeyEvent.ACTION_UP)) {
+                    Log.d(LOGTAG, "SessionCallback: HEADSETHOOK/MEDIA_PLAY_PAUSE short press");
+                    mKeyActionDownCount = 0;
+                    toggleFM();
+                } else if ((mKeyActionDownCount == 2) && (key_action == KeyEvent.ACTION_DOWN)) {
+                    Log.d(LOGTAG, "SessionCallback: HEADSETHOOK/MEDIA_PLAY_PAUSE long press");
+                    mKeyActionDownCount = 0;
+                }
                 return true;
             } else if((event != null) && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PAUSE)
                        && (key_action == KeyEvent.ACTION_DOWN)) {
