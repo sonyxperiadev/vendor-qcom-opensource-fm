@@ -38,7 +38,6 @@
 #include <cutils/properties.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <media/tavarua.h>
 #include <linux/videodev2.h>
 #include <math.h>
 
@@ -59,6 +58,16 @@
 #define WAIT_TIMEOUT 200000 /* 200*1000us */
 #define TX_RT_DELIMITER    0x0d
 #define PS_LEN    9
+#define V4L2_CID_PRIVATE_TAVARUA_STOP_RDS_TX_RT 0x08000017
+#define V4L2_CID_PRIVATE_TAVARUA_STOP_RDS_TX_PS_NAME 0x08000016
+#define V4L2_CID_PRIVATE_UPDATE_SPUR_TABLE 0x08000034
+#define V4L2_CID_PRIVATE_TAVARUA_TX_SETPSREPEATCOUNT 0x08000034
+#define MASK_PI                    (0x0000FFFF)
+#define MASK_PI_MSB                (0x0000FF00)
+#define MASK_PI_LSB                (0x000000FF)
+#define MASK_PTY                   (0x0000001F)
+#define MASK_TXREPCOUNT            (0x0000000F)
+
 enum search_dir_t {
     SEEK_UP,
     SEEK_DN,
