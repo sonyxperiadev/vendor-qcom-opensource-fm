@@ -73,5 +73,6 @@ interface IFMRadioService
     long getRecordingStartTime();
     boolean isSleepTimerActive();
     boolean isSSRInProgress();
+    boolean isRtPlusSupported();
 }
 
