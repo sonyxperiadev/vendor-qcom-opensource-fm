@@ -46,4 +46,5 @@ interface IFMRadioServiceCallbacks
   void onRecordingStopped();
   void onExtenRadioTextChanged();
   void onRecordingStarted();
+  void onSeekNextStation();
 }

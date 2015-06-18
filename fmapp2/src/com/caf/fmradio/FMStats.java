@@ -2713,6 +2713,9 @@ public class FMStats extends Activity  {
              initiateRecordDurationTimer(durationInMins);
              invalidateOptionsMenu();
           }
+          public void onSeekNextStation() {
+             Log.d(LOGTAG, "mServiceCallbacks.onSeekNextStation:");
+          }
       };
       /* Radio Vars */
      private Handler mHandler = new Handler();

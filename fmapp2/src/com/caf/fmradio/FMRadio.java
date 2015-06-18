@@ -3131,6 +3131,10 @@ public class FMRadio extends Activity
          Log.d(LOGTAG, "mServiceCallbacks.onRecordingStarted:");
          startRecordingTimer();
       }
+      public void onSeekNextStation() {
+          Log.d(LOGTAG, "mServiceCallbacks.onSeekNextStation:");
+          SeekNextStation();
+      }
    };
 
     private void registerFMSettingListner() {

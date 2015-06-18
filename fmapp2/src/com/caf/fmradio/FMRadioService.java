@@ -469,12 +469,6 @@ public class FMRadioService extends Service
                          int keycode = event.getKeyCode();
                          switch (keycode) {
                              case KeyEvent.KEYCODE_HEADSETHOOK :
-                                 if (isFmOn() && getResources()
-                                        .getBoolean(R.bool.def_headset_next_enabled)) {
-                                     Log.d(LOGTAG, "enabled the headset button function to seek next station");
-                                     seek(true);
-                                     break;
-                                 }
                                  toggleFM();
                                  if (isOrderedBroadcast()) {
                                      abortBroadcast();
@@ -838,6 +832,13 @@ public class FMRadioService extends Service
                     toggleFM();
                 } else if ((mKeyActionDownCount == 2) && (key_action == KeyEvent.ACTION_DOWN)) {
                     Log.d(LOGTAG, "SessionCallback: HEADSETHOOK/MEDIA_PLAY_PAUSE long press");
+                    if (isFmOn() && getResources()
+                            .getBoolean(R.bool.def_headset_next_enabled)) {
+                        try {
+                            mCallbacks.onSeekNextStation();
+                        }catch (RemoteException e) {
+                        }
+                    }
                     mKeyActionDownCount = 0;
                 }
                 return true;
