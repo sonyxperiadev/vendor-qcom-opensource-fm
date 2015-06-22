@@ -1710,7 +1710,7 @@ public class FMRadio extends Activity
 
             mDisableRadioHandler.removeCallbacks(mDisableRadioTask);
             mEnableRadioHandler.removeCallbacks(mEnableRadioTask);
-            mEnableRadioHandler.postDelayed(mEnableRadioTask, 0);
+            mEnableRadioHandler.postDelayed(mEnableRadioTask, 2000);
 
             cleanupTimeoutHandler();
             Log.e(LOGTAG, "Done with restart");

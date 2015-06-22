@@ -2767,6 +2767,11 @@ public class FMRadioService extends Service
                     if (isAntennaAvailable())
                     {
                         mIsSSRInProgress = true;
+                        try {
+                             Thread.sleep(2000);
+                        } catch (Exception ex) {
+                            Log.d( LOGTAG, "RunningThread InterruptedException in RadioReset");
+                        }
                         bStatus = fmOn();
                         if(bStatus)
                         {
