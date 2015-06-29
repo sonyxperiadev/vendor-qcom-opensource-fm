@@ -842,9 +842,9 @@ public class FMRadioService extends Service
                     mKeyActionDownCount = 0;
                 }
                 return true;
-            } else if((event != null) && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PAUSE)
+            } else if((event != null) && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY)
                        && (key_action == KeyEvent.ACTION_DOWN)) {
-                Log.d(LOGTAG, "SessionCallback: MEDIA_PAUSE");
+                Log.d(LOGTAG, "SessionCallback: MEDIA_PLAY");
                 if (mServiceInUse ) {
                     fmOn();
                     try {
@@ -856,9 +856,10 @@ public class FMRadioService extends Service
                     }
                     return true;
                 }
-            } else if ((event != null) && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY)
-                       && (key_action == KeyEvent.ACTION_DOWN)) {
-                Log.d(LOGTAG, "SessionCallback: MEDIA_PLAY");
+            } else if ((event != null) && ((event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PAUSE) ||
+                                           (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_STOP))
+                                       && (key_action == KeyEvent.ACTION_DOWN)) {
+                Log.d(LOGTAG, "SessionCallback: MEDIA_PAUSE");
                 if (isFmOn()){
                     //FM should be off when Headset hook pressed.
                     fmOff();
