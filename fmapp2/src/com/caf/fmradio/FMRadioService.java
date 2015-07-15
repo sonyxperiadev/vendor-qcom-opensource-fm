@@ -367,6 +367,13 @@ public class FMRadioService extends Service
                        boolean state = intent.getBooleanExtra("state", false);
                        if (state == true) {
                            fmOff();
+                           try {
+                               if ((mServiceInUse) && (mCallbacks != null) ) {
+                                   mCallbacks.onDisabled();
+                               }
+                           } catch (RemoteException e) {
+                               e.printStackTrace();
+                           }
                        }
                    }
                }
