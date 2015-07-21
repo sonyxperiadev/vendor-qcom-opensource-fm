@@ -443,9 +443,6 @@ public class FMRadio extends Activity
    @Override
    public void onStop() {
       Log.d(LOGTAG, "FMRadio: onStop");
-      if(isSleepTimerActive()) {
-         mSleepUpdateHandlerThread.interrupt();
-      }
       if(isRecording()) {
           try {
               if (null != mRecordUpdateHandlerThread) {
@@ -484,6 +481,10 @@ public class FMRadio extends Activity
    protected void onPause() {
       Log.d(LOGTAG, "FMRadio: onPause");
       super.onPause();
+      if (isSleepTimerActive()) {
+          Log.d(LOGTAG, "FMRadio: Sleep Timer active");
+          mSleepUpdateHandlerThread.interrupt();
+      }
       mRadioTextScroller.stopScroll();
       mERadioTextScroller.stopScroll();
       FmSharedPreferences.setTunedFrequency(mTunedStation.getFrequency());
