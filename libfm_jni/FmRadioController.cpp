@@ -159,8 +159,11 @@ int FmRadioController ::Pwr_Up(int freq)
     int ret = FM_SUCCESS;
     struct timespec ts;
     ConfigFmThs thsObj;
+    char value[PROPERTY_VALUE_MAX] = {'\0'};
 
     ALOGI("%s,[freq=%d]\n", __func__, freq);
+    property_get("qcom.bluetooth.soc", value, NULL);
+    ALOGD("BT soc is %s\n", value);
     if (fd_driver < 0) {
         ret = open_dev();
         if (ret != FM_SUCCESS) {
@@ -171,12 +174,14 @@ int FmRadioController ::Pwr_Up(int freq)
 
     if (cur_fm_state == FM_OFF) {
         ALOGE("cur_fm_state = %d\n",cur_fm_state);
-        ret = FmIoctlsInterface::start_fm_patch_dl(fd_driver);
-        if (ret != FM_SUCCESS) {
-            ALOGE("FM patch downloader failed: %d\n", ret);
-            close_dev();
-            set_fm_state(FM_OFF);
-            return FM_FAILURE;
+        if (strcmp(value, "rome") != 0) {
+            ret = FmIoctlsInterface::start_fm_patch_dl(fd_driver);
+            if (ret != FM_SUCCESS) {
+                ALOGE("FM patch downloader failed: %d\n", ret);
+                close_dev();
+                set_fm_state(FM_OFF);
+                return FM_FAILURE;
+            }
         }
         if (event_listener_thread == 0) {
             ret = pthread_create(&event_listener_thread, NULL,
@@ -1095,10 +1100,15 @@ void FmRadioController :: handle_enabled_event
      void
 )
 {
+     char value[PROPERTY_VALUE_MAX] = {'\0'};
+
      ALOGI("FM handle ready Event\n");
      FmIoctlsInterface::set_control(fd_driver,
              V4L2_CID_PRV_AUDIO_PATH, AUDIO_DIGITAL_PATH);
-     FmIoctlsInterface::set_calibration(fd_driver);
+     property_get("qcom.bluetooth.soc", value, NULL);
+     if (strcmp(value, "rome") != 0) {
+         FmIoctlsInterface::set_calibration(fd_driver);
+     }
      pthread_mutex_lock(&mutex_turn_on_cond);
      set_fm_state(FM_ON);
      pthread_cond_broadcast(&turn_on_cond);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014, 2015, The Linux Foundation. All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,7 +44,7 @@ const UINT CAL_DATA_SIZE = 23;
 #define STD_BUF_SIZE  256
 
 const char *const FM_PERFORMANCE_PARAMS = "/etc/fm/fm_srch_af_th.conf";
-const char *const CALIB_DATA_NAME = "/data/app/Riva_fm_cal";
+const char *const CALIB_DATA_NAME = "/data/misc/fm/Riva_fm_cal";
 
 #define V4L2_CTRL_CLASS_USER  0x00980000
 #define V4L2_CID_BASE  (V4L2_CTRL_CLASS_USER | 0x900)
