@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009-2013, 2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -474,8 +474,8 @@ public class FMTransmitterService extends Service
              }
 
              Log.e(LOGTAG, "FMTx is on: Requesting to start FM TX");
-             AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM_TX,
-                                  AudioSystem.DEVICE_STATE_AVAILABLE, "");
+//             AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM_TX,
+//                                  AudioSystem.DEVICE_STATE_AVAILABLE, "");
          }
 
          if(true == bStatus )
@@ -507,8 +507,8 @@ public class FMTransmitterService extends Service
       Log.d(LOGTAG, "fmOperationsOff" );
 
       Log.e(LOGTAG, "FMTx is off: Requesting to stop FM Tx");
-      AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM_TX,
-                           AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
+//      AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_FM_TX,
+//                           AudioSystem.DEVICE_STATE_UNAVAILABLE, "");
    }
    /*
     * Turn OFF FM: Disable the FM Host and hardware                                  .
