@@ -108,7 +108,7 @@ static jint android_hardware_fmradio_FmReceiverJNI_acquireFdNative
     if( err >= 0 ) {
        ALOGD("Driver Version(Same as ChipId): %x \n",  cap.version );
        /*Conver the integer to string */
-       sprintf(versionStr, "%d", cap.version );
+       snprintf(versionStr, sizeof(versionStr), "%d", cap.version);
        property_set("hw.fm.version", versionStr);
     } else {
        return FM_JNI_FAILURE;
