@@ -2218,7 +2218,6 @@ public class FMRadioService extends Service
       // This will reset the FM radio receiver
       if (mReceiver != null)
       {
-         bStatus = mReceiver.reset();
          mReceiver = null;
       }
       stop();
