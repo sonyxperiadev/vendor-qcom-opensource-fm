@@ -753,7 +753,7 @@ static char key_exist
      while((grp != NULL)) {
            if(!strcmp(cur_grp, grp->grp_name)) {
               key_index = (key_hash_code % grp->keys_hash_size);
-              if(!grp->list)
+              if(grp->list)
                  list = grp->list[key_index];
               while((list != NULL) && strcmp(key, list->key)) {
                     list = list->next;
