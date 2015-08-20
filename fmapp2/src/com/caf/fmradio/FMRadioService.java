@@ -387,7 +387,9 @@ public class FMRadioService extends Service
 
     private synchronized void exitRecordSinkThread() {
         stopRecordSink();
-        mRecordSinkThread.interrupt();
+        if (mRecordSinkThread != null) {
+            mRecordSinkThread.interrupt();
+        }
         mRecordSinkThread = null;
     }
 
