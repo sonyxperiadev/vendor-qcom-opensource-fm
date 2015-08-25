@@ -220,8 +220,12 @@ class FmRxEventListner {
                                     cb.FmRxEvDisableReceiver();
                                     Thread.currentThread().interrupt();
                                 } else {
+                                    FmTransceiver.setFMPowerState(FmTransceiver.FMState_Turned_Off);
                                     Log.d(TAG, "Unexpected RADIO_DISABLED recvd");
+                                    Log.v(TAG, "RxEvtList: CURRENT-STATE : FMRxOn ---> NEW-STATE : FMOff");
+                                    FmTransceiver.release("/dev/radio0");
                                     cb.FmRxEvRadioReset();
+                                    Thread.currentThread().interrupt();
                                 }
                                 break;
                             case 19:
