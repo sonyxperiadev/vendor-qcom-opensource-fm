@@ -553,7 +553,9 @@ public class FMRadioService extends Service
                        // audio policy manager switch audio to speaker.
                        mHandler.removeCallbacks(mHeadsetPluginHandler);
                        mHandler.post(mHeadsetPluginHandler);
-                    } else if(mA2dpDeviceState.isA2dpStateChange(action) ) {
+                    } else if(mA2dpDeviceState.isA2dpStateChange(action) &&
+                             (mA2dpDeviceState.isConnected(intent) ||
+                              mA2dpDeviceState.isDisconnected(intent))) {
                         boolean  bA2dpConnected =
                         mA2dpDeviceState.isConnected(intent);
                         Log.d(LOGTAG, "bA2dpConnected:" +bA2dpConnected);

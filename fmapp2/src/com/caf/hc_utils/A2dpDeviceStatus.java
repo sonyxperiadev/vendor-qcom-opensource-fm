@@ -65,6 +65,15 @@ public class A2dpDeviceStatus {
         }
         return isConnected;
     }
+    public boolean isDisconnected(Intent intent) {
+        boolean isDisconnected = false;
+        int state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE,
+                                BluetoothA2dp.STATE_CONNECTED);
+        if((state == BluetoothA2dp.STATE_DISCONNECTED)) {
+            isDisconnected = true;
+        }
+        return isDisconnected;
+    }
     public boolean isPlaying(Intent intent) {
         boolean isPlaying = false;
         int state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE,
