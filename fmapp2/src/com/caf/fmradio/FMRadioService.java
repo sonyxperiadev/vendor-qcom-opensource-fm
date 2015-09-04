@@ -188,8 +188,6 @@ public class FMRadioService extends Service
    public static final String ACTION_FM_RECORDING_STATUS =
            "codeaurora.intent.action.FM.Recording.Status";
    private BroadcastReceiver mFmRecordingStatus  = null;
-   static final int RECORD_START = 1;
-   static final int RECORD_STOP = 0;
    private Thread mRecordServiceCheckThread = null;
    private boolean mUnMuteOnFocusLoss = false;
    private boolean mSpeakerOnFocusLoss = false;
@@ -909,23 +907,6 @@ public class FMRadioService extends Service
       return myProcessName;
    }
 
-   private void sendRecordIntent(int action) {
-       Intent intent = new Intent(ACTION_FM_RECORDING);
-       intent.putExtra("state", action);
-       if(action == RECORD_START) {
-          int mRecordDuration = -1;
-          if(FmSharedPreferences.getRecordDuration() !=
-             FmSharedPreferences.RECORD_DUR_INDEX_3_VAL) {
-             mRecordDuration = (FmSharedPreferences.getRecordDuration() * 60 * 1000);
-          }
-          intent.putExtra("record_duration", mRecordDuration);
-          intent.putExtra("process_name", getProcessName());
-          intent.putExtra("process_id", Process.myPid());
-        }
-       Log.d(LOGTAG, "Sending Recording intent for = " +action);
-       getApplicationContext().sendBroadcast(intent);
-   }
-
    private void sendRecordServiceIntent(int action) {
        Intent intent = new Intent(ACTION_FM);
        intent.putExtra("state", action);
@@ -1106,6 +1087,8 @@ public class FMRadioService extends Service
    }
 
    public boolean startRecording() {
+      int mRecordDuration = -1;
+
       Log.d(LOGTAG, "In startRecording of Recorder");
       if((true == mSingleRecordingInstanceSupported) &&
          (true == mOverA2DP )) {
@@ -1124,9 +1107,16 @@ public class FMRadioService extends Service
         if (!updateAndShowStorageHint())
             return false;
         long maxFileSize = mStorageSpace - LOW_STORAGE_THRESHOLD;
+        if(FmSharedPreferences.getRecordDuration() !=
+            FmSharedPreferences.RECORD_DUR_INDEX_3_VAL) {
+            mRecordDuration = (FmSharedPreferences.getRecordDuration() * 60 * 1000);
+         }
+
         mRecorder = new MediaRecorder();
         try {
               mRecorder.setMaxFileSize(maxFileSize);
+              if (mRecordDuration >= 0)
+                  mRecorder.setMaxDuration(mRecordDuration);
         } catch (RuntimeException exception) {
 
         }
@@ -1181,9 +1171,10 @@ public class FMRadioService extends Service
                          Log.d(LOGTAG, "Maximum file size/duration reached, stop the recording");
                          stopRecording();
                      }
-                     // Show the toast.
-                     Toast.makeText(FMRadioService.this, R.string.FMRecording_reach_size_limit,
-                               Toast.LENGTH_LONG).show();
+                     if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED)
+                         // Show the toast.
+                         Toast.makeText(FMRadioService.this, R.string.FMRecording_reach_size_limit,
+                                        Toast.LENGTH_LONG).show();
                  }
              }
              // from MediaRecorder.OnErrorListener
@@ -2152,7 +2143,6 @@ public class FMRadioService extends Service
          Log.d(LOGTAG, "audioManager.setFmRadioOn false done \n" );
       }
 
-      sendRecordServiceIntent(RECORD_STOP);
       if (isAnalogModeEnabled()) {
               SystemProperties.set("hw.fm.isAnalog","false");
               misAnalogPathEnabled = false;
