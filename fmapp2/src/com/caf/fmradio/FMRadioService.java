@@ -1149,6 +1149,12 @@ public class FMRadioService extends Service
              mRecorder.setAudioSource(MediaRecorder.AudioSource.RADIO_TUNER);
              mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
              mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+             final int samplingRate = 44100;
+             mRecorder.setAudioSamplingRate(samplingRate);
+             final int bitRate = 128000;
+             mRecorder.setAudioEncodingBitRate(bitRate);
+             final int audiochannels = 2;
+             mRecorder.setAudioChannels(audiochannels);
         } catch (RuntimeException exception) {
              mRecorder.reset();
              mRecorder.release();
