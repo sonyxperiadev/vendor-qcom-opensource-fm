@@ -74,5 +74,6 @@ interface IFMRadioService
     boolean isSleepTimerActive();
     boolean isSSRInProgress();
     boolean isRtPlusSupported();
+    boolean isA2DPConnected();
 }
 

@@ -1858,6 +1858,19 @@ public class FMRadio extends Activity
       return(mRtPlusSupported);
    }
 
+   private boolean isA2DPConnected() {
+      boolean A2DPConnected = false;
+      if (mService != null) {
+          try {
+             A2DPConnected = mService.isA2DPConnected();
+          } catch (RemoteException e) {
+             e.printStackTrace();
+         }
+      }
+      Log.d(LOGTAG, "A2DPConnected: " + A2DPConnected);
+      return(A2DPConnected);
+   }
+
    private boolean isSpeakerEnabled() {
       boolean speakerEnabled = false;
       if (mService != null) {
@@ -2047,6 +2060,10 @@ public class FMRadio extends Activity
         }else{
             mSpeakerButton.setImageResource(R.drawable.btn_earphone);
         }
+        if (isA2DPConnected())
+            mSpeakerButton.setClickable(false);
+        else
+            mSpeakerButton.setClickable(true);
       }
    }
 
@@ -2225,6 +2242,16 @@ public class FMRadio extends Activity
       updateSearchProgress();
    }
 
+   private void A2DPConnectionState(boolean state) {
+      Log.d(LOGTAG, "A2DPConnectionState with:" +state);
+      if (state) {
+          Log.d(LOGTAG, "make speaker button disable");
+          mSpeakerButton.setClickable(false);
+      } else {
+          Log.d(LOGTAG, "make speaker button enable");
+          mSpeakerButton.setClickable(true);
+      }
+   }
    /** Scan related */
    private void initiateSearch(int pty) {
       synchronized (this) {
@@ -3143,6 +3170,10 @@ public class FMRadio extends Activity
       public void onSeekNextStation() {
           Log.d(LOGTAG, "mServiceCallbacks.onSeekNextStation:");
           SeekNextStation();
+      }
+      public void onA2DPConnectionstateChanged(boolean state){
+          Log.d(LOGTAG, "mServiceCallbacks.onA2DPConnectionstateChanged :");
+          A2DPConnectionState(state);
       }
    };
 
