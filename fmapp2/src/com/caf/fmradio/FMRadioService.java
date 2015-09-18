@@ -555,6 +555,12 @@ public class FMRadioService extends Service
                         boolean  bA2dpConnected =
                         mA2dpDeviceState.isConnected(intent);
                         Log.d(LOGTAG, "bA2dpConnected:" +bA2dpConnected);
+                        try {
+                             if ((mServiceInUse) && (mCallbacks != null))
+                                 mCallbacks.onA2DPConnectionstateChanged(bA2dpConnected);
+                        } catch (RemoteException e) {
+                             e.printStackTrace();
+                        }
                         if (!bA2dpConnected) {
                             Log.d(LOGTAG, "A2DP device is dis-connected!");
                             mA2dpDisconnected = true;
@@ -1964,6 +1970,11 @@ public class FMRadioService extends Service
       {
          return(mService.get().isSSRInProgress());
       }
+
+      public boolean isA2DPConnected()
+      {
+         return(mService.get().isA2DPConnected());
+      }
    }
    private final IBinder mBinder = new ServiceStub(this);
 
@@ -2202,6 +2213,9 @@ public class FMRadioService extends Service
       return mIsSSRInProgress;
    }
 
+   public boolean isA2DPConnected() {
+       return (mA2dpConnected);
+   }
    /* Returns whether FM hardware is ON.
     *
     * @return true if FM was tuned, searching. (at the end of
