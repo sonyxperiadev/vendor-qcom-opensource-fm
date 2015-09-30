@@ -213,18 +213,18 @@ class FmRxEventListner {
                             case 18:
                                 Log.d(TAG, "Got RADIO_DISABLED");
                                 if (FmTransceiver.getFMPowerState() == FmTransceiver.subPwrLevel_FMTurning_Off) {
+                                    FmTransceiver.release("/dev/radio0");
+                                    cb.FmRxEvDisableReceiver();
                                     /*Set the state as FMOff */
                                     FmTransceiver.setFMPowerState(FmTransceiver.FMState_Turned_Off);
                                     Log.v(TAG, "RxEvtList: CURRENT-STATE : FMTurningOff ---> NEW-STATE : FMOff");
-                                    FmTransceiver.release("/dev/radio0");
-                                    cb.FmRxEvDisableReceiver();
                                     Thread.currentThread().interrupt();
                                 } else {
-                                    FmTransceiver.setFMPowerState(FmTransceiver.FMState_Turned_Off);
                                     Log.d(TAG, "Unexpected RADIO_DISABLED recvd");
-                                    Log.v(TAG, "RxEvtList: CURRENT-STATE : FMRxOn ---> NEW-STATE : FMOff");
                                     FmTransceiver.release("/dev/radio0");
                                     cb.FmRxEvRadioReset();
+                                    FmTransceiver.setFMPowerState(FmTransceiver.FMState_Turned_Off);
+                                    Log.v(TAG, "RxEvtList: CURRENT-STATE : FMRxOn ---> NEW-STATE : FMOff");
                                     Thread.currentThread().interrupt();
                                 }
                                 break;
