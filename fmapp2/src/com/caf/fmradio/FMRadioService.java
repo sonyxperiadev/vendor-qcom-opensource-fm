@@ -932,7 +932,7 @@ public class FMRadioService extends Service
            } catch (RemoteException e) {
                 e.printStackTrace();
            }
-       } else if( mServiceInUse ) {
+       } else if(isAntennaAvailable() && mServiceInUse ) {
            fmOn();
            try {
                 if (mCallbacks != null ) {
@@ -974,7 +974,7 @@ public class FMRadioService extends Service
             } else if((event != null) && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY)
                        && (key_action == KeyEvent.ACTION_DOWN)) {
                 Log.d(LOGTAG, "SessionCallback: MEDIA_PLAY");
-                if (mServiceInUse ) {
+                if (isAntennaAvailable() && mServiceInUse) {
                     fmOn();
                     try {
                         if (mCallbacks != null ) {
