@@ -412,12 +412,13 @@ unsigned int ConfigFmThs :: extract_comma_sep_freqs
 )
 {
     char *next_freq;
+    char *saveptr = NULL;
     unsigned int freq;
     unsigned int *freqs_new_arr;
     unsigned int size = 0;
     unsigned int len = 0;
 
-    next_freq = strtok(freqs, str);
+    next_freq = strtok_r(freqs, str, &saveptr);
     while(next_freq != NULL) {
           freq = atoi(next_freq);
           ALOGD("HYBRID_SRCH freq: %u\n", freq);
@@ -436,7 +437,7 @@ unsigned int ConfigFmThs :: extract_comma_sep_freqs
           }
           (*freqs_arr)[len] = freq;
           len++;
-          next_freq = strtok(NULL, str);
+          next_freq = strtok_r(NULL, str, &saveptr);
     }
     return len;
 }
@@ -449,12 +450,13 @@ unsigned int ConfigFmThs :: extract_comma_sep_sinrs
 )
 {
     char *next_sinr;
+    char *saveptr = NULL;
     signed char *sinrs_new_arr;
     unsigned int size = 0;
     unsigned int len = 0;
     signed char sinr;
 
-    next_sinr = strtok(sinrs, str);
+    next_sinr = strtok_r(sinrs, str, &saveptr);
     while(next_sinr != NULL) {
           sinr = atoi(next_sinr);
           ALOGD("HYBRID_SRCH sinr: %d\n", sinr);
@@ -473,7 +475,7 @@ unsigned int ConfigFmThs :: extract_comma_sep_sinrs
           }
           (*sinrs_arr)[len] = sinr;
           len++;
-          next_sinr = strtok(NULL, str);
+          next_sinr = strtok_r(NULL, str, &saveptr);
     }
     return len;
 }
