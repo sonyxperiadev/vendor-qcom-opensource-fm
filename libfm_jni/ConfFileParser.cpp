@@ -27,6 +27,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define LOG_TAG "android_hardware_fm"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -476,19 +478,19 @@ static char parse_load_frm_fhandler
   unsigned int i;
   bool has_carriage_rtn = false;
 
-  while((bytes_read = fread(buf, 1, MAX_LINE_LEN, fp))) {
-        for(i = 0; i < bytes_read; i++) {
-            if(line_len == line_allocated) {
+  while (bytes_read = fread(buf, 1, MAX_LINE_LEN, fp)) {
+        for (i = 0; i < bytes_read; i++) {
+            if (line_len == line_allocated) {
                 line_allocated += 25;
                 new_line = realloc(line, line_allocated);
-                if(new_line == NULL) {
+                if (new_line == NULL) {
                    ret = FALSE;
                    ALOGE("memory allocation failed for line\n");
                    break;
                 }
                 line = (char *)new_line;
             }
-            if((buf[i] == '\n')) {
+            if (buf[i] == '\n') {
                 has_carriage_rtn = false;
                 line[line_len] = '\0';
                 ret = parse_line(key_file, line, &cur_grp);
@@ -497,15 +499,15 @@ static char parse_load_frm_fhandler
                    ALOGE("could not parse the line, line not proper\n");
                    break;
                 }
-            }else if(buf[i] == '\r') {
+            } else if (buf[i] == '\r') {
                 ALOGE("File has carriage return\n");
                 has_carriage_rtn = true;
-            }else if(has_carriage_rtn) {
+            } else if (has_carriage_rtn) {
                 ALOGE("File format is not proper, no line character\
                         after carraige return\n");
                 ret = FALSE;
                 break;
-            }else {
+            } else {
                 line[line_len] = buf[i];
                 line_len++;
             }
@@ -809,7 +811,7 @@ static char line_is_key_value_pair
   }
   while((str != equal_start) && isalnum(*str))
         str++;
-  if((str == equal_start)) {
+  if (str == equal_start) {
       key = (char *)malloc(sizeof(char) * (key_len + 1));
       if(key == NULL) {
          ALOGE("could not alloc memory for new key\n");

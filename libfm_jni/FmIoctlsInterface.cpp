@@ -27,6 +27,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define LOG_TAG "android_hardware_fm"
+
 #include "FmIoctlsInterface.h"
 #include <cstdio>
 #include <cstdlib>
@@ -50,24 +52,24 @@ int FmIoctlsInterface :: start_fm_patch_dl
     struct v4l2_capability cap;
 
 #ifndef QCOM_NO_FM_FIRMWARE
-    ALOGE("start_fm_patch_dl = %d\n",fd);
+    ALOGI("%s: start_fm_patch_dl = %d\n", __func__, fd);
     ret = ioctl(fd, VIDIOC_QUERYCAP, &cap);
-    ALOGE("executed cmd\n");
+    ALOGD("%s: executed cmd\n", __func__);
     if(ret == IOCTL_SUCC) {
         ret = snprintf(versionStr, MAX_VER_STR_LEN, "%d", cap.version);
         if(ret >= MAX_VER_STR_LEN) {
             return FM_FAILURE;
         }else {
             ret = property_set(FM_VERSION_PROP, versionStr);
-            ALOGE("set versionStr done");
+            ALOGD("set versionStr done");
             if(ret != PROP_SET_SUCC)
                return FM_FAILURE;
             ret = property_set(FM_MODE_PROP, "normal");
-            ALOGE("set FM_MODE_PROP done");
+            ALOGD("set FM_MODE_PROP done");
             if(ret != PROP_SET_SUCC)
                return FM_FAILURE;
             ret = property_set(FM_INIT_PROP, "0");
-            ALOGE("set FM_INIT_PROP done");
+            ALOGD("set FM_INIT_PROP done");
             if(ret != PROP_SET_SUCC)
                return FM_FAILURE;
             ret = property_set(SCRIPT_START_PROP, SOC_PATCH_DL_SCRPT);
@@ -306,7 +308,7 @@ int  FmIoctlsInterface :: get_upperband_limit
         return FM_FAILURE;
     }else {
         freq = (tuner.rangehigh / TUNE_MULT);
-        ALOGE("high freq: %d\n",freq);
+        ALOGI("high freq: %lu\n", freq);
         return FM_SUCCESS;
     }
 }
@@ -325,7 +327,7 @@ int  FmIoctlsInterface :: get_lowerband_limit
         return FM_FAILURE;
     }else {
         freq = (tuner.rangelow / TUNE_MULT);
-        ALOGE("low freq: %d\n",freq);
+        ALOGE("low freq: %lu\n",freq);
         return FM_SUCCESS;
     }
 }

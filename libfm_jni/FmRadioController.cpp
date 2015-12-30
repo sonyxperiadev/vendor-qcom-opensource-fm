@@ -27,6 +27,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define LOG_TAG "android_hardware_fm"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -163,7 +165,7 @@ int FmRadioController ::Pwr_Up(int freq)
 
     ALOGI("%s,[freq=%d]\n", __func__, freq);
     property_get("qcom.bluetooth.soc", value, NULL);
-    ALOGD("BT soc is %s\n", value);
+    ALOGD("BT soc is '%s'\n", value);
     if (fd_driver < 0) {
         ret = open_dev();
         if (ret != FM_SUCCESS) {
@@ -173,7 +175,7 @@ int FmRadioController ::Pwr_Up(int freq)
     }
 
     if (cur_fm_state == FM_OFF) {
-        ALOGE("cur_fm_state = %d\n",cur_fm_state);
+        ALOGD("%s: cur_fm_state = %d\n", __func__, cur_fm_state);
         if (strcmp(value, "rome") != 0) {
             ret = FmIoctlsInterface::start_fm_patch_dl(fd_driver);
             if (ret != FM_SUCCESS) {
@@ -277,7 +279,7 @@ int FmRadioController ::Pwr_Down()
                         V4L2_CID_PRV_STATE, FM_DEV_NONE);
     }
     if(event_listener_thread != 0) {
-        ALOGD("%s, event_listener_thread canceeled\n", __func__);
+        ALOGD("%s, event_listener_thread cancelled\n", __func__);
         event_listener_canceled = true;
         pthread_join(event_listener_thread, NULL);
     }
@@ -326,7 +328,7 @@ int FmRadioController :: Seek(int dir)
     struct timespec ts;
 
     if (cur_fm_state != FM_ON) {
-        ALOGE("%s error Fm state: %d\n", __func__,cur_fm_state);
+        ALOGE("%s error Fm state: %d\n", __func__, cur_fm_state);
         return FM_FAILURE;
     }
 
@@ -376,7 +378,7 @@ bool FmRadioController ::IsRds_support
 )
 {
    is_rds_support = true;
-   ALOGI("is_rds_support: \n", is_rds_support);
+   ALOGI("is_rds_support: %d\n", is_rds_support);
    return is_rds_support;
 }
 
@@ -385,12 +387,12 @@ int FmRadioController ::MuteOn()
 {
     int ret;
 
-    ALOGE("cur_fm_state = %d\n", cur_fm_state);
+    ALOGD("%s: cur_fm_state = %d\n", __func__, cur_fm_state);
     if((cur_fm_state != FM_OFF) &&
        (cur_fm_state != FM_ON_IN_PROGRESS)) {
        ret = FmIoctlsInterface::set_control(fd_driver,
                        V4L2_CID_AUDIO_MUTE, MUTE_L_R_CHAN);
-       ALOGE("CMD executed mute\n");
+       ALOGI("CMD executed mute\n");
     }else {
        ret = FM_FAILURE;
     }
@@ -402,12 +404,12 @@ int FmRadioController ::MuteOff()
 {
     int ret;
 
-    ALOGE("cur_fm_state = %d\n", cur_fm_state);
+    ALOGD("%s: cur_fm_state = %d\n", __func__, cur_fm_state);
     if((cur_fm_state != FM_OFF) &&
        (cur_fm_state != FM_ON_IN_PROGRESS)) {
         ret = FmIoctlsInterface::set_control(fd_driver,
                       V4L2_CID_AUDIO_MUTE, UNMUTE_L_R_CHAN);
-        ALOGE("CMD executed for unmute\n");
+        ALOGI("CMD executed for unmute\n");
     }else {
         ret = FM_FAILURE;
     }
@@ -449,8 +451,9 @@ int FmRadioController :: Stop_Scan_Seek
 (
 )
 {
-   int ret;
+    int ret;
 
+    ALOGD("%s: cur_fm_state = %d\n", __func__, cur_fm_state);
     if((cur_fm_state == SEEK_IN_PROGRESS) ||
        (cur_fm_state == SCAN_IN_PROGRESS)) {
         ret = FmIoctlsInterface::set_control(fd_driver,
@@ -609,7 +612,7 @@ int FmRadioController :: SetDeConstant
 {
     int ret;
 
-     ALOGE("cur_fm_state: %d, emphasis: %d\n", cur_fm_state, emphasis);
+    ALOGD("cur_fm_state: %d, emphasis: %ld\n", cur_fm_state, emphasis);
     if(cur_fm_state == FM_ON) {
         switch(emphasis) {
             case DE_EMP75:
@@ -679,7 +682,7 @@ int FmRadioController :: GetStationList
         freq |= tmpFreqByte2;
         ALOGI(" freq: %d", freq);
         real_freq  = (freq * FREQ_MULTIPLEX) + lowBand;
-        ALOGI(" real_freq: %d", real_freq);
+        ALOGI("real_freq: %f", real_freq);
         if ( (real_freq < lowBand ) || (real_freq > highBand) ) {
               ALOGI("Frequency out of band limits");
         } else {
@@ -734,7 +737,7 @@ int FmRadioController ::ScanList
             return FM_FAILURE;
         }
     } else {
-        ALOGI("Scanlist: not proper state %d\n",cur_fm_state );
+        ALOGI("Scanlist: not proper state %d\n", cur_fm_state);
         return FM_FAILURE;
     }
     return FM_SUCCESS;
@@ -791,7 +794,7 @@ int FmRadioController :: EnableRDS
 {
     int ret = FM_FAILURE;
 
-    ALOGE("%s:cur_fm_state = %d\n", __func__, cur_fm_state);
+    ALOGD("%s: cur_fm_state = %d\n", __func__, cur_fm_state);
     if (cur_fm_state == FM_ON) {
         ret = FmIoctlsInterface::set_control(fd_driver,
                       V4L2_CID_PRV_RDSON, 1);
@@ -811,7 +814,7 @@ int FmRadioController :: EnableRDS
         rds_enabled = 1;
         EnableAF();
     } else {
-        ALOGE("%s:not in proper state cur_fm_state = %d\n", cur_fm_state);
+        ALOGE("%s: not in proper state cur_fm_state = %d\n", __func__, cur_fm_state);
         return ret;
     }
     return ret;
@@ -826,7 +829,7 @@ int FmRadioController :: DisableRDS
 {
     int ret = FM_FAILURE;
 
-    ALOGE("%s:cur_fm_state = %d\n", __func__, cur_fm_state);
+    ALOGD("%s: cur_fm_state = %d\n", __func__, cur_fm_state);
     if (cur_fm_state == FM_ON) {
         ret = FmIoctlsInterface::set_control(fd_driver,
                       V4L2_CID_PRV_RDSON, 2);
@@ -838,7 +841,7 @@ int FmRadioController :: DisableRDS
         rds_enabled = 0;
         DisableAF();
     } else {
-        ALOGE("%s:not in proper state cur_fm_state = %d\n", cur_fm_state);
+        ALOGE("%s: not in proper state cur_fm_state = %d\n", __func__, cur_fm_state);
         ret = FM_FAILURE;
     }
     return ret;

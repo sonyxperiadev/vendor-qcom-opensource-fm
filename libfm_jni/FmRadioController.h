@@ -28,7 +28,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifndef __FM_RADIO_CTRL_H__
-#define __FM_RADIO_CTRL_H___
+#define __FM_RADIO_CTRL_H__
 
 #include <pthread.h>
 #include <ctime>

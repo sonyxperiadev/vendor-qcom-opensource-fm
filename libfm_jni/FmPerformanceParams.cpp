@@ -27,6 +27,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define LOG_TAG "android_hardware_fm"
+
 #include <cstdio>
 #include <utils/Log.h>
 #include "FmPerformanceParams.h"
@@ -54,7 +56,7 @@ signed char FmPerformanceParams :: SetBand
                                76000, 90000);
        break;
    default:
-       ALOGE("Band type: %ld is invalid\n", band);
+       ALOGE("Band type: %u is invalid\n", band);
        ret = FM_FAILURE;
        break;
    }

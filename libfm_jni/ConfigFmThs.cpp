@@ -27,6 +27,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define LOG_TAG "android_hardware_fm"
+
 #include <cstdlib>
 #include <cstring>
 #include <utils/Log.h>
@@ -568,7 +570,7 @@ void  ConfigFmThs :: SetRxSearchAfThs
 
     keyfile = get_key_file();
 
-    ALOGE("file name is: %s\n", file);
+    ALOGD("%s: file name is: %s\n", __func__, file);
     if(!parse_load_file(keyfile, file)) {
        ALOGE("Error in loading threshold file\n");
     }else {
