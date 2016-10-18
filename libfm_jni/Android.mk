@@ -27,4 +27,7 @@ ifeq ($(TARGET_QCOM_NO_FM_FIRMWARE),true)
 endif
 
 LOCAL_MODULE := libfmjni
+
+ifneq ($(BOARD_HAVE_BCM_FM), true)
 include $(BUILD_SHARED_LIBRARY)
+endif
